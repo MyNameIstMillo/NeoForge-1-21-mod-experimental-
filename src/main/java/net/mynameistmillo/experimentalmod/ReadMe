@@ -10,6 +10,13 @@ zmiany:  (klik -> shift + f6)
     ModItemTagProvider
     ModTags x2
 
+    jak się okazuje, jak się zmienia po przez shift + f6 to wszytskie się zmieniają
+
+    lang
+    creative mod tabs
+    nazwa folderu w assets
+
+    warto też usunąć generated żeby jeszcze raz generowało pliki
 
 
 2. w klasie main -> Mod_ID na odpowiednie

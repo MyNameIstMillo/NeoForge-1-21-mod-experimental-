@@ -1,6 +1,6 @@
 package net.mynameistmillo.experimentalmod;
 
-import net.mynameistmillo.experimentalmod.block.custom.ModBlocks;
+import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.tabs.ModCreativeModeTabs;
 import org.slf4j.Logger;

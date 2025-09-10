@@ -2,7 +2,7 @@ package net.mynameistmillo.experimentalmod.datagen;
 
 import net.minecraft.data.PackOutput;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.block.custom.ModBlocks;
+import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;

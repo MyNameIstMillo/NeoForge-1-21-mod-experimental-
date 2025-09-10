@@ -5,7 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.block.custom.ModBlocks;
+import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.tags.ModTags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;

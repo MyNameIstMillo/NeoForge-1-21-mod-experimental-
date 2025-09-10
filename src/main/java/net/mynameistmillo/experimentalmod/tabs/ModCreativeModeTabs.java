@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.block.custom.ModBlocks;
+import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,7 +19,7 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> MOD_ITEMS = CREATIVE_MODE_TAB.register("mod_items_tab",
             ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModItems.FANCY_ITEM.get()))
-                    .title(Component.translatable("creativetab.templatemodid.mod_items_tab"))
+                    .title(Component.translatable("creativetab.experimentalmodid.mod_items_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.FANCY_ITEM);
 
@@ -30,7 +30,7 @@ public class ModCreativeModeTabs {
     public static final Supplier<CreativeModeTab> MOD_BLOCKS = CREATIVE_MODE_TAB.register("mod_blocks",
             ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModBlocks.FANCY_BLOCK.get()))
                     .withTabsBefore(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "mod_items_tab"))
-                    .title(Component.translatable("creativetab.templatemodid.mod_blocks_tab"))
+                    .title(Component.translatable("creativetab.experimentalmodid.mod_blocks_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModBlocks.FANCY_BLOCK);
 

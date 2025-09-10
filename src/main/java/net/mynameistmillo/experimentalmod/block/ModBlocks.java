@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.block.custom;
+package net.mynameistmillo.experimentalmod.block;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
