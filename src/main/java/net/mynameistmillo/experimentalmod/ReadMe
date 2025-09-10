@@ -1,0 +1,22 @@
+zmiany:  (klik -> shift + f6)
+
+1. nazwa klasy TemplateMod na odpowiednie
+    ModItems
+    ModBlocks
+    CreativeModeTab, w .withTabsBefore też występuje
+    ModBlockStateProvider
+    ModItemModelProvider
+    ModBlockTagProvider
+    ModItemTagProvider
+    ModTags x2
+
+
+
+2. w klasie main -> Mod_ID na odpowiednie
+    gradle.properties jest mod id zmienić też
+
+3. w gradle.properties maping trzeba pozmieniać
+    parchment version
+    minecraft version
+    ... version
+

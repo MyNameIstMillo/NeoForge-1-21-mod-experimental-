@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "templatemodid:block/fancy_block"
+    }
+  }
+}

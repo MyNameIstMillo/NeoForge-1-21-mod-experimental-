@@ -1,0 +1,26 @@
+package net.mynameistmillo.experimentalmod.tags;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
+
+public class ModTags {
+    public static class Blocks {
+
+        private static TagKey<Block> createTag(String name) {
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, name));
+        }
+    }
+
+    public static class Items {
+        public static final TagKey<Item> FANCY_ITEMS = createTag("fancy_items");
+
+        private static TagKey<Item> createTag(String name) {
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, name));
+        }
+    }
+}
