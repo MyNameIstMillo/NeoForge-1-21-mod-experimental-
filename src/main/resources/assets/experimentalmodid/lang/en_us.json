@@ -1,6 +1,16 @@
 {
   "item.experimentalmodid.fancy_item": "Fancy item",
+  "item.experimentalmodid.wand": "Wand",
+  "item.experimentalmodid.key": "Key",
+
+
+
   "block.experimentalmodid.fancy_block": "Fancy block",
+  "block.experimentalmodid.wand_editor": "Wand Editor",
+
+
+
+
 
   "creativetab.experimentalmodid.mod_items_tab": "Mods Items",
   "creativetab.experimentalmodid.mod_blocks_tab": "Mods Blocks"

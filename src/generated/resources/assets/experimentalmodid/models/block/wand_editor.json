@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "experimentalmodid:block/wand_editor_bottom",
+    "side": "experimentalmodid:block/wand_editor_side",
+    "top": "experimentalmodid:block/wand_editor_top"
+  }
+}

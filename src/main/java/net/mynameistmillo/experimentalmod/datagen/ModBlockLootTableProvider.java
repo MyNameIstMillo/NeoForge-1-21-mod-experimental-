@@ -17,6 +17,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(ModBlocks.FANCY_BLOCK.get());
+        dropSelf(ModBlocks.WAND_EDITOR.get());
     }
 
     @Override

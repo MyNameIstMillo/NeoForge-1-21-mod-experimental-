@@ -19,6 +19,10 @@ public class ModTags {
     public static class Items {
         public static final TagKey<Item> FANCY_ITEMS = createTag("fancy_items");
 
+        public static final TagKey<Item> WAND_ITEM = createTag("wand_item");
+
+        public static final TagKey<Item> KEY_ITEM = createTag("key_item");
+
         private static TagKey<Item> createTag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, name));
         }

@@ -22,6 +22,8 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable("creativetab.experimentalmodid.mod_items_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.FANCY_ITEM);
+                        output.accept(ModItems.WAND);
+                        output.accept(ModItems.KEY);
 
 
 
@@ -33,6 +35,7 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable("creativetab.experimentalmodid.mod_blocks_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModBlocks.FANCY_BLOCK);
+                        output.accept(ModBlocks.WAND_EDITOR);
 
 
 

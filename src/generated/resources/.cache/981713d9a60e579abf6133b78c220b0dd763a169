@@ -1,4 +1,7 @@
-// 1.21	2025-09-10T11:52:43.0953415	Block States: experimentalmodid
+// 1.21	2025-09-10T13:27:45.5981569	Block States: experimentalmodid
 6a3008a6b1bd8ac2627934d2f1b627fb9e20afdf assets/experimentalmodid/blockstates/fancy_block.json
+6f7dcb9cc694c8d98882733b8c13ba2bf80bca31 assets/experimentalmodid/blockstates/wand_editor.json
 82f6ac834321791459989df88e0ff655e8d1cf85 assets/experimentalmodid/models/block/fancy_block.json
+eaa235967896a955a04a68f0d04b5aa9d973ef0d assets/experimentalmodid/models/block/wand_editor.json
 3e026fa9f1a4b79097db23c78860a9b86c92f5dd assets/experimentalmodid/models/item/fancy_block.json
+11bf4fb1e0a6d75001f3d16c81cce5efaedb67a4 assets/experimentalmodid/models/item/wand_editor.json

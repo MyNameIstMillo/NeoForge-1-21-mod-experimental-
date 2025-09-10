@@ -25,5 +25,12 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.FANCY_ITEM.get())
                 .add(ModBlocks.FANCY_BLOCK.asItem());
 
+        tag(ModTags.Items.WAND_ITEM)
+                .add(ModItems.WAND.get());
+
+        tag(ModTags.Items.KEY_ITEM)
+                .add(ModItems.KEY.get());
+
+
     }
 }

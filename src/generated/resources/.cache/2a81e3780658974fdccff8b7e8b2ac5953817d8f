@@ -1,3 +1,4 @@
-// 1.21	2025-09-10T11:52:43.0903434	Tags for minecraft:block mod id experimentalmodid
-6e0826908d40929048fd9cdd3c5788accc00de75 data/minecraft/tags/block/mineable/hoe.json
+// 1.21	2025-09-10T13:27:45.5961117	Tags for minecraft:block mod id experimentalmodid
+91490013632e42b116da6023630eb892eed205a3 data/minecraft/tags/block/mineable/hoe.json
+4efb3e1931b7428c38329a8f655134dd07da0d39 data/minecraft/tags/block/needs_diamond_tool.json
 6e0826908d40929048fd9cdd3c5788accc00de75 data/minecraft/tags/block/needs_iron_tool.json

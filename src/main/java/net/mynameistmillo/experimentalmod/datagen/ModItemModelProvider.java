@@ -14,5 +14,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         basicItem(ModItems.FANCY_ITEM.get());
+        basicItem(ModItems.WAND.get());
+        basicItem(ModItems.KEY.get());
     }
 }
