@@ -17,6 +17,9 @@ zmiany:  (klik -> shift + f6)
     nazwa folderu w assets
 
     warto też usunąć generated żeby jeszcze raz generowało pliki
+    experimentalmodid modblockentities
+    ModMenuTypes
+    WandEditorScreen
 
 
 2. w klasie main -> Mod_ID na odpowiednie

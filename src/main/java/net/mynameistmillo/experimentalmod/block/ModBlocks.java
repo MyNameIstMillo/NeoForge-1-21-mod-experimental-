@@ -2,16 +2,13 @@ package net.mynameistmillo.experimentalmod.block;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.block.custom.WandEditor;
-import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -32,7 +29,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> WAND_EDITOR = registerBlock("wand_editor",
             ()-> new WandEditor(BlockBehaviour.Properties.of()
                     .requiresCorrectToolForDrops()
-
+                    .noOcclusion()
                     .strength(3600.0f, 10000.0f)
                     .sound(SoundType.DECORATED_POT)));
 
@@ -40,7 +37,9 @@ public class ModBlocks {
 
     public static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block){
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        registerBlockItem(name, toReturn);
+        if(name != "wand_editor") {
+            registerBlockItem(name, toReturn);
+        }
         return toReturn;
     }
 

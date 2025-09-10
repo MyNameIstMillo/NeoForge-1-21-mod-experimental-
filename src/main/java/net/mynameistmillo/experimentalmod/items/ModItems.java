@@ -27,6 +27,13 @@ public class ModItems {
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1)));
 
+    public static final DeferredItem<BlockItem> WAND_EDITOR_ITEM = ITEMS.register("wand_editor",
+            ()-> new BlockItem(ModBlocks.WAND_EDITOR.get(),
+                    new Item.Properties()
+                            .stacksTo(1)
+                            .rarity(Rarity.EPIC)
+                            .fireResistant()));
+
 
     public static void register(IEventBus eventBus){
          ITEMS.register(eventBus);
