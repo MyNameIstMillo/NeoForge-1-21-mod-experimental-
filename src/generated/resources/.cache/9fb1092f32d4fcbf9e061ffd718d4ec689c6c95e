@@ -1,5 +1,5 @@
-// 1.21	2025-09-09T18:29:12.5492492	Recipes
-11b3293d2a932e094a9ac24251dda52e53f4b0c1 data/templatemodid/advancement/recipes/building_blocks/fancy_block.json
-cd6554cb6ce0a5e3e965e0213595441d8681ccd7 data/templatemodid/advancement/recipes/misc/fancy_item.json
-6f68636e6d455957d8151ddfc53bb391ba7dd705 data/templatemodid/recipe/fancy_block.json
-9b6c4d4851538d9631ef697d4e129a30184cc597 data/templatemodid/recipe/fancy_item.json
+// 1.21	2025-09-10T11:52:43.0943433	Recipes
+0eed48d207383b939cffadfeda7b40c19984a5db data/experimentalmodid/advancement/recipes/building_blocks/fancy_block.json
+38e3d763f689afb73b06d9196b136a97de6e233e data/experimentalmodid/advancement/recipes/misc/fancy_item.json
+4765bf976c53ba13142df2c46561673dd6114a9e data/experimentalmodid/recipe/fancy_block.json
+83c281bbb9cf83ee1f044e84e5f92a1f01a41326 data/experimentalmodid/recipe/fancy_item.json

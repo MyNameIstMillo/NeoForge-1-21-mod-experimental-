@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "templatemodid:fancy_block"
+        "recipe": "experimentalmodid:fancy_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "templatemodid:fancy_block"
+      "experimentalmodid:fancy_block"
     ]
   }
 }

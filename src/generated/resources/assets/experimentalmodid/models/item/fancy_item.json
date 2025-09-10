@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "templatemodid:item/fancy_item"
+    "layer0": "experimentalmodid:item/fancy_item"
   }
 }

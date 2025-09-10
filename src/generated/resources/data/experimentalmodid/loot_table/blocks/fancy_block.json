@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "templatemodid:fancy_block"
+          "name": "experimentalmodid:fancy_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "templatemodid:blocks/fancy_block"
+  "random_sequence": "experimentalmodid:blocks/fancy_block"
 }
