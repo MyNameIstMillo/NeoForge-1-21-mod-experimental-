@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
@@ -57,8 +60,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                 if(!(wand.getItem() instanceof WandItem wandItem)) return;
 
                 if(key.is(ModTags.Items.KEY_ITEM)) {
-                    LOGGER.info("onContentsChanged -> key is in slot -> {}", slot);
-                    LOGGER.info("onContentsChanged -> wand capacity -? {}", wandItem.getCapacity(wand));
 
                     switch (slot){
                         case 28 -> {
@@ -78,31 +79,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                     inventory.setStackInSlot(slot, ItemStack.EMPTY);
                 }
             }
-            /*
-                switch (slot){
-                    case 28 -> {
-                        if(!wandItem.areThereItemsInWand(wand, level)){
-                            LOGGER.info("slot 28 update -> funkcja  -> Move Items Into Wand !");
-                            MoveItemsIntoWand();
-                        } else {
-                            playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
-                            LOGGER.info("slot 28 download -> nie funkcja");
-                        }
-                    }
-                    case 29 -> {
-                        if(wandItem.areThereItemsInWand(wand, level)) {
-                            LOGGER.info("slot 29 download -> funkcja  -> Move Items Into Block !");
-                            MoveItemsIntoBlock(wandItem, wand);
-                            playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
-                        } else {
-                            playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
-                            LOGGER.info("slot 29 download -> nie funkcja");
-                        }
-
-                    }
-                }
-
-             */
 
 
         }
@@ -127,6 +103,10 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
     private void sendSpellsToWand(ItemStack wand){
         if(!(wand.getItem() instanceof WandItem wandItem)) return;
         int capacity = wandItem.getCapacity(wand);
+        if(wandItem.areThereSpellsInWand(wand, level)){
+            playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
+            return;
+        }
 
         NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, ItemStack.EMPTY);
 
@@ -137,6 +117,10 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         }
         if(SpellsToSend.stream().anyMatch(stack -> !stack.isEmpty())){
             wandItem.saveSpells(wand, SpellsToSend, this.level);
+            playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
+        }
+        else{
+            playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
         }
 
     }
@@ -160,9 +144,21 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             }
             wandItem.clearStoredSpells(wand);
         }
+        playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
 
     }
 
+    public enum FeedbackType{
+        SUCCESS,
+        FAIL
+    }
+
+    public void playFeedbackSound(Level level, BlockPos pos, FeedbackType type){
+        switch (type){
+            case SUCCESS -> level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0f, 2.0f);
+            case FAIL -> level.playSound(null, pos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.2f, 0.7f);
+        }
+    }
 
 
 
