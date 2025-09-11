@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.ModItems;
-import net.mynameistmillo.experimentalmod.tags.ModTags;
+import net.mynameistmillo.experimentalmod.data.ModTags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 

@@ -6,6 +6,7 @@ import net.mynameistmillo.experimentalmod.block.entity.renderer.WandEditorEntity
 import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.screen.ModMenuTypes;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorScreen;
+import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.tabs.ModCreativeModeTabs;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -51,6 +52,8 @@ public class ExperimentalMod {
         ModBlockEntities.register(modEventBus);
 
         ModMenuTypes.register(modEventBus);
+
+        ModDataComponents.DATA_COMPONENTS.register(modEventBus);
 
 
         // Register the item to a creative tab

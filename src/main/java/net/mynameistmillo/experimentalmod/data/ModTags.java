@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.tags;
+package net.mynameistmillo.experimentalmod.data;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;

@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.block.entity.custom.WandEditorEntity;
 import net.mynameistmillo.experimentalmod.screen.ModMenuTypes;
-import net.mynameistmillo.experimentalmod.tags.ModTags;
+import net.mynameistmillo.experimentalmod.data.ModTags;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class WandEditorMenu extends AbstractContainerMenu {

@@ -22,7 +22,8 @@ public class ModItems {
                     .durability(128)
                     .rarity(Rarity.UNCOMMON)
                     .setNoRepair()
-                    .fireResistant()));
+                    .fireResistant()
+                    , 1));
 
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1)));
