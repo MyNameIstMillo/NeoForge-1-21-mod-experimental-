@@ -139,8 +139,9 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                         worldPosition.getX()+0.5,
                         worldPosition.getY()+1.0,
                         worldPosition.getZ()+0.5,
-                        storedSpells.get(i).copy());
+                        itemInBlock);
                 level.addFreshEntity(entity);
+                inventory.setStackInSlot(i, storedSpells.get(i).copy());
             }
             wandItem.clearStoredSpells(wand);
         }

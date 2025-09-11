@@ -8,10 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 
@@ -41,14 +38,20 @@ public class WandItem extends Item {
 
         for (int i = 0; i < capacity; i++) {
             ItemStack spell = spellList.get(i);
+            CompoundTag spellTag = new CompoundTag();
+
             if (!spell.isEmpty()) {
-                CompoundTag spellTag = new CompoundTag();
                 spell.save(level.registryAccess(), spellTag);
                 spellTag.putString("id", BuiltInRegistries.ITEM.getKey(spell.getItem()).toString());
                 spellTag.putByte("Count", (byte) spell.getCount());
-                spellTag.putInt("Slot", i);
-                spellsListTag.add(spellTag);
             }
+            else {
+                spellTag.putString("id", "minecraft:air");
+                spellTag.putByte("Count", (byte) 0);
+
+            }
+            spellTag.putInt("Slot", i);
+            spellsListTag.add(spellTag);
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Spells", spellsListTag);
@@ -69,7 +72,11 @@ public class WandItem extends Item {
                 int slot = spellTag.getInt("Slot");
                 ItemStack spell = ItemStack.parse(level.registryAccess(), spellTag).orElse(ItemStack.EMPTY);
 
-                if (!spell.isEmpty() && slot >= 0 && slot < list.size()) {
+                if(spell.isEmpty() && (spell.getItem() == Items.AIR)){
+                    spell = ItemStack.EMPTY;
+                }
+
+                if(slot >= 0 && slot < list.size()){
                     list.set(slot, spell);
                 }
             }
@@ -99,22 +106,26 @@ public class WandItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack wand, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Level level = context.level();
-        if (!areThereSpellsInWand(stack, level)) {
-            tooltip.add(Component.literal("There are no Spells.").withStyle(ChatFormatting.GRAY));
-            return;
-        } else if (Screen.hasShiftDown()) {
+        int capacity = getCapacity(wand);
 
-            NonNullList<ItemStack> spells = getSavedSpells(stack, level);
+        if (Screen.hasShiftDown()){
+            NonNullList<ItemStack> spells = getSavedSpells(wand, level);
             tooltip.add(Component.literal("Spells:").withStyle(ChatFormatting.GRAY));
-            int i = 1;
-            for (ItemStack spell : spells) {
-                if (!spell.isEmpty()) {
-                    tooltip.add(Component.literal(i + ": " + spell.getHoverName().getString()).withStyle(ChatFormatting.GRAY));
+
+
+            for(int i=0; i<capacity; i++){
+                if (!spells.get(i).isEmpty()) {
+                    tooltip.add(Component.literal(i+1 + ": " + spells.get(i).getHoverName().getString()).withStyle(ChatFormatting.GRAY));
                 }
+                else{
+                    tooltip.add(Component.literal(i+1 + ": - - - - - ").withStyle(ChatFormatting.DARK_GRAY));
+                }
+
             }
-        } else {
+        }
+        else {
             tooltip.add(Component.literal("Press CTRL to view Spells.").withStyle(ChatFormatting.GRAY));
         }
     }
