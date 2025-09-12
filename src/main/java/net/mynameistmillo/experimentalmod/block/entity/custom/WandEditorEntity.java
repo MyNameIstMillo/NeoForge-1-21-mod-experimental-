@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -108,15 +109,19 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
-        NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, ItemStack.EMPTY);
+        NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
 
         for(int i=0; i<capacity; i++){
             ItemStack stack = inventory.getStackInSlot(i);
+            if(stack.is(Items.AIR)) continue;
+
             SpellsToSend.set(i, stack);
             inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
-        if(SpellsToSend.stream().anyMatch(stack -> !stack.isEmpty())){
+
+        if(SpellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
             wandItem.saveSpells(wand, SpellsToSend, this.level);
+            //LOGGER.info("sendSpellsToWand -> list to send -> {}", SpellsToSend);
             playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
         }
         else{
@@ -127,9 +132,16 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
 
     public void downloadSpellsFromWand(WandItem wandItem, ItemStack wand){
         int capacity = wandItem.getCapacity(wand);
+        if(!wandItem.areThereSpellsInWand(wand, level)){
+            playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
+            return;
+        }
         List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
+        //LOGGER.info("downloadSpellsFromWand -> list recived -> {}", storedSpells);
 
         for(int i=0; i<capacity; i++){
+            if(storedSpells.get(i).is(Items.DIRT)) continue;
+
             ItemStack itemInBlock = inventory.getStackInSlot(i);
             if(itemInBlock.isEmpty()){
                 inventory.setStackInSlot(i, storedSpells.get(i).copy());
@@ -143,7 +155,8 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                 level.addFreshEntity(entity);
                 inventory.setStackInSlot(i, storedSpells.get(i).copy());
             }
-            wandItem.clearStoredSpells(wand);
+            NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
+            wandItem.saveSpells(wand, SpellsToSend, level);
         }
         playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
 

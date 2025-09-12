@@ -23,7 +23,7 @@ public class ModItems {
                     .rarity(Rarity.UNCOMMON)
                     .setNoRepair()
                     .fireResistant()
-                    , 3));
+                    , 1));
 
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1)));

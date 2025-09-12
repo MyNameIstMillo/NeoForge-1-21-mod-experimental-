@@ -44,14 +44,14 @@ public class WandItem extends Item {
             ItemStack spell = spellList.get(i);
             CompoundTag spellTag = new CompoundTag();
 
-            if (!spell.isEmpty()) {
+            if (!spell.is(Items.DIRT)) {
                 spell.save(level.registryAccess(), spellTag);
                 spellTag.putString("id", BuiltInRegistries.ITEM.getKey(spell.getItem()).toString());
                 spellTag.putByte("Count", (byte) spell.getCount());
             }
             else {
-                spellTag.putString("id", "minecraft:air");
-                spellTag.putByte("Count", (byte) 0);
+                spellTag.putString("id", "minecraft:dirt");
+                spellTag.putByte("Count", (byte) 1);
 
             }
             spellTag.putInt("Slot", i);
@@ -61,11 +61,12 @@ public class WandItem extends Item {
         rootTag.put("Spells", spellsListTag);
 
         wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
+        //LOGGER.info("saveSpells -> rootTag -> {}", rootTag);
     }
 
     public NonNullList<ItemStack> getSavedSpells(ItemStack wand, Level level) {
         int capacity = getCapacity(wand);
-        NonNullList<ItemStack> list = NonNullList.withSize(capacity, ItemStack.EMPTY);
+        NonNullList<ItemStack> list = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
         CompoundTag wandSpellsTag = wand.get(ModDataComponents.WAND_SPELLS.get());
 
         if (wandSpellsTag != null && wandSpellsTag.contains("Spells", ListTag.TAG_LIST)) {
@@ -74,17 +75,14 @@ public class WandItem extends Item {
             for (int i = 0; i < capacity; i++) {
                 CompoundTag spellTag = listTag.getCompound(i);
                 int slot = spellTag.getInt("Slot");
-                ItemStack spell = ItemStack.parse(level.registryAccess(), spellTag).orElse(ItemStack.EMPTY);
-
-                if(spell.isEmpty() && (spell.getItem() == Items.AIR)){
-                    spell = ItemStack.EMPTY;
-                }
+                ItemStack spell = ItemStack.parse(level.registryAccess(), spellTag).orElse(new ItemStack(Items.DIRT));
 
                 if(slot >= 0 && slot < list.size()){
                     list.set(slot, spell);
                 }
             }
         }
+        //LOGGER.info("getSavedSpells -> list -> {}", list);
         return list;
     }
 
@@ -96,17 +94,11 @@ public class WandItem extends Item {
 
         for (ItemStack stack : contents) {
 
-            if (!stack.isEmpty()) {
+            if (!stack.is(Items.DIRT)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public void clearStoredSpells(ItemStack wand) {
-        CompoundTag tag = new CompoundTag();
-        tag.put("Spells", new ListTag());
-        wand.set(ModDataComponents.WAND_SPELLS.get(), tag);
     }
 
     @Override
@@ -116,11 +108,11 @@ public class WandItem extends Item {
 
         if (Screen.hasShiftDown()){
             NonNullList<ItemStack> spells = getSavedSpells(wand, level);
-            tooltip.add(Component.literal("Spells:").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
 
 
             for(int i=0; i<capacity; i++){
-                if (!spells.get(i).isEmpty()) {
+                if (!spells.get(i).is(Items.DIRT)) {
                     tooltip.add(Component.literal(i+1 + ": " + spells.get(i).getHoverName().getString()).withStyle(ChatFormatting.GRAY));
                 }
                 else{
@@ -130,7 +122,7 @@ public class WandItem extends Item {
             }
         }
         else {
-            tooltip.add(Component.literal("Press CTRL to view Spells.").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.literal("Press SHIFT to view Spells.").withStyle(ChatFormatting.GRAY));
         }
     }
 
