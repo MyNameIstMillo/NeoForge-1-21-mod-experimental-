@@ -23,6 +23,8 @@ public class ModTags {
 
         public static final TagKey<Item> KEY_ITEM = createTag("key_item");
 
+        public static final TagKey<Item> SPELL_ITEM = createTag("spell_item");
+
         private static TagKey<Item> createTag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, name));
         }

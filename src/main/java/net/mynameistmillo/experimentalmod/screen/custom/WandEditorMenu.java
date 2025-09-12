@@ -37,7 +37,7 @@ public class WandEditorMenu extends AbstractContainerMenu {
                 this.addSlot(new SlotItemHandler(this.blockEntity.inventory, index, 8 + l * 18, 18 + k * 18) {
                     @Override
                     public boolean mayPlace(ItemStack stack) {
-                        return !stack.is(ModTags.Items.WAND_ITEM) && !stack.is(ModTags.Items.KEY_ITEM);
+                        return !stack.is(ModTags.Items.WAND_ITEM) && !stack.is(ModTags.Items.KEY_ITEM) && stack.is(ModTags.Items.SPELL_ITEM);
                     }
                 });
 

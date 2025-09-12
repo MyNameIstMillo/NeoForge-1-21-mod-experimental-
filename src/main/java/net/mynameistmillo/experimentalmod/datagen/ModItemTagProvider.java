@@ -31,6 +31,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
         tag(ModTags.Items.KEY_ITEM)
                 .add(ModItems.KEY.get());
 
+        tag(ModTags.Items.SPELL_ITEM)
+                .add(ModItems.FIRE_BOLT.get());
+
 
     }
 }

@@ -8,10 +8,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import net.mynameistmillo.experimentalmod.spells.ISpell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +104,30 @@ public class WandItem extends Item {
             }
         }
         return false;
+    }
+
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        ItemStack wand = player.getItemInHand(usedHand);
+        int capacity = getCapacity(wand);
+        List<ItemStack> storedSpells = getSavedSpells(wand, level);
+
+        for(int i=0; i<capacity; i++){
+            ItemStack currentSpell = storedSpells.get(i);
+            if(level.isClientSide()){
+                return InteractionResultHolder.pass(wand);
+            }
+
+           if(currentSpell.getItem() instanceof ISpell spellCast && !currentSpell.is(Items.DIRT)){
+               Entity entity = spellCast.spawnSpell(level, player, wand, currentSpell);
+
+               return InteractionResultHolder.success(wand);
+           }
+
+        }
+
+        return InteractionResultHolder.pass(wand);
     }
 
     @Override

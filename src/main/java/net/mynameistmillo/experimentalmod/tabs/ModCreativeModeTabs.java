@@ -24,6 +24,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.FANCY_ITEM);
                         output.accept(ModItems.WAND);
                         output.accept(ModItems.KEY);
+                        output.accept(ModItems.FIRE_BOLT);
 
 
 
