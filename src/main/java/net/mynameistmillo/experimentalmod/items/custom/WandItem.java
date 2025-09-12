@@ -10,11 +10,15 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class WandItem extends Item {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     public WandItem(Properties properties, int capacity) {
         super(properties);
         this.deafultCapacity = capacity;
