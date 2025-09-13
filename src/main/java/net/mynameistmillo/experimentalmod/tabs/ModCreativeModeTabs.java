@@ -24,7 +24,18 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.FANCY_ITEM);
                         output.accept(ModItems.WAND);
                         output.accept(ModItems.KEY);
+
+
+
+                    }).build());
+
+    public static final Supplier<CreativeModeTab> MOD_SPELLS = CREATIVE_MODE_TAB.register("mod_spells_tab",
+            ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModItems.FIRE_BOLT.get()))
+                    .withTabsBefore(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "mod_items_tab"))
+                    .title(Component.translatable("creativetab.experimentalmodid.mod_spells_tab"))
+                    .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.FIRE_BOLT);
+                        output.accept(ModItems.SNOW_BOLT);
 
 
 
@@ -32,7 +43,7 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> MOD_BLOCKS = CREATIVE_MODE_TAB.register("mod_blocks",
             ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModBlocks.FANCY_BLOCK.get()))
-                    .withTabsBefore(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "mod_items_tab"))
+                    .withTabsBefore(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "mod_spells_tab"))
                     .title(Component.translatable("creativetab.experimentalmodid.mod_blocks_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModBlocks.FANCY_BLOCK);

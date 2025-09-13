@@ -66,6 +66,7 @@ public class WandItem extends Item {
         rootTag.put("Spells", spellsListTag);
 
         wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
+        setCurrentIndex(wand, 0);
         //LOGGER.info("saveSpells -> rootTag -> {}", rootTag);
     }
 
@@ -106,26 +107,60 @@ public class WandItem extends Item {
         return false;
     }
 
+    public int getCurrentIndex(ItemStack wand, int capacity){
+        Integer index = wand.get(ModDataComponents.WAND_INDEX.get());
+        if(index == null){
+            index = 0;
+            wand.set(ModDataComponents.WAND_INDEX.get(), index);
+        }
+        return Math.floorMod(index, capacity);
+    }
+
+    public void setCurrentIndex(ItemStack wand, int index){
+        wand.set(ModDataComponents.WAND_INDEX.get(), index);
+    }
+
+
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack wand = player.getItemInHand(usedHand);
         int capacity = getCapacity(wand);
+        int index = getCurrentIndex(wand, capacity);
         List<ItemStack> storedSpells = getSavedSpells(wand, level);
 
-        for(int i=0; i<capacity; i++){
-            ItemStack currentSpell = storedSpells.get(i);
-            if(level.isClientSide()){
-                return InteractionResultHolder.pass(wand);
-            }
 
-           if(currentSpell.getItem() instanceof ISpell spellCast && !currentSpell.is(Items.DIRT)){
-               Entity entity = spellCast.spawnSpell(level, player, wand, currentSpell);
 
-               return InteractionResultHolder.success(wand);
-           }
-
+        if(level.isClientSide()){
+            return InteractionResultHolder.pass(wand);
         }
+
+        int checked=0;
+        ItemStack currentSpell = ItemStack.EMPTY;
+        while(checked<capacity){
+            currentSpell = storedSpells.get(index);
+            if(!currentSpell.is(Items.DIRT)){
+                break;
+            }
+            index = (index+1)%capacity;
+        }
+
+        if(currentSpell.getItem() instanceof ISpell spellCast){
+
+            Entity entity = spellCast.spawnSpell(level, player, wand,currentSpell);
+
+
+
+
+
+            index = (index+1)%capacity;
+            setCurrentIndex(wand, index);
+
+           return InteractionResultHolder.success(wand);
+        }
+
+
+
 
         return InteractionResultHolder.pass(wand);
     }

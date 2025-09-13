@@ -10,4 +10,6 @@ public interface ISpell {
 
     Entity spawnSpell(Level level, Player caster, ItemStack wandStack, ItemStack spell);
 
+
+
 }

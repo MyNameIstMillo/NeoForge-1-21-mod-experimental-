@@ -27,4 +27,11 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
                             .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> WAND_INDEX =
+            DATA_COMPONENTS.register("wand_index",
+                    ()-> new DataComponentType.Builder<Integer>()
+                            .persistent(Codec.INT)
+                            .networkSynchronized(ByteBufCodecs.INT)
+                            .build());
+
 }
