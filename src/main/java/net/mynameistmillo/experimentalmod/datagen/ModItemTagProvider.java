@@ -33,6 +33,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         tag(ModTags.Items.SPELL_ITEM)
                 .add(ModItems.SNOW_BOLT.get())
+                .add(ModItems.SMAL_EXPLOSION.get())
+                .add(ModItems.BOLT_TRIGGER.get())
                 .add(ModItems.FIRE_BOLT.get());
 
 

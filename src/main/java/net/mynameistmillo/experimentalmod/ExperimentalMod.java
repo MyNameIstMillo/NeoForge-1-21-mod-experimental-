@@ -1,8 +1,12 @@
 package net.mynameistmillo.experimentalmod;
 
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.block.entity.renderer.WandEditorEntityRenderer;
+import net.mynameistmillo.experimentalmod.entity.ModEntities;
+import net.mynameistmillo.experimentalmod.entity.client.BasicProjectileRenderer;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.screen.ModMenuTypes;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorScreen;
@@ -53,6 +57,8 @@ public class ExperimentalMod {
 
         ModMenuTypes.register(modEventBus);
 
+        ModEntities.register(modEventBus);
+
         ModDataComponents.DATA_COMPONENTS.register(modEventBus);
 
 
@@ -83,6 +89,7 @@ public class ExperimentalMod {
 
         @SubscribeEvent
         static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(ModEntities.BASIC_PROJECTILE.get(), BasicProjectileRenderer::new);
 
         }
         @SubscribeEvent

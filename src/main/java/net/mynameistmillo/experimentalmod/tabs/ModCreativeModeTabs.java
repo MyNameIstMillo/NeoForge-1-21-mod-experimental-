@@ -36,6 +36,8 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.FIRE_BOLT);
                         output.accept(ModItems.SNOW_BOLT);
+                        output.accept(ModItems.SMAL_EXPLOSION);
+                        output.accept(ModItems.BOLT_TRIGGER);
 
 
 

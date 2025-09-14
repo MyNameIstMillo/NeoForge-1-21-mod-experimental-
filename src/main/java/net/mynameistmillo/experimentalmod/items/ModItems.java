@@ -6,7 +6,9 @@ import net.minecraft.world.item.Rarity;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
+import net.mynameistmillo.experimentalmod.spells.custom.boltTriger;
 import net.mynameistmillo.experimentalmod.spells.custom.fireBolt;
+import net.mynameistmillo.experimentalmod.spells.custom.smalExplosion;
 import net.mynameistmillo.experimentalmod.spells.custom.snowBolt;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -35,6 +37,12 @@ public class ModItems {
 
     public static final DeferredItem<Item> SNOW_BOLT = ITEMS.register("snow_bolt",
             ()-> new snowBolt(new Item.Properties()));
+
+    public static final DeferredItem<Item> SMAL_EXPLOSION = ITEMS.register("smal_explosion",
+            ()-> new smalExplosion(new Item.Properties()));
+
+    public static final DeferredItem<Item> BOLT_TRIGGER = ITEMS.register("bolt_trigger",
+            ()-> new boltTriger(new Item.Properties()));
 
 
 

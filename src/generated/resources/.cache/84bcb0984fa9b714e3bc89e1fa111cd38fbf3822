@@ -1,6 +1,8 @@
-// 1.21	2025-09-13T12:38:32.6333728	Item Models: experimentalmodid
+// 1.21	2025-09-13T20:02:13.8785006	Item Models: experimentalmodid
+0e1f49dd84d8034f87eb363318984b3a5b503a49 assets/experimentalmodid/models/item/bolt_trigger.json
 63ba9fa2d3f6ccf8b58cdc09d3446e3559ba8625 assets/experimentalmodid/models/item/fancy_item.json
 c6cbbd3eb8e1c33dff189247189bbf4e76205d91 assets/experimentalmodid/models/item/fire_bolt.json
 1fff2476bfb2af7ff9271cfb9dc4b2e20a6d17ce assets/experimentalmodid/models/item/key.json
+bb649d094a7ed9447c8be4f37709a8460573c04b assets/experimentalmodid/models/item/smal_explosion.json
 e7117b97c87f0b31966294846f719be38e124b72 assets/experimentalmodid/models/item/snow_bolt.json
 c8c66315be398f807ca40fc7f641552e111a3133 assets/experimentalmodid/models/item/wand.json

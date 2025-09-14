@@ -16,10 +16,13 @@ zmiany:  (klik -> shift + f6)
     creative mod tabs
     nazwa folderu w assets
 
+
     warto też usunąć generated żeby jeszcze raz generowało pliki
     experimentalmodid modblockentities
     ModMenuTypes
     WandEditorScreen
+    ModEntities
+    ClientModEvents
 
 
 2. w klasie main -> Mod_ID na odpowiednie

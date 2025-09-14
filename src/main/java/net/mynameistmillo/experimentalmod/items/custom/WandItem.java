@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
@@ -107,7 +108,8 @@ public class WandItem extends Item {
         return false;
     }
 
-    public int getCurrentIndex(ItemStack wand, int capacity){
+    public int getCurrentIndex(ItemStack wand){
+        Integer capacity = wand.get(ModDataComponents.WAND_CAPACITY.get());
         Integer index = wand.get(ModDataComponents.WAND_INDEX.get());
         if(index == null){
             index = 0;
@@ -126,7 +128,7 @@ public class WandItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack wand = player.getItemInHand(usedHand);
         int capacity = getCapacity(wand);
-        int index = getCurrentIndex(wand, capacity);
+        int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = getSavedSpells(wand, level);
 
 
@@ -147,11 +149,8 @@ public class WandItem extends Item {
 
         if(currentSpell.getItem() instanceof ISpell spellCast){
 
-            Entity entity = spellCast.spawnSpell(level, player, wand,currentSpell);
-
-
-
-
+            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, wand, storedSpells);
+            Explosion explosion = spellCast.spawnExplosion(level, player.getOnPos(), player, wand, currentSpell);
 
             index = (index+1)%capacity;
             setCurrentIndex(wand, index);
