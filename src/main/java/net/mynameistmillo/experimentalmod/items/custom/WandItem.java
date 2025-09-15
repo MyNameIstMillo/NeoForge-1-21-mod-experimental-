@@ -149,8 +149,8 @@ public class WandItem extends Item {
 
         if(currentSpell.getItem() instanceof ISpell spellCast){
 
-            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, wand, storedSpells);
-            Explosion explosion = spellCast.spawnExplosion(level, player.getOnPos(), player, wand, currentSpell);
+            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, wand);
+            Explosion explosion = spellCast.spawnExplosion(level, player.getOnPos(), player, wand);
 
             index = (index+1)%capacity;
             setCurrentIndex(wand, index);

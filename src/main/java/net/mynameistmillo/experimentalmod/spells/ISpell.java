@@ -14,10 +14,20 @@ import java.util.List;
 
 public interface ISpell {
 
-    Entity spawnSpell(Level level, BlockPos pos, Player caster, ItemStack wandStack, List<ItemStack> spellList);
+    Entity spawnSpell(Level level,
+                      BlockPos pos,
+                      Player caster,
+                      ItemStack wandStack);
 
-    Explosion spawnExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack, ItemStack spell);
+    Explosion spawnExplosion(Level level,
+                             BlockPos pos,
+                             Player caster,
+                             ItemStack wandStack);
 
-    void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack, List<ItemStack> spellList);
+    void onHit(Level level,
+               @Nullable Entity hitEntity,
+               @Nullable BlockPos hitBlock,
+               Player caster,
+               ItemStack wandStack);
 
 }

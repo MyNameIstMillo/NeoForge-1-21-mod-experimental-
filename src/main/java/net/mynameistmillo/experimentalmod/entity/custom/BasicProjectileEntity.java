@@ -1,20 +1,28 @@
 package net.mynameistmillo.experimentalmod.entity.custom;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
+import net.mynameistmillo.experimentalmod.spells.ISpell;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
 
@@ -27,6 +35,10 @@ public class BasicProjectileEntity extends Projectile {
 
     private float damage = 0.0f;
     private float lifeTime = 60;
+
+    private ItemStack spellStack = ItemStack.EMPTY;
+    private ItemStack wandStack = ItemStack.EMPTY;
+    private UUID casterUUID = null;
 
     
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
@@ -60,6 +72,23 @@ public class BasicProjectileEntity extends Projectile {
         this.lifeTime = lifeTime;
     }
 
+    public void setSpellStack(ItemStack stack){
+        this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
+    public ItemStack getSpellStack(){
+        return this.spellStack; }
+
+    public void setWandStack(ItemStack stack){
+        this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
+    public ItemStack getWandStack()
+    { return this.wandStack; }
+
+    public void setCasterUUID(UUID id){
+        this.casterUUID = id; }
+    public UUID getCasterUUID(){
+        return this.casterUUID; }
+
+
+                //spellTag.putString("id", BuiltInRegistries.ITEM.getKey(spell.getItem()).toString());
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
@@ -70,6 +99,21 @@ public class BasicProjectileEntity extends Projectile {
         nbt.putDouble("AccelY", this.acceleration.y);
         nbt.putDouble("AccelZ", this.acceleration.z);
         nbt.putDouble("lifeTime", this.lifeTime);
+
+        if(this.spellStack.isEmpty()) {
+            CompoundTag spellTag = new CompoundTag();
+            this.spellStack.save(level().registryAccess(), spellTag);
+            nbt.put("SpellStack", spellTag);
+        }
+        if(this.wandStack.isEmpty()) {
+            CompoundTag wandTag = new CompoundTag();
+            this.wandStack.save(level().registryAccess(), wandTag);
+            nbt.put("WandStack", wandTag);
+        }
+        if(this.casterUUID != null) {
+            nbt.putUUID("CasterUUID", this.casterUUID);
+        }
+
     }
 
     @Override
@@ -80,6 +124,14 @@ public class BasicProjectileEntity extends Projectile {
         if (nbt.contains("ProjDamage")) this.damage = nbt.getFloat("ProjDamage");
         this.acceleration = new Vec3(nbt.getDouble("AccelX"), nbt.getDouble("AccelY"), nbt.getDouble("AccelZ"));
         if (nbt.contains("lifeTime")) this.lifeTime = nbt.getFloat("lifeTime");
+
+        if(nbt.contains("SpellStack", Tag.TAG_COMPOUND)){
+            this.spellStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("SpellStack"));
+        } else this.spellStack = ItemStack.EMPTY;
+
+        if(nbt.hasUUID("CasterUUID")){
+            this.casterUUID = nbt.getUUID("CasterUUID");
+        }
     }
 
     @Override
@@ -143,11 +195,12 @@ public class BasicProjectileEntity extends Projectile {
             }
 
             if (blockHit != null && blockDist <= entityDist) {
-                this.onHitBlock(blockHit);
+                BlockPos pos = ((BlockHitResult) blockHit).getBlockPos();
+                this.handleSpellHit(null, pos);
                 if (!this.level().isClientSide()) this.discard();
                 return;
             } else if (entityHit != null) {
-                this.onHitEntity(entityHit);
+                this.handleSpellHit(entityHit.getEntity(), null);
                 if (!this.level().isClientSide()) this.discard();
                 return;
             }
@@ -163,25 +216,41 @@ public class BasicProjectileEntity extends Projectile {
     }
 
 
+    private void handleSpellHit(@Nullable Entity hitEntity, @Nullable BlockPos hitBlock){
+        if(level().isClientSide()) return;
+
+        if(!this.spellStack.isEmpty()){
+            Item item = this.spellStack.getItem();
+            if(item instanceof ISpell){
+
+                Player caster = null;
+                if(this.casterUUID != null){
+                    Entity e = ((ServerLevel)this.level()).getEntity(this.casterUUID);
+                    if(e instanceof Player p) caster =p;
+                }
+                if(caster == null && this.getOwner() instanceof Player p) caster = p;
+
+                ISpell spellLogic = (ISpell) item;
+
+                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, this.wandStack);
+
+
+            }
+        }
+    }
 
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
-    }
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
     @Override
-    protected void onHit(HitResult result) {
-    }
+    protected void onHit(HitResult result) {}
 
-    protected void onHitBlock(HitResult result) {
-    }
+    protected void onHitBlock(HitResult result) {}
 
-    protected void onHitEntity(Entity entity){
-    }
+    protected void onHitEntity(Entity entity){}
 
-    protected void onExpire(){
-    }
+    protected void onExpire(){}
 
 
     @Override

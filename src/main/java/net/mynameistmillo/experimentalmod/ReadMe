@@ -33,3 +33,5 @@ zmiany:  (klik -> shift + f6)
     minecraft version
     ... version
 
+4. Logger
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);

@@ -20,7 +20,7 @@ public class fireBolt extends Item implements ISpell {
     }
 
     @Override
-    public Entity spawnSpell(Level level, BlockPos pos, Player caster, ItemStack wandStack, List<ItemStack> spellList) {
+    public Entity spawnSpell(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         if(level.isClientSide()) return null;
 
         Vec3 look = caster.getLookAngle();
@@ -38,12 +38,12 @@ public class fireBolt extends Item implements ISpell {
     }
 
     @Override
-    public Explosion spawnExplosion(Level level, BlockPos pos, Player player, ItemStack wandStack, ItemStack spell) {
+    public Explosion spawnExplosion(Level level, BlockPos pos, Player player, ItemStack wandStack) {
         return null;
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack, List<ItemStack> spellList) {
+    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
 
     }
 }

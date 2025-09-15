@@ -8,19 +8,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
+import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.spells.ISpell;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class boltTrigger extends Item implements ISpell {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     public boltTrigger(Properties properties) {
         super(properties);
     }
 
     @Override
-    public Entity spawnSpell(Level level, BlockPos pos, Player caster, ItemStack wandStack, List<ItemStack> spellList) {
+    public Entity spawnSpell(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         if(level.isClientSide()) return null;
 
         Vec3 look = caster.getLookAngle();
@@ -39,6 +45,11 @@ public class boltTrigger extends Item implements ISpell {
 
         projectile.setPos(x,y,z);
 
+        ItemStack spellStack = new ItemStack(ModItems.BOLT_TRIGGER.get());
+        projectile.setSpellStack(spellStack);
+        projectile.setWandStack(wandStack.copy());
+        projectile.setCasterUUID(caster.getUUID());
+
         level.addFreshEntity(projectile);
 
         return projectile;
@@ -46,13 +57,15 @@ public class boltTrigger extends Item implements ISpell {
 
 
     @Override
-    public Explosion spawnExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack, ItemStack spell) {
+    public Explosion spawnExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         return null;
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack, List<ItemStack> spellList) {
+    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
+        if(level.isClientSide()) return;
 
-        //tu chce kod wywołać <-
+        LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {}", hitBlock, hitEntity);
+
     }
 }
