@@ -30,4 +30,9 @@ public interface ISpell {
                Player caster,
                ItemStack wandStack);
 
+    void onExpire(Level level,
+                  BlockPos pos,
+                  Player caster,
+                  ItemStack wandStack);
+
 }

@@ -46,4 +46,9 @@ public class fireBolt extends Item implements ISpell {
     public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
 
     }
+
+    @Override
+    public void onExpire(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
+
+    }
 }

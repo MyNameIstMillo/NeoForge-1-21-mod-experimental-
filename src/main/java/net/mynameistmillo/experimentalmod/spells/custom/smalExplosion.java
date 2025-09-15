@@ -10,8 +10,6 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.spells.ISpell;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.List;
-
 public class smalExplosion extends Item implements ISpell {
     public smalExplosion(Properties properties) {
         super(properties);
@@ -43,6 +41,11 @@ public class smalExplosion extends Item implements ISpell {
 
     @Override
     public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
+
+    }
+
+    @Override
+    public void onExpire(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
 
     }
 

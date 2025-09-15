@@ -1,15 +1,12 @@
 package net.mynameistmillo.experimentalmod.entity.custom;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -18,22 +15,31 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.spells.ISpell;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
+    private float initWidth;
+    private float initHeight;
 
-    //acceleration should be in 0.0 -> no 0.2 -> big gravity
+    //acceleration should be in 0.0 -> no, 0.2 -> big gravity
     private Vec3 acceleration = Vec3.ZERO;
-    //gravity should bo in 0.0 -> no gravity 0.2 -> bigger gravity
-    private float gravity = 0.02f;
-    //drag should be in 0.~8 -> big drag close to 1 0.999 -> no drag
-    private float drag = 0.99f;
+    //gravity should bo in 0.0 -> no gravity, 0.2 -> bigger gravity
+    private float gravity = 0f;
+    //drag should be in 0.~8 -> big drag, close to 1 0.999 -> no drag
+    private float drag = 1f;
+    //energyLoss should be in 0 -> stop, 1 -> no Loss, 1.2 -> max?
+    private float energyLoss = 0.0f;
 
-    private float damage = 0.0f;
+    private float MIN_SPEED = 0.05f;
+
     private float lifeTime = 60;
 
     private ItemStack spellStack = ItemStack.EMPTY;
@@ -46,10 +52,16 @@ public class BasicProjectileEntity extends Projectile {
         this.noPhysics = false;
     }
 
-    public BasicProjectileEntity(Level level, LivingEntity shooter){
+    public BasicProjectileEntity(Level level, LivingEntity shooter, float width, float height){
         this(ModEntities.BASIC_PROJECTILE.get(), level);
-        this.setOwner(shooter);
-        this.setPos(shooter.getX(), shooter.getY(), shooter.getZ());
+        this.initWidth = width;
+        this.initHeight = height;
+        //this.refreshDimensions();
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        return EntityDimensions.scalable(this.initWidth, this.initHeight);
     }
 
     public void setAcceleration(Vec3 acceleration) {
@@ -64,8 +76,8 @@ public class BasicProjectileEntity extends Projectile {
         this.drag = drag;
     }
 
-    public void setDamage(float damage) {
-        this.damage = damage;
+    public void setEnergyLoss(float energyLoss) {
+        this.energyLoss = energyLoss;
     }
 
     public void setLifeTime(float lifeTime) {
@@ -88,13 +100,12 @@ public class BasicProjectileEntity extends Projectile {
         return this.casterUUID; }
 
 
-                //spellTag.putString("id", BuiltInRegistries.ITEM.getKey(spell.getItem()).toString());
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putFloat("ProjGravity", this.gravity);
         nbt.putFloat("ProjDrag", this.drag);
-        nbt.putFloat("ProjDamage", this.damage);
+        nbt.putFloat("EnergyLoss", this.energyLoss);
         nbt.putDouble("AccelX", this.acceleration.x);
         nbt.putDouble("AccelY", this.acceleration.y);
         nbt.putDouble("AccelZ", this.acceleration.z);
@@ -121,7 +132,7 @@ public class BasicProjectileEntity extends Projectile {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("ProjGravity")) this.gravity = nbt.getFloat("ProjGravity");
         if (nbt.contains("ProjDrag")) this.drag = nbt.getFloat("ProjDrag");
-        if (nbt.contains("ProjDamage")) this.damage = nbt.getFloat("ProjDamage");
+        if (nbt.contains("EnergyLoss")) this.energyLoss = nbt.getFloat("EnergyLoss");
         this.acceleration = new Vec3(nbt.getDouble("AccelX"), nbt.getDouble("AccelY"), nbt.getDouble("AccelZ"));
         if (nbt.contains("lifeTime")) this.lifeTime = nbt.getFloat("lifeTime");
 
@@ -141,8 +152,7 @@ public class BasicProjectileEntity extends Projectile {
         if(!this.level().isClientSide()){
             this.lifeTime--;
             if(this.lifeTime<=0){
-                this.onExpire();
-                this.discard();
+                this.handleOnExpire(this.blockPosition());
                 return;
             }
         }
@@ -164,7 +174,7 @@ public class BasicProjectileEntity extends Projectile {
         double distance = delta.length();
 
         // sub-stepping for very fast projectiles (prevents tunneling)
-        int steps = (int)Math.ceil(distance / 0.75); // podziel na kawałki max ~0.75 bloku
+        int steps = (int)Math.ceil(distance / 0.5); // podziel na kawałki max ~0.75 bloku
         steps = Math.max(1, Math.min(steps, 5)); // ogranicz max steps do 5 dla perfomansu
 
         Vec3 currentPos = start;
@@ -195,14 +205,28 @@ public class BasicProjectileEntity extends Projectile {
             }
 
             if (blockHit != null && blockDist <= entityDist) {
-                BlockPos pos = ((BlockHitResult) blockHit).getBlockPos();
-                this.handleSpellHit(null, pos);
-                if (!this.level().isClientSide()) this.discard();
+                BlockHitResult bhr = (BlockHitResult) blockHit;
+
+                BlockPos hit = bhr.getBlockPos();
+                Direction face = bhr.getDirection();
+
+                BlockPos beforeHit = hit.relative(face);
+                this.handleSpellHit(null, beforeHit);
+
+//                Vec3 motion = this.getDeltaMovement();
+//                motion = motion.scale(this.energyLoss);
+//                switch(face){
+//                    case EAST, WEST -> motion = new Vec3(-motion.x, motion.y, motion.z);
+//                    case UP, DOWN -> motion = new Vec3(motion.x, -motion.y, motion.z);
+//                    case NORTH, SOUTH -> motion = new Vec3(motion.x, motion.y, -motion.z);
+//                }
+//                this.setDeltaMovement(motion);
+//                this.setPos(blockHit.getLocation().add(motion.normalize().scale(0.01)));
+//                if(distance < MIN_SPEED) this.handleOnExpire(this.blockPosition());
+
                 return;
             } else if (entityHit != null) {
                 this.handleSpellHit(entityHit.getEntity(), null);
-                if (!this.level().isClientSide()) this.discard();
-                return;
             }
 
             // no hit in this substep -> move
@@ -218,7 +242,8 @@ public class BasicProjectileEntity extends Projectile {
 
     private void handleSpellHit(@Nullable Entity hitEntity, @Nullable BlockPos hitBlock){
         if(level().isClientSide()) return;
-
+        this.discard();
+        LOGGER.info("                             hit!");
         if(!this.spellStack.isEmpty()){
             Item item = this.spellStack.getItem();
             if(item instanceof ISpell){
@@ -239,19 +264,45 @@ public class BasicProjectileEntity extends Projectile {
         }
     }
 
+    private void handleOnExpire(BlockPos pos){
+        if(level().isClientSide()) return;
+        this.discard();
+
+        if(!this.spellStack.isEmpty()){
+            Item item = this.spellStack.getItem();
+            if(item instanceof ISpell){
+
+                Player caster = null;
+                if(this.casterUUID != null){
+                    Entity e = ((ServerLevel)this.level()).getEntity(this.casterUUID);
+                    if(e instanceof Player p) caster =p;
+                }
+                if(caster == null && this.getOwner() instanceof Player p) caster = p;
+
+                ISpell spellLogic = (ISpell) item;
+                spellLogic.onExpire(this.level(), pos, caster,this.wandStack);
+            }
+        }
+    }
+
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
     @Override
-    protected void onHit(HitResult result) {}
+    public boolean canCollideWith(Entity entity) {
+        return !(entity instanceof BasicProjectileEntity);
+    }
 
-    protected void onHitBlock(HitResult result) {}
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
 
-    protected void onHitEntity(Entity entity){}
-
-    protected void onExpire(){}
-
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
 
     @Override
     public boolean isNoGravity() {
