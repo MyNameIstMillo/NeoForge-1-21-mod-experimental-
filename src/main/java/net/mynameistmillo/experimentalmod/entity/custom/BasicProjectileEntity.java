@@ -5,10 +5,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -16,11 +18,13 @@ import net.mynameistmillo.experimentalmod.entity.ModEntities;
 
 public class BasicProjectileEntity extends Projectile {
 
+    //acceleration should be in 0.0 -> no 0.2 -> big gravity
     private Vec3 acceleration = Vec3.ZERO;
-    private float gravity = 0.1f;
-    //the more drag the less drag you have! yes 1 -> heavy 10 -> almost non
-    //wait drag should be in (1,0)?
+    //gravity should bo in 0.0 -> no gravity 0.2 -> bigger gravity
+    private float gravity = 0.02f;
+    //drag should be in 0.~8 -> big drag close to 1 0.999 -> no drag
     private float drag = 0.99f;
+
     private float damage = 0.0f;
     private float lifeTime = 60;
 
@@ -102,37 +106,61 @@ public class BasicProjectileEntity extends Projectile {
 
     }
 
-    private void moveDesc(){
+    private void moveDesc() {
         Vec3 start = this.position();
-        Vec3 end = start.add(this.getDeltaMovement());
+        Vec3 delta = this.getDeltaMovement();
+        double distance = delta.length();
 
-        HitResult blockHit = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE, this));
-        if(blockHit != null && blockHit.getType() == HitResult.Type.BLOCK){
-            this.onHitBlock(blockHit);
-            if(!this.level().isClientSide()) this.discard();
-            return;
+        // sub-stepping for very fast projectiles (prevents tunneling)
+        int steps = (int)Math.ceil(distance / 0.75); // podziel na kawałki max ~0.75 bloku
+        steps = Math.max(1, Math.min(steps, 5)); // ogranicz max steps do 5 dla perfomansu
+
+        Vec3 currentPos = start;
+        for (int s = 0; s < steps; s++) {
+            Vec3 stepDelta = delta.scale(1.0 / steps);
+            Vec3 end = currentPos.add(stepDelta);
+
+            // block raytrace
+            HitResult blockHit = this.level().clip(new ClipContext(currentPos, end,
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+
+            // entity raytrace: używamy AABB małego inflatu zależnego od rozmiaru
+            AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.3D);
+            EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
+
+            // wybierz najbliższe trafienie (jeśli oba istnieją)
+            double blockDist = Double.POSITIVE_INFINITY;
+            double entityDist = Double.POSITIVE_INFINITY;
+            if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
+                blockDist = blockHit.getLocation().distanceTo(currentPos);
+            } else {
+                blockHit = null;
+            }
+            if (entityHit != null) {
+                entityDist = entityHit.getLocation().distanceTo(currentPos);
+            } else {
+                entityHit = null;
+            }
+
+            if (blockHit != null && blockDist <= entityDist) {
+                this.onHitBlock(blockHit);
+                if (!this.level().isClientSide()) this.discard();
+                return;
+            } else if (entityHit != null) {
+                this.onHitEntity(entityHit);
+                if (!this.level().isClientSide()) this.discard();
+                return;
+            }
+
+            // no hit in this substep -> move
+            this.move(MoverType.SELF, stepDelta);
+            currentPos = this.position(); // zaktualizowana po move()
         }
-
-        EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end,
-                this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), (e)->{
-            return !e.isSpectator() && e.isAlive() && e != this.getOwner();
-        });
-
-        if(entityHit != null){
-            this.onHitEntity(entityHit);
-            if(!this.level().isClientSide()) this.discard();
-            return;
-        }
-
-        this.setPos(this.getX() + this.getDeltaMovement().x,
-                    this.getY() + this.getDeltaMovement().y,
-                    this.getZ() + this.getDeltaMovement().z);
-
-
-
     }
 
+    private boolean canHit(Entity e){
+        return !e.isSpectator() && e.isAlive() && e != this.getOwner();
+    }
 
 
 
