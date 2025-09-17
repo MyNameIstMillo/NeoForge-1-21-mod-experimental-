@@ -46,6 +46,9 @@ public class BasicProjectileEntity extends Projectile {
     private ItemStack wandStack = ItemStack.EMPTY;
     private UUID casterUUID = null;
 
+    private static final double MAX_STEP = 0.5;
+    private static final int MAX_STEPS = 8;
+
     
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
         super(entityType, level);
@@ -64,40 +67,21 @@ public class BasicProjectileEntity extends Projectile {
         return EntityDimensions.scalable(this.initWidth, this.initHeight);
     }
 
-    public void setAcceleration(Vec3 acceleration) {
-        this.acceleration = acceleration;
-    }
+    public void setAcceleration(Vec3 acceleration) { this.acceleration = acceleration;}
 
-    public void setGravity(float gravity) {
-        this.gravity = gravity;
-    }
+    public void setGravity(float gravity) { this.gravity = gravity;}
 
-    public void setDrag(float drag) {
-        this.drag = drag;
-    }
+    public void setDrag(float drag) { this.drag = drag;}
 
-    public void setEnergyLoss(float energyLoss) {
-        this.energyLoss = energyLoss;
-    }
+    public void setEnergyLoss(float energyLoss) { this.energyLoss = energyLoss;}
 
-    public void setLifeTime(float lifeTime) {
-        this.lifeTime = lifeTime;
-    }
+    public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
 
-    public void setSpellStack(ItemStack stack){
-        this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
-    public ItemStack getSpellStack(){
-        return this.spellStack; }
+    public void setSpellStack(ItemStack stack){ this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
-    public void setWandStack(ItemStack stack){
-        this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
-    public ItemStack getWandStack()
-    { return this.wandStack; }
+    public void setWandStack(ItemStack stack){ this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
 
-    public void setCasterUUID(UUID id){
-        this.casterUUID = id; }
-    public UUID getCasterUUID(){
-        return this.casterUUID; }
+    public void setCasterUUID(UUID id){ this.casterUUID = id; }
 
 
     @Override
@@ -174,25 +158,27 @@ public class BasicProjectileEntity extends Projectile {
         double distance = delta.length();
 
         // sub-stepping for very fast projectiles (prevents tunneling)
-        int steps = (int)Math.ceil(distance / 0.5); // podziel na kawałki max ~0.75 bloku
-        steps = Math.max(1, Math.min(steps, 5)); // ogranicz max steps do 5 dla perfomansu
+        int steps = (int)Math.ceil(distance / MAX_STEP); // podziel na kawałki max ~0.75 bloku
+        steps = Math.max(1, Math.min(steps, MAX_STEPS)); // ogranicz max steps do 5 dla perfomansu
 
         Vec3 currentPos = start;
+        Vec3 stepDelta = delta.scale(1.0 / steps);
+
         for (int s = 0; s < steps; s++) {
-            Vec3 stepDelta = delta.scale(1.0 / steps);
             Vec3 end = currentPos.add(stepDelta);
 
             // block raytrace
             HitResult blockHit = this.level().clip(new ClipContext(currentPos, end,
                     ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
-            // entity raytrace: używamy AABB małego inflatu zależnego od rozmiaru
+            // entity raytrace: używamy AABB małego inflate zależnego od rozmiaru
             AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.3D);
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
 
             // wybierz najbliższe trafienie (jeśli oba istnieją)
             double blockDist = Double.POSITIVE_INFINITY;
             double entityDist = Double.POSITIVE_INFINITY;
+
             if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
                 blockDist = blockHit.getLocation().distanceTo(currentPos);
             } else {
@@ -206,37 +192,38 @@ public class BasicProjectileEntity extends Projectile {
 
             if (blockHit != null && blockDist <= entityDist) {
                 BlockHitResult bhr = (BlockHitResult) blockHit;
+                Direction face = bhr.getDirection();
+                Vec3 hitVec = bhr.getLocation();
 
                 BlockPos hit = bhr.getBlockPos();
-                Direction face = bhr.getDirection();
-
                 BlockPos beforeHit = hit.relative(face);
+
+                Vec3 offset = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ()).scale(0.01);
+                Vec3 placePos = hitVec.subtract(this.getDeltaMovement().normalize().scale(0.01));
+                //this.setPos(placePos.x, placePos.y, placePos.z);
+
                 this.handleSpellHit(null, beforeHit);
 
-//                Vec3 motion = this.getDeltaMovement();
-//                motion = motion.scale(this.energyLoss);
-//                switch(face){
-//                    case EAST, WEST -> motion = new Vec3(-motion.x, motion.y, motion.z);
-//                    case UP, DOWN -> motion = new Vec3(motion.x, -motion.y, motion.z);
-//                    case NORTH, SOUTH -> motion = new Vec3(motion.x, motion.y, -motion.z);
-//                }
-//                this.setDeltaMovement(motion);
-//                this.setPos(blockHit.getLocation().add(motion.normalize().scale(0.01)));
-//                if(distance < MIN_SPEED) this.handleOnExpire(this.blockPosition());
-
                 return;
+
             } else if (entityHit != null) {
                 this.handleSpellHit(entityHit.getEntity(), null);
+                return;
+
             }
 
             // no hit in this substep -> move
             this.move(MoverType.SELF, stepDelta);
+            //this.setDeltaMovement(stepDelta);
             currentPos = this.position(); // zaktualizowana po move()
         }
     }
 
     private boolean canHit(Entity e){
-        return !e.isSpectator() && e.isAlive() && e != this.getOwner();
+        if(e == this) return false;
+        if(e.isSpectator() || !e.isAlive()) return false;
+        if(this.casterUUID != null && e.getUUID().equals(this.casterUUID)) return false;
+        return !(e instanceof BasicProjectileEntity);
     }
 
 

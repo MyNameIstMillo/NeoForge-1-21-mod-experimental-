@@ -29,14 +29,16 @@ public class boltTrigger extends Item implements ISpell {
 
         Vec3 look = caster.getLookAngle();
 
+        float speed = 0.5f;
+
         double x = caster.getX() + look.x * 1.2;
         double y = caster.getY() + 1.25 + look.y * 1.2;
         double z = caster.getZ() + look.z * 1.2;
 
         BasicProjectileEntity projectile = new BasicProjectileEntity(level, caster, 1.0f, 1.0f);
 
-        projectile.setDeltaMovement(look);
-        projectile.setGravity(0.015f);
+        projectile.setDeltaMovement(look.x * speed, look.y * speed, look.z * speed);
+        projectile.setGravity(0.03f);
         projectile.setDrag(1.0f);
         projectile.setEnergyLoss(0.0f);
 
