@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.spells.ISpell;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -40,12 +41,12 @@ public class smalExplosion extends Item implements ISpell {
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
+    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack) {
 
     }
 
     @Override
-    public void onExpire(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
+    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal,  ItemStack wandStack) {
 
     }
 

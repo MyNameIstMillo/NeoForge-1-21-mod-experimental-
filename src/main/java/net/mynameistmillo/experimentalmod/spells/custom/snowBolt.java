@@ -45,12 +45,12 @@ public class snowBolt extends Item implements ISpell {
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, ItemStack wandStack) {
+    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack) {
 
     }
 
     @Override
-    public void onExpire(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
+    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal,  ItemStack wandStack) {
 
     }
 }
