@@ -45,9 +45,9 @@ public class boltTrigger extends Item implements ISpell {
         float speed = 0.8f;
         float gravity = 0.03f;
         float drag = 1.0f;
-        float lifeTime = 200;
+        float lifeTime = 60;
 
-        BasicProjectileEntity projectile = new BasicProjectileEntity(level, caster, 1.0f, 1.0f);
+        BasicProjectileEntity projectile = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
         projectile.setDeltaMovement(look.x * speed, look.y * speed, look.z * speed);
         //projectile.setAcceleration(acceleration);
@@ -95,6 +95,16 @@ public class boltTrigger extends Item implements ISpell {
     @Override
     public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack) {
         LOGGER.info("expire!");
+        double x = pos.getX();
+        double y = pos.getY();
+        double z = pos.getZ();
+
+        level.explode(
+                null,
+                x, y, z,
+                0.7f,
+                false,
+                Level.ExplosionInteraction.TNT);
 
     }
 }

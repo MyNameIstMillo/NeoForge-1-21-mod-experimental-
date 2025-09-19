@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -27,8 +29,13 @@ import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
-    private float initWidth;
-    private float initHeight;
+    private float initWidth = 0.25f;
+    private float initHeight = 0.25f;
+
+    private static final EntityDataAccessor<Float> PROJ_WIDTH =
+            SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> PROJ_HEIGHT =
+            SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
 
     //gravity should bo in 0.0 -> no gravity, 0.2 -> bigger gravity
     private float gravity = 0f;
@@ -56,10 +63,10 @@ public class BasicProjectileEntity extends Projectile {
         this(ModEntities.BASIC_PROJECTILE.get(), level);
         this.initWidth = width;
         this.initHeight = height;
+        this.entityData.set(PROJ_WIDTH, width);
+        this.entityData.set(PROJ_HEIGHT, height);
+        this.refreshDimensions();
     }
-
-    @Override
-    public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }
 
     //public void setAcceleration(Vec3 acceleration) { this.acceleration = acceleration;}
 
@@ -326,7 +333,22 @@ public class BasicProjectileEntity extends Projectile {
 
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(PROJ_WIDTH, 0.25f);
+        builder.define(PROJ_HEIGHT, 0.25f);
+    }
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (key == PROJ_WIDTH || key == PROJ_HEIGHT) {
+            this.initWidth = this.entityData.get(PROJ_WIDTH);
+            this.initHeight = this.entityData.get(PROJ_HEIGHT);
+            this.refreshDimensions();
+        }
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }
 
     @Override
     public boolean canCollideWith(Entity entity) {
