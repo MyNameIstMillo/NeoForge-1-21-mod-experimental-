@@ -37,6 +37,7 @@ public class boltTrigger extends Item implements ISpell {
         this.baseStats.set(StatsKey.SPEED, 0.8f);
         this.baseStats.set(StatsKey.LIFETIME, 60);
         this.baseStats.set(StatsKey.DAMAGE, 1.0f);
+        this.baseStats.set(StatsKey.DISPLACEMENT, 0);
 
 
     }
@@ -54,8 +55,11 @@ public class boltTrigger extends Item implements ISpell {
         //connect spellItem to the projectile
         projectile.setSpellStack(new ItemStack(ModItems.BOLT_TRIGGER.get()));
         projectile.setWandStack(wandStack.copy());
+        projectile.setCasterUUID(caster.getUUID());
         //here you can decide final stats on the spells, afer this player can't change them
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
+        this.baseStats.set(StatsKey.DISPLACEMENT, -10f);
+        LOGGER.info("normal -> {}", normal);
 
         //apply stats
         this.baseStats.applyToProjectile(projectile, pos, normal, caster);

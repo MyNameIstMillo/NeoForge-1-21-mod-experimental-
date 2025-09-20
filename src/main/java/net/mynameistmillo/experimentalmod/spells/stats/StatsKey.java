@@ -5,7 +5,8 @@ public enum StatsKey {
     DRAG("drag", 1.0f),
     SPEED("speed", 1.0f),
     LIFETIME("lifetime", 60.0f),
-    DAMAGE("damage", 1.0f);
+    DAMAGE("damage", 1.0f),
+    DISPLACEMENT("displacement", 0);
     //przesunięcie?
     //akceleracja
     //kolor, ale to nie jest priorytetem

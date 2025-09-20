@@ -32,28 +32,33 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
 
     public void applyToProjectile(BasicProjectileEntity e,
                                   BlockPos pos,
-                                  Vec3 normal,
+                                  Vec3 look,
                                   Player caster){
-        double x; double y; double z;
-        if(caster == null){// not player so not player
-            x = pos.getX();
-            y = pos.getY();
-            z = pos.getZ();
-        }else{ // player so near player
-            x = caster.getX() + normal.x * 1.2;
-            y = caster.getY() + 1.25 + normal.y * 1.2;
-            z = caster.getZ() + normal.z * 1.2;
+        double shift = this.get(StatsKey.DISPLACEMENT);
+        Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
+                new Vec3(0,0,1) : look.normalize();
+        double baseOffset = 1.2;
+        double distance = baseOffset + shift;
+        Vec3 spawnPos;
+        if(caster != null){// if player so plater, yes
+            Vec3 eye = caster.getEyePosition(1.0f);
+            spawnPos = new Vec3(
+                    eye.x + lookNorn.x * distance,
+                    eye.y - 0.25 + lookNorn.y * distance,
+                    eye.z + lookNorn.z * distance);
+        }else{ // not player so not player
+            Vec3 center = Vec3.atCenterOf(pos);
+            spawnPos = center.add(lookNorn.scale(distance));
         }
         float speed = this.get(StatsKey.SPEED);
-        e.setDeltaMovement(normal.x * speed,
-                            normal.y * speed,
-                            normal.z * speed);
+        e.setDeltaMovement( lookNorn.x * speed,
+                            lookNorn.y * speed,
+                            lookNorn.z * speed);
 
         e.setGravity(this.get(StatsKey.GRAVITY));
         e.setDrag(this.get(StatsKey.DRAG));
         e.setLifeTime(this.get(StatsKey.LIFETIME));
-        e.setPos(x,y,z);
-        e.setCasterUUID(caster.getUUID());
+        e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
 
     }
 
