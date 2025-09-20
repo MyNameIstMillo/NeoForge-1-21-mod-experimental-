@@ -1,8 +1,5 @@
 {
   "values": [
-    "experimentalmodid:snow_bolt",
-    "experimentalmodid:smal_explosion",
-    "experimentalmodid:bolt_trigger",
-    "experimentalmodid:fire_bolt"
+    "experimentalmodid:bolt_trigger"
   ]
 }
