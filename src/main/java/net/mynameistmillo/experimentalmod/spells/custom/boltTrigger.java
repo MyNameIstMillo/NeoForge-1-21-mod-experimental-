@@ -58,8 +58,7 @@ public class boltTrigger extends Item implements ISpell {
         projectile.setCasterUUID(caster.getUUID());
         //here you can decide final stats on the spells, afer this player can't change them
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
-        this.baseStats.set(StatsKey.DISPLACEMENT, -10f);
-        LOGGER.info("normal -> {}", normal);
+        //LOGGER.info("normal -> {}", normal);
 
         //apply stats
         this.baseStats.applyToProjectile(projectile, pos, normal, caster);
@@ -79,18 +78,13 @@ public class boltTrigger extends Item implements ISpell {
         if(level.isClientSide() || hitBlock == null) return;
         LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
 
-        ItemStack held = caster.getMainHandItem();
+        if(hitEntity != null){
+            hitEntity.discard();
 
-        if(held.getItem() instanceof BlockItem blockItem){
-            if(level.isEmptyBlock(hitBlock)){
-                UseOnContext ctx = new UseOnContext(caster, InteractionHand.MAIN_HAND,
-                        new BlockHitResult(Vec3.atCenterOf(hitBlock), Direction.UP, hitBlock, false));
-                InteractionResult result = blockItem.useOn(ctx);
-                if (result.consumesAction()) {
-                    held.shrink(1);
-                }
-            }
         }
+
+
+
 
     }
 
@@ -104,6 +98,16 @@ public class boltTrigger extends Item implements ISpell {
     @Override
     public Explosion createExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         return null;
+    }
+
+    @Override
+    public boolean spawnNextOnHit() {
+        return false;
+    }
+
+    @Override
+    public boolean spawnNextOnExpire() {
+        return false;
     }
 
 }

@@ -1,0 +1,11 @@
+ItemStack held = caster.getMainHandItem();
+if(held.getItem() instanceof BlockItem blockItem){
+            if(level.isEmptyBlock(hitBlock)){
+                UseOnContext ctx = new UseOnContext(caster, InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(hitBlock), Direction.UP, hitBlock, false));
+                InteractionResult result = blockItem.useOn(ctx);
+                if (result.consumesAction()) {
+                    held.shrink(1);
+                }
+            }
+        }

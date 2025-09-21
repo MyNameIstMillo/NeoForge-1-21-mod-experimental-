@@ -39,4 +39,7 @@ public interface ISpell {
                               Player caster,
                               ItemStack wandStack);
 
+    boolean spawnNextOnHit();
+    boolean spawnNextOnExpire();
+
 }
