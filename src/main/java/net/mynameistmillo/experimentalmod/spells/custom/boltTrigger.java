@@ -75,13 +75,10 @@ public class boltTrigger extends Item implements ISpell {
                       Player caster,
                       Vec3 normal,
                       ItemStack wandStack) {
-        if(level.isClientSide() || hitBlock == null) return;
+        if(level.isClientSide()) return;
         LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
 
-        if(hitEntity != null){
-            hitEntity.discard();
 
-        }
 
 
 

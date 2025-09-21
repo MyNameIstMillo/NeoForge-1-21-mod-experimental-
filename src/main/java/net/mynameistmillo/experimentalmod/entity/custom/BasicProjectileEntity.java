@@ -159,43 +159,43 @@ public class BasicProjectileEntity extends Projectile {
         for (int s = 0; s < steps; s++) {
             Vec3 end = currentPos.add(stepDelta);
 
-            HitResult blockHit = this.level().clip(new ClipContext(currentPos, end,
-                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-
-            AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.01D);
+//            HitResult blockHit = this.level().clip(new ClipContext(currentPos, end,
+//                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.04D);
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
 
             double blockDist = Double.POSITIVE_INFINITY;
             double entityDist = Double.POSITIVE_INFINITY;
 
-            if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
-                blockDist = blockHit.getLocation().distanceTo(currentPos);
-                LOGGER.info("blockHit");
-            }
-            else { blockHit = null; }
-
+//            if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
+//                blockDist = blockHit.getLocation().distanceTo(currentPos);
+//                LOGGER.info("blockHit");
+//            }
+//            else { blockHit = null; }
             if (entityHit != null) {
-                entityDist = entityHit.getLocation().distanceTo(currentPos);
-            }
-            else { entityHit = null; }
-
-            if (blockHit != null && blockDist <= entityDist) {
-                BlockHitResult bhr = (BlockHitResult) blockHit;
-                this.onBlockHit(bhr);
-                return;
-
-            } else if (entityHit != null) {
+                //entityDist = entityHit.getLocation().distanceTo(currentPos);
+                LOGGER.info("entity?");
                 this.handleSpellHit(entityHit.getEntity(), null, null);
                 return;
-
+            }else {
+                entityHit = null;
             }
 
+//            if (blockHit != null && blockDist <= entityDist) {
+//                BlockHitResult bhr = (BlockHitResult) blockHit;
+//                this.onBlockHit(bhr);
+//                return;
+//
+//            } els
+
+
             this.move(MoverType.SELF, stepDelta);
-            //if(this.level().isClientSide()) LOGGER.info("stepDelta -> {} , deltamovmenyt -> {}", stepDelta, this.getDeltaMovement());
             currentPos = this.position();
 
-            if (checkBounceGuessAndHandle(this.getDeltaMovement(), this.prevDelta)) {
-                return;
+            if(entityHit == null) {
+                if (checkBounceGuessAndHandle(this.getDeltaMovement(), this.prevDelta)) {
+                    return;
+                }
             }
 
             this.prevDelta = this.getDeltaMovement();
@@ -213,6 +213,7 @@ public class BasicProjectileEntity extends Projectile {
     private static final double EPS = 1e-6;
     private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta) {
         if (this.tickCount <= 2) return false;
+
 
         boolean xHit = Math.abs(delta.x) < EPS && Math.abs(prevDelta.x) > EPS;
         boolean yHit = Math.abs(delta.y) < EPS && Math.abs(prevDelta.y) > EPS;
@@ -246,6 +247,7 @@ public class BasicProjectileEntity extends Projectile {
 
         BlockPos hitPos = pos.relative(faceGuess.getOpposite());
         BlockHitResult bhr = new BlockHitResult(hitVec, faceGuess, hitPos, false);
+        LOGGER.info("perhaps?");
         this.onBlockHit(bhr);
 
         return true;
