@@ -52,24 +52,18 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
 
         }
 
-        float entitySize = 0.25f;
-        float yOffsetLocal = 0.125f/size;
-        float zOffsetLocal = 0.125f/size;
-
         float half = 1.0f;
 
         //front
         poseStack.pushPose();
-        //poseStack.translate(0.0f, 0.0f, 0.2 / size);
-        //poseStack.translate(0.0f, 0.125f, 0.0f);
+        poseStack.translate(0.f, 0.0f, 0.5f);
         drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_FRONT)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();
 
         //side
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(90f));
-        //poseStack.translate(0.0f, 0.125f, 0.0f);
+        poseStack.mulPose(Axis.YP.rotationDegrees(-90f));
         drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_SIDE)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();
@@ -77,8 +71,7 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
         //top
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90f));
-        poseStack.mulPose(Axis.ZN.rotationDegrees(90f));
-        //poseStack.translate(0.0f, 0.125f, 0.0f);
+        poseStack.mulPose(Axis.ZN.rotationDegrees(-90f));
         drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_SIDE)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();

@@ -44,7 +44,7 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
             Vec3 eye = caster.getEyePosition(1.0f);
             spawnPos = new Vec3(
                     eye.x + lookNorn.x * distance,
-                    eye.y - 0.25 + lookNorn.y * distance,
+                    eye.y - 0.125 + lookNorn.y * distance,
                     eye.z + lookNorn.z * distance);
         }else{ // not player so not player
             Vec3 center = Vec3.atCenterOf(pos);

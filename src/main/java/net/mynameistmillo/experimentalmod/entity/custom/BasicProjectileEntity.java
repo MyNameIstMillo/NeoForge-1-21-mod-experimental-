@@ -163,10 +163,10 @@ public class BasicProjectileEntity extends Projectile {
 //                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
             AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.04D);
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
-
-            double blockDist = Double.POSITIVE_INFINITY;
-            double entityDist = Double.POSITIVE_INFINITY;
-
+//
+//            double blockDist = Double.POSITIVE_INFINITY;
+//            double entityDist = Double.POSITIVE_INFINITY;
+//
 //            if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
 //                blockDist = blockHit.getLocation().distanceTo(currentPos);
 //                LOGGER.info("blockHit");
@@ -174,21 +174,18 @@ public class BasicProjectileEntity extends Projectile {
 //            else { blockHit = null; }
             if (entityHit != null) {
                 //entityDist = entityHit.getLocation().distanceTo(currentPos);
-                LOGGER.info("entity?");
+                //LOGGER.info("entity?");
                 this.handleSpellHit(entityHit.getEntity(), null, null);
                 return;
             }else {
                 entityHit = null;
             }
-
 //            if (blockHit != null && blockDist <= entityDist) {
 //                BlockHitResult bhr = (BlockHitResult) blockHit;
 //                this.onBlockHit(bhr);
 //                return;
 //
 //            } els
-
-
             this.move(MoverType.SELF, stepDelta);
             currentPos = this.position();
 
@@ -221,6 +218,19 @@ public class BasicProjectileEntity extends Projectile {
 
         if (!(xHit || yHit || zHit)) return false;
 
+        Vec3 currentPos = this.position();
+        Vec3 prevPos = currentPos.subtract(prevDelta);
+        Vec3 start = prevPos;
+        Vec3 end = currentPos;
+
+        AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
+        EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
+        if(entityHit != null) {
+            //LOGGER.info("perhaps entity? -> {}, start -> {} , end -> {}", entityHit, start, end);
+            this.handleSpellHit(entityHit.getEntity(), null, null);
+            return true;
+        }
+
         BlockPos pos = this.blockPosition();
 
         Vec3 normal;
@@ -247,7 +257,7 @@ public class BasicProjectileEntity extends Projectile {
 
         BlockPos hitPos = pos.relative(faceGuess.getOpposite());
         BlockHitResult bhr = new BlockHitResult(hitVec, faceGuess, hitPos, false);
-        LOGGER.info("perhaps?");
+        //LOGGER.info("perhaps?");
         this.onBlockHit(bhr);
 
         return true;

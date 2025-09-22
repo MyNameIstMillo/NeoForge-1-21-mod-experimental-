@@ -1,18 +1,12 @@
 package net.mynameistmillo.experimentalmod.spells.custom;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
@@ -34,7 +28,7 @@ public class boltTrigger extends Item implements ISpell {
         this.baseStats = new SpellStats();
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
         this.baseStats.set(StatsKey.DRAG, 1.0f);
-        this.baseStats.set(StatsKey.SPEED, 0.8f);
+        this.baseStats.set(StatsKey.SPEED, 0.9f);
         this.baseStats.set(StatsKey.LIFETIME, 60);
         this.baseStats.set(StatsKey.DAMAGE, 1.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT, 0);
@@ -58,7 +52,6 @@ public class boltTrigger extends Item implements ISpell {
         projectile.setCasterUUID(caster.getUUID());
         //here you can decide final stats on the spells, afer this player can't change them
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
-        //LOGGER.info("normal -> {}", normal);
 
         //apply stats
         this.baseStats.applyToProjectile(projectile, pos, normal, caster);
