@@ -1,6 +1,9 @@
-package net.mynameistmillo.experimentalmod.spells.custom;
+package net.mynameistmillo.experimentalmod.spellProjectile.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -9,21 +12,22 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import net.mynameistmillo.experimentalmod.items.ModItems;
-import net.mynameistmillo.experimentalmod.spells.ISpell;
-import net.mynameistmillo.experimentalmod.spells.stats.SpellStats;
-import net.mynameistmillo.experimentalmod.spells.stats.StatsKey;
+import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
+import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class boltTrigger extends Item implements ISpell {
+public class sparkBolt extends Item implements ISpell {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     private final SpellStats baseStats;
 
-    public boltTrigger(Properties properties) {
+    public sparkBolt(Properties properties) {
         super(properties);
         this.baseStats = new SpellStats();
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
@@ -42,23 +46,31 @@ public class boltTrigger extends Item implements ISpell {
     }
 
     @Override
-    public Entity spawnSpell(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack) {
+    public Entity spawnSpell(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell, int index) {
         if(level.isClientSide()) return null;
         //create projectile
-        BasicProjectileEntity projectile = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
+        BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
+
+        //set texture for projectile
+        String side = "spark_bolt_side";
+        String front = "spark_bolt_front";
+        proj.setSideTexture(side);
+        proj.setFrontTexture(front);
+
+
         //connect spellItem to the projectile
-        projectile.setSpellStack(new ItemStack(ModItems.BOLT_TRIGGER.get()));
-        projectile.setWandStack(wandStack.copy());
-        projectile.setCasterUUID(caster.getUUID());
+        proj.setSpellStack(thisSpell.copy());
+        proj.setWandStack(wandStack.copy());
+        proj.setCasterUUID(caster.getUUID());
         //here you can decide final stats on the spells, afer this player can't change them
         this.baseStats.set(StatsKey.GRAVITY, 0.03f);
 
         //apply stats
-        this.baseStats.applyToProjectile(projectile, pos, normal, caster);
+        this.baseStats.applyToProjectile(proj, pos, normal, caster);
         //add projectile to the world
-        level.addFreshEntity(projectile);
+        level.addFreshEntity(proj);
 
-        return projectile;
+        return proj;
     }
 
     @Override
@@ -90,14 +102,5 @@ public class boltTrigger extends Item implements ISpell {
         return null;
     }
 
-    @Override
-    public boolean spawnNextOnHit() {
-        return false;
-    }
-
-    @Override
-    public boolean spawnNextOnExpire() {
-        return false;
-    }
 
 }

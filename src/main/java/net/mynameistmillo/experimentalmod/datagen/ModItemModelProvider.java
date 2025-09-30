@@ -16,6 +16,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.FANCY_ITEM.get());
         basicItem(ModItems.WAND.get());
         basicItem(ModItems.KEY.get());
-        basicItem(ModItems.BOLT_TRIGGER.get());
+        basicItem(ModItems.SPARK_BOLT.get());
+        basicItem(ModItems.BUBBLE_SPARK.get());
     }
 }

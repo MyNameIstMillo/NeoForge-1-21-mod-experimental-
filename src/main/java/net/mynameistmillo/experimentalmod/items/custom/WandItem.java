@@ -17,7 +17,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
-import net.mynameistmillo.experimentalmod.spells.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,18 +27,18 @@ public class WandItem extends Item {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     public WandItem(Properties properties, int capacity) {
         super(properties);
-        this.deafultCapacity = capacity;
+        this.defaultCapacity = capacity;
     }
 
-    private final int deafultCapacity;
+    private final int defaultCapacity;
 
     public int getCapacity(ItemStack wand) {
         Integer capacity = wand.get(ModDataComponents.WAND_CAPACITY.get());
         if (capacity == null) {
-            capacity = deafultCapacity;
+            capacity = defaultCapacity;
             wand.set(ModDataComponents.WAND_CAPACITY.get(), capacity);
         }
-        return deafultCapacity;
+        return defaultCapacity;
     }
 
 
@@ -58,6 +58,8 @@ public class WandItem extends Item {
             else {
                 spellTag.putString("id", "minecraft:dirt");
                 spellTag.putByte("Count", (byte) 1);
+                spellTag.putString("proj_side", "default_side");
+                spellTag.putString("proj_front", "default_front");
 
             }
             spellTag.putInt("Slot", i);
@@ -139,7 +141,7 @@ public class WandItem extends Item {
 
         int checked=0;
         ItemStack currentSpell = ItemStack.EMPTY;
-        while(checked<capacity){
+        while(checked < capacity){
             currentSpell = storedSpells.get(index);
             if(!currentSpell.is(Items.DIRT)){
                 break;
@@ -149,7 +151,7 @@ public class WandItem extends Item {
 
         if(currentSpell.getItem() instanceof ISpell spellCast){
 
-            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, player.getLookAngle(), wand);
+            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, player.getLookAngle(), wand, currentSpell, index);
             Explosion explosion = spellCast.createExplosion(level, player.getOnPos(), player, wand);
 
             index = (index+1)%capacity;

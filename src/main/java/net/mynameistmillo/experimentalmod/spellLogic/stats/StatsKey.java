@@ -1,13 +1,12 @@
-package net.mynameistmillo.experimentalmod.spells.stats;
+package net.mynameistmillo.experimentalmod.spellLogic.stats;
 
 public enum StatsKey {
-    GRAVITY("gravity", 0.03f),
-    DRAG("drag", 1.0f),
-    SPEED("speed", 1.0f),
-    LIFETIME("lifetime", 60.0f),
+    GRAVITY("gravity", 0.03f),          //0->No 0.2->big
+    DRAG("drag", 1.0f),                 //1->No 0.90->big
+    SPEED("speed", 1.0f),               //1->normal >big >small
+    LIFETIME("lifetime", 60.0f),        //life
     DAMAGE("damage", 1.0f),
-    DISPLACEMENT("displacement", 0);
-    //przesunięcie?
+    DISPLACEMENT("displacement", 0);    //how far from normal
     //akceleracja
     //kolor, ale to nie jest priorytetem
 

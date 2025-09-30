@@ -30,11 +30,12 @@ public class ModCreativeModeTabs {
                     }).build());
 
     public static final Supplier<CreativeModeTab> MOD_SPELLS = CREATIVE_MODE_TAB.register("mod_spells_tab",
-            ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModItems.BOLT_TRIGGER.get()))
+            ()-> CreativeModeTab.builder().icon(()-> new ItemStack(ModItems.SPARK_BOLT.get()))
                     .withTabsBefore(ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "mod_items_tab"))
                     .title(Component.translatable("creativetab.experimentalmodid.mod_spells_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
-                        output.accept(ModItems.BOLT_TRIGGER);
+                        output.accept(ModItems.SPARK_BOLT);
+                        output.accept(ModItems.BUBBLE_SPARK);
 
 
 

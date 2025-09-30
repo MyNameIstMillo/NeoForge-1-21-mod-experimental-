@@ -6,7 +6,8 @@ import net.minecraft.world.item.Rarity;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
-import net.mynameistmillo.experimentalmod.spells.custom.boltTrigger;
+import net.mynameistmillo.experimentalmod.spellProjectile.projectile.bubbleSpark;
+import net.mynameistmillo.experimentalmod.spellProjectile.projectile.sparkBolt;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -29,8 +30,11 @@ public class ModItems {
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1)));
 
-    public static final DeferredItem<Item> BOLT_TRIGGER = ITEMS.register("bolt_trigger",
-            ()-> new boltTrigger(new Item.Properties()));
+    public static final DeferredItem<Item> SPARK_BOLT = ITEMS.register("spark_bolt",
+            ()-> new sparkBolt(new Item.Properties()));
+
+    public static final DeferredItem<Item> BUBBLE_SPARK = ITEMS.register("bubble_spark",
+            ()-> new bubbleSpark(new Item.Properties()));
 
 
 

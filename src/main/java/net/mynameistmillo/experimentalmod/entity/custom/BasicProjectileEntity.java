@@ -15,12 +15,11 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
-import net.mynameistmillo.experimentalmod.spells.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,21 +28,19 @@ import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
+    private static final EntityDataAccessor<String> DATA_SIDE = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> DATA_FRONT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Float> PROJ_WIDTH = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+
     private float initWidth = 0.25f;
     private float initHeight = 0.25f;
 
-    private static final EntityDataAccessor<Float> PROJ_WIDTH =
-            SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> PROJ_HEIGHT =
-            SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
-
-    //gravity should bo in 0.0 -> no gravity, 0.2 -> bigger gravity
     private float gravity = 0f;
-    //drag should be in 0.~8 -> big drag, close to 1 0.999 -> no drag
     private float drag = 1f;
+    private float minSpeed = 0.001f;
 
     private float lifeTime = 60;
-    private final float MIN_SPEED = 0.001f;
     private Vec3 prevDelta = Vec3.ZERO;
 
     private ItemStack spellStack = ItemStack.EMPTY;
@@ -76,11 +73,15 @@ public class BasicProjectileEntity extends Projectile {
 
     public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
 
+    public void setMinSpeed(float minSpeed){this.minSpeed = minSpeed;}
+
     public void setSpellStack(ItemStack stack){ this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
     public void setWandStack(ItemStack stack){ this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
 
     public void setCasterUUID(UUID id){ this.casterUUID = id; }
+
+
 
 
     @Override
@@ -103,6 +104,8 @@ public class BasicProjectileEntity extends Projectile {
         if(this.casterUUID != null) {
             nbt.putUUID("CasterUUID", this.casterUUID);
         }
+        nbt.putString("proj_side", getSidePath());
+        nbt.putString("proj_front", getFrontPath());
 
     }
 
@@ -120,6 +123,8 @@ public class BasicProjectileEntity extends Projectile {
         if(nbt.hasUUID("CasterUUID")){
             this.casterUUID = nbt.getUUID("CasterUUID");
         }
+        if (nbt.contains("proj_side")) setSideTexture(nbt.getString("proj_side"));
+        if (nbt.contains("proj_front")) setFrontTexture(nbt.getString("proj_front"));
     }
 
     @Override
@@ -148,7 +153,11 @@ public class BasicProjectileEntity extends Projectile {
         Vec3 start = this.position();
         Vec3 delta = this.getDeltaMovement();
         double distance = delta.length();
-        if(distance <= MIN_SPEED) this.handleOnExpire(this.blockPosition(), this.getDeltaMovement().normalize());
+        if(this.minSpeed >= 0) {
+            LOGGER.info("ehgyfdusgfkavbfhgdsjkafvghdsjak -> {} -> {}", this.minSpeed >=-1, this.minSpeed);
+            if (distance <= this.minSpeed)
+                this.handleOnExpire(this.blockPosition(), this.getDeltaMovement().normalize());
+        }
 
         int steps = (int)Math.ceil(distance / MAX_STEP);
         steps = Math.max(1, Math.min(steps, MAX_STEPS));
@@ -316,6 +325,7 @@ public class BasicProjectileEntity extends Projectile {
                 ISpell spellLogic = (ISpell) item;
 
                 spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack);
+                handleOnExpire(hitBlock, normal);
 
 
             }
@@ -348,6 +358,8 @@ public class BasicProjectileEntity extends Projectile {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(PROJ_WIDTH, 0.25f);
         builder.define(PROJ_HEIGHT, 0.25f);
+        builder.define(DATA_SIDE, "");
+        builder.define(DATA_FRONT, "");
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -356,8 +368,24 @@ public class BasicProjectileEntity extends Projectile {
             this.initWidth = this.entityData.get(PROJ_WIDTH);
             this.initHeight = this.entityData.get(PROJ_HEIGHT);
             this.refreshDimensions();
+        }else if (key == DATA_SIDE){
+            this.sidePath = this.entityData.get(DATA_SIDE);
+        }else if (key == DATA_FRONT){
+            this.frontPath = this.entityData.get(DATA_FRONT);
         }
     }
+    private String sidePath = "";
+    public void setSideTexture(String path){
+        this.entityData.set(DATA_SIDE, path == null? "" : path);
+        this.sidePath = path == null? "": path;
+    }
+    public String getSidePath(){return this.entityData.get(DATA_SIDE);}
+    private String frontPath = "";
+    public void setFrontTexture(String path){
+        this.entityData.set(DATA_FRONT, path == null? "": path);
+        this.frontPath = path == null? "": path;
+    }
+    public String getFrontPath(){return this.entityData.get(DATA_FRONT);}
 
     @Override
     public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }

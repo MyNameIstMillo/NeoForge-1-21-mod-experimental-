@@ -13,21 +13,62 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.joml.Matrix4f;
 import com.mojang.math.Axis;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntity> {
-    private static final ResourceLocation TEXTURE_SIDE = ResourceLocation.fromNamespaceAndPath
-            (ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/basic_proj_side.png");
-    private static final ResourceLocation TEXTURE_FRONT = ResourceLocation.fromNamespaceAndPath
-            (ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/basic_proj_front.png");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
+    private static ResourceLocation TEXTURE_SIDE = ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/default_side.png");
+    private static ResourceLocation TEXTURE_FRONT = ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/default_front.png");
+
+
 
     public BasicProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
+    public ResourceLocation getTextureLocation(BasicProjectileEntity entity) {
+        return TEXTURE_SIDE;
+    }
+
+    private ResourceLocation getTextureSide(BasicProjectileEntity e){
+        String path = e.getSidePath();
+        if (path == null || path.isEmpty()) return TEXTURE_SIDE;
+        return ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID,
+                "textures/entity/basic_projectile/"+ path +".png");
+    }
+
+    private ResourceLocation getTextureFront(BasicProjectileEntity e){
+        String path = e.getFrontPath();
+        if (path == null || path.isEmpty()) return TEXTURE_FRONT;
+        return ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID,
+                "textures/entity/basic_projectile/"+ path +".png");
+    }
+
+    private Float getShift(BasicProjectileEntity e){
+        String path = e.getSidePath();
+        float shift;
+        switch (path){
+            case "spark_bolt_side" -> shift = 0.5f;
+            default -> shift = 0f;
+        }
+        return shift;
+    }
+
+
+
+    @Override
     public void render(BasicProjectileEntity entity, float entityYaw, float partialTicks,
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
+
+
+        ResourceLocation side = getTextureSide(entity);
+        ResourceLocation front = getTextureFront(entity);
+
+        float shift = getShift(entity);
 
         float size = 0.25f;
         poseStack.scale(size, size, size);
@@ -56,15 +97,15 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
 
         //front
         poseStack.pushPose();
-        poseStack.translate(0.f, 0.0f, 0.5f);
-        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_FRONT)),
+        poseStack.translate(0.f, 0.0f, shift);
+        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(front)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();
 
         //side
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-90f));
-        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_SIDE)),
+        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(side)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();
 
@@ -72,7 +113,7 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90f));
         poseStack.mulPose(Axis.ZN.rotationDegrees(-90f));
-        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_SIDE)),
+        drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(side)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();
 
@@ -113,11 +154,5 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
                 .setUv2(uv2_low, uv2_high)
                 .setNormal(0f, 0f, 1f);
 
-    }
-
-
-    @Override
-    public ResourceLocation getTextureLocation(BasicProjectileEntity entity) {
-    return TEXTURE_SIDE;
     }
 }

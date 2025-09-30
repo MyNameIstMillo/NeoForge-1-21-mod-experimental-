@@ -32,7 +32,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.KEY.get());
 
         tag(ModTags.Items.SPELL_ITEM)
-                .add(ModItems.BOLT_TRIGGER.get());
+                .add(ModItems.BUBBLE_SPARK.get())
+                .add(ModItems.SPARK_BOLT.get());
 
 
     }

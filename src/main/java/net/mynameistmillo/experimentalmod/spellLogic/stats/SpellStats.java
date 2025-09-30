@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.spells.stats;
+package net.mynameistmillo.experimentalmod.spellLogic.stats;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
