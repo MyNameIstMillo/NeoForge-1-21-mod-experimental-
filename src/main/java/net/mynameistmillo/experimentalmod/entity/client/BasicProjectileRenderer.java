@@ -19,10 +19,6 @@ import org.slf4j.LoggerFactory;
 
 public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntity> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
-    private static ResourceLocation TEXTURE_SIDE = ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/default_side.png");
-    private static ResourceLocation TEXTURE_FRONT = ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, "textures/entity/basic_projectile/default_front.png");
-
-
 
     public BasicProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -30,45 +26,20 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
 
     @Override
     public ResourceLocation getTextureLocation(BasicProjectileEntity entity) {
-        return TEXTURE_SIDE;
+        EntityDataTextures e = new EntityDataTextures();
+        return e.getTxtPathFront("spark_bolt");
     }
-
-    private ResourceLocation getTextureSide(BasicProjectileEntity e){
-        String path = e.getSidePath();
-        if (path == null || path.isEmpty()) return TEXTURE_SIDE;
-        return ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID,
-                "textures/entity/basic_projectile/"+ path +".png");
-    }
-
-    private ResourceLocation getTextureFront(BasicProjectileEntity e){
-        String path = e.getFrontPath();
-        if (path == null || path.isEmpty()) return TEXTURE_FRONT;
-        return ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID,
-                "textures/entity/basic_projectile/"+ path +".png");
-    }
-
-    private Float getShift(BasicProjectileEntity e){
-        String path = e.getSidePath();
-        float shift;
-        switch (path){
-            case "spark_bolt_side" -> shift = 0.5f;
-            default -> shift = 0f;
-        }
-        return shift;
-    }
-
-
 
     @Override
     public void render(BasicProjectileEntity entity, float entityYaw, float partialTicks,
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
+        EntityDataTextures eDT = new EntityDataTextures();
 
+        ResourceLocation side = eDT.getTxtPathSide(entity.getProjName());
+        ResourceLocation front = eDT.getTxtPathFront(entity.getProjName());
 
-        ResourceLocation side = getTextureSide(entity);
-        ResourceLocation front = getTextureFront(entity);
-
-        float shift = getShift(entity);
+        float shift = eDT.getFrontAxisShift(entity.getProjName());
 
         float size = 0.25f;
         poseStack.scale(size, size, size);

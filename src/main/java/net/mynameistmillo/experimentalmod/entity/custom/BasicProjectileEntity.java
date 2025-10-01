@@ -28,8 +28,7 @@ import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
-    private static final EntityDataAccessor<String> DATA_SIDE = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<String> DATA_FRONT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> DATA_NAME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> PROJ_WIDTH = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
 
@@ -104,8 +103,7 @@ public class BasicProjectileEntity extends Projectile {
         if(this.casterUUID != null) {
             nbt.putUUID("CasterUUID", this.casterUUID);
         }
-        nbt.putString("proj_side", getSidePath());
-        nbt.putString("proj_front", getFrontPath());
+        nbt.putString("proj_name", getProjName());
 
     }
 
@@ -123,8 +121,7 @@ public class BasicProjectileEntity extends Projectile {
         if(nbt.hasUUID("CasterUUID")){
             this.casterUUID = nbt.getUUID("CasterUUID");
         }
-        if (nbt.contains("proj_side")) setSideTexture(nbt.getString("proj_side"));
-        if (nbt.contains("proj_front")) setFrontTexture(nbt.getString("proj_front"));
+        if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
 
     @Override
@@ -154,7 +151,6 @@ public class BasicProjectileEntity extends Projectile {
         Vec3 delta = this.getDeltaMovement();
         double distance = delta.length();
         if(this.minSpeed >= 0) {
-            LOGGER.info("ehgyfdusgfkavbfhgdsjkafvghdsjak -> {} -> {}", this.minSpeed >=-1, this.minSpeed);
             if (distance <= this.minSpeed)
                 this.handleOnExpire(this.blockPosition(), this.getDeltaMovement().normalize());
         }
@@ -358,8 +354,7 @@ public class BasicProjectileEntity extends Projectile {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(PROJ_WIDTH, 0.25f);
         builder.define(PROJ_HEIGHT, 0.25f);
-        builder.define(DATA_SIDE, "");
-        builder.define(DATA_FRONT, "");
+        builder.define(DATA_NAME, "");
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -368,24 +363,16 @@ public class BasicProjectileEntity extends Projectile {
             this.initWidth = this.entityData.get(PROJ_WIDTH);
             this.initHeight = this.entityData.get(PROJ_HEIGHT);
             this.refreshDimensions();
-        }else if (key == DATA_SIDE){
-            this.sidePath = this.entityData.get(DATA_SIDE);
-        }else if (key == DATA_FRONT){
-            this.frontPath = this.entityData.get(DATA_FRONT);
+        }else if (key == DATA_NAME){
+            this.name = this.entityData.get(DATA_NAME);
         }
     }
-    private String sidePath = "";
-    public void setSideTexture(String path){
-        this.entityData.set(DATA_SIDE, path == null? "" : path);
-        this.sidePath = path == null? "": path;
+    private String name = "";
+    public void setProjName(String name){
+        this.entityData.set(DATA_NAME, name == null? "" : name);
+        this.name = name == null? "": name;
     }
-    public String getSidePath(){return this.entityData.get(DATA_SIDE);}
-    private String frontPath = "";
-    public void setFrontTexture(String path){
-        this.entityData.set(DATA_FRONT, path == null? "": path);
-        this.frontPath = path == null? "": path;
-    }
-    public String getFrontPath(){return this.entityData.get(DATA_FRONT);}
+    public String getProjName(){return this.entityData.get(DATA_NAME);}
 
     @Override
     public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }

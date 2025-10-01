@@ -7,7 +7,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
@@ -45,9 +44,8 @@ public class bubbleSpark extends Item implements ISpell {
 
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
-        String side = "bubble_spark_side";
-        proj.setSideTexture(side);
-        proj.setFrontTexture(side);
+        String name = "bubble_spark";
+        proj.setProjName(name);
 
         proj.setSpellStack(thisSpell.copy());
         proj.setWandStack(wandStack.copy());

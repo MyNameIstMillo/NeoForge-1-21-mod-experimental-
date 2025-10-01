@@ -1,9 +1,6 @@
 package net.mynameistmillo.experimentalmod.spellProjectile.projectile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -12,9 +9,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
-import net.mynameistmillo.experimentalmod.items.ModItems;
 import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
@@ -52,10 +47,8 @@ public class sparkBolt extends Item implements ISpell {
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
         //set texture for projectile
-        String side = "spark_bolt_side";
-        String front = "spark_bolt_front";
-        proj.setSideTexture(side);
-        proj.setFrontTexture(front);
+        String name = "spark_bolt";
+        proj.setProjName(name);
 
 
         //connect spellItem to the projectile
