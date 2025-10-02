@@ -32,7 +32,6 @@ public class sparkBolt extends Item implements ISpell {
         this.baseStats.set(StatsKey.DAMAGE, 1.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT, 0);
 
-
     }
 
     @Override
@@ -56,7 +55,8 @@ public class sparkBolt extends Item implements ISpell {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
         //here you can decide final stats on the spells, afer this player can't change them
-        this.baseStats.set(StatsKey.GRAVITY, 0.03f);
+        //this.baseStats.set(StatsKey.GRAVITY, 0.03f);
+        //that's not how it works anymore
 
         //apply stats
         this.baseStats.applyToProjectile(proj, pos, normal, caster);
@@ -94,6 +94,7 @@ public class sparkBolt extends Item implements ISpell {
     public Explosion createExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         return null;
     }
+
 
 
 }

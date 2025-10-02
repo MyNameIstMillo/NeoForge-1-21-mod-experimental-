@@ -75,4 +75,5 @@ public class bubbleSpark extends Item implements ISpell {
     public Explosion createExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
         return null;
     }
+
 }

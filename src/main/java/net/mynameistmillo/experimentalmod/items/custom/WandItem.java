@@ -132,6 +132,15 @@ public class WandItem extends Item {
         return false;
     }
 
+    public void resetSpellsStats(ItemStack wand, Level level){
+        List<ItemStack> spellList = getCompactSpells(wand, level);
+        for (ItemStack stack : spellList){
+            if (stack.getItem() instanceof ISpell spell){
+                spell.resetStats();
+            }
+        }
+    }
+
 
     public List<ItemStack> destroyEmpty(List<ItemStack> list){
         List<ItemStack> nonEmpty = new ArrayList<>();
@@ -152,7 +161,7 @@ public class WandItem extends Item {
                  applyModifierToNextSpell(allList, modifier, index, level);
 
              }
-             if (stack.getItem() instanceof ISpell) spellList.add(stack);
+             if (stack.getItem() instanceof ISpell) spellList.add(stack.copy());
              index++;
          }
         saveCompactSpells(wand, spellList, level);
@@ -161,7 +170,7 @@ public class WandItem extends Item {
     public void applyModifierToNextSpell(List<ItemStack> list, IModifier modifier, int index, Level level){
         for (int i = index; i<list.size(); i++){
             if (list.get(i).getItem() instanceof ISpell){
-                modifier.applyChanges(level, list.get(i));
+                modifier.applyChanges(level, list.get(i).copy());
                 break;
             }
         }
@@ -199,7 +208,7 @@ public class WandItem extends Item {
             for (int i=0; i<capacity; i++){
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
-                list.add(stack);
+                list.add(stack.copy());
             }
         }
         return list;

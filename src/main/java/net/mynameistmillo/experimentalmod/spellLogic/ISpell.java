@@ -41,4 +41,5 @@ public interface ISpell {
                               Player caster,
                               ItemStack wandStack);
 
+
 }

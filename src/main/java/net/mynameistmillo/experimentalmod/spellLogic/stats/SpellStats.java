@@ -37,7 +37,7 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
         double shift = this.get(StatsKey.DISPLACEMENT);
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
-        double baseOffset = 1.2;
+        double baseOffset = 1.0;
         double distance = baseOffset + shift;
         Vec3 spawnPos;
         if(caster != null){// if player so plater, yes

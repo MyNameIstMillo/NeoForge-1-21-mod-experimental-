@@ -23,9 +23,7 @@ public class SpeedUp extends Item implements IModifier {
 
         if (stack.getItem() instanceof ISpell spell){
             float speed = spell.getBaseStats().get(StatsKey.SPEED);
-            LOGGER.info("speed wczesniej -> {}", speed);
             speed *=2;
-            LOGGER.info("speed potem -> {}", speed);
             spell.getBaseStats().set(StatsKey.SPEED, speed);
         }
 

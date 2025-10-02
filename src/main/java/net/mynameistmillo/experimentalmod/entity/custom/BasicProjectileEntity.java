@@ -212,9 +212,9 @@ public class BasicProjectileEntity extends Projectile {
     }
 
     private boolean handledHit = false;
-    private static final double EPS = 1e-6;
+    private static final double EPS = 1e-8;
     private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta) {
-        if (this.tickCount <= 2) return false;
+        //if (this.tickCount <= 2) return false;
 
 
         boolean xHit = Math.abs(delta.x) < EPS && Math.abs(prevDelta.x) > EPS;

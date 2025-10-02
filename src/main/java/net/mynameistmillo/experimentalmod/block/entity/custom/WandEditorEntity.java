@@ -156,6 +156,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                 inventory.setStackInSlot(i, storedSpells.get(i).copy());
             }
             NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
+            wandItem.resetSpellsStats(wand, level);
             wandItem.saveSpells(wand, SpellsToSend, level);
         }
         playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);

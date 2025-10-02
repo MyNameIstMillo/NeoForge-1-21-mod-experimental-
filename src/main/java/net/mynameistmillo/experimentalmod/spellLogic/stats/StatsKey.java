@@ -7,7 +7,7 @@ public enum StatsKey {
     LIFETIME("lifetime", 60.0f),        //life
     DAMAGE("damage", 1.0f),
     DISPLACEMENT("displacement", 0);    //how far from normal
-    //akceleracja
+    //akceleracja, ale to w sumie minusowy drag
     //kolor, ale to nie jest priorytetem
 
 
