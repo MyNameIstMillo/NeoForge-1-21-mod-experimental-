@@ -33,8 +33,13 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         tag(ModTags.Items.SPELL_ITEM)
                 .add(ModItems.BUBBLE_SPARK.get())
-                .add(ModItems.SPARK_BOLT.get());
+                .add(ModItems.SPARK_BOLT.get())
 
 
+                .add(ModItems.SPEED_UP.get())
+                .add(ModItems.SPEED_DOWN.get())
+
+
+        ;
     }
 }

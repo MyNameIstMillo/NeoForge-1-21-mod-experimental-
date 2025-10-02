@@ -6,8 +6,10 @@ import net.minecraft.world.item.Rarity;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
-import net.mynameistmillo.experimentalmod.spellProjectile.projectile.bubbleSpark;
-import net.mynameistmillo.experimentalmod.spellProjectile.projectile.sparkBolt;
+import net.mynameistmillo.experimentalmod.spellEntity.projectile.bubbleSpark;
+import net.mynameistmillo.experimentalmod.spellEntity.projectile.sparkBolt;
+import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedDown;
+import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedUp;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -36,7 +38,11 @@ public class ModItems {
     public static final DeferredItem<Item> BUBBLE_SPARK = ITEMS.register("bubble_spark",
             ()-> new bubbleSpark(new Item.Properties()));
 
+    public static final DeferredItem<Item> SPEED_UP = ITEMS.register("speed_up",
+            () -> new SpeedUp(new Item.Properties()));
 
+    public static final DeferredItem<Item> SPEED_DOWN = ITEMS.register("speed_down",
+            () -> new SpeedDown(new Item.Properties()));
 
 
 

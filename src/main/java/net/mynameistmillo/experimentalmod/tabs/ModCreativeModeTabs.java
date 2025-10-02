@@ -36,6 +36,8 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.SPARK_BOLT);
                         output.accept(ModItems.BUBBLE_SPARK);
+                        output.accept(ModItems.SPEED_UP);
+                        output.accept(ModItems.SPEED_DOWN);
 
 
 

@@ -17,10 +17,13 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
 import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WandItem extends Item {
@@ -41,6 +44,26 @@ public class WandItem extends Item {
         return defaultCapacity;
     }
 
+    public int getCurrentIndex(ItemStack wand){
+        Integer capacity = wand.get(ModDataComponents.WAND_CAPACITY_COMPACT.get());
+        Integer index = wand.get(ModDataComponents.WAND_INDEX.get());
+        if(index == null){
+            index = 0;
+            wand.set(ModDataComponents.WAND_INDEX.get(), index);
+        }
+        return Math.floorMod(index, capacity);
+    }
+
+    public void setCurrentIndex(ItemStack wand, int index){
+        wand.set(ModDataComponents.WAND_INDEX.get(), index);
+    }
+    public void increaseIndex(ItemStack wand){
+        int index = wand.get(ModDataComponents.WAND_INDEX.get());
+        int capacity = wand.get(ModDataComponents.WAND_CAPACITY_COMPACT.get());
+        index = (index+1)%capacity;
+        wand.set(ModDataComponents.WAND_INDEX.get(), index);
+    }
+
 
     public void saveSpells(ItemStack wand, List<ItemStack> spellList, Level level) {
         int capacity = getCapacity(wand);
@@ -58,10 +81,9 @@ public class WandItem extends Item {
             else {
                 spellTag.putString("id", "minecraft:dirt");
                 spellTag.putByte("Count", (byte) 1);
-                spellTag.putString("proj_side", "default_side");
-                spellTag.putString("proj_front", "default_front");
 
             }
+            spellTag.putString("proj_name", "");
             spellTag.putInt("Slot", i);
             spellsListTag.add(spellTag);
         }
@@ -70,7 +92,7 @@ public class WandItem extends Item {
 
         wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
         setCurrentIndex(wand, 0);
-        //LOGGER.info("saveSpells -> rootTag -> {}", rootTag);
+        compactSpells(wand, spellList, level);
     }
 
     public NonNullList<ItemStack> getSavedSpells(ItemStack wand, Level level) {
@@ -110,59 +132,111 @@ public class WandItem extends Item {
         return false;
     }
 
-    public int getCurrentIndex(ItemStack wand){
-        Integer capacity = wand.get(ModDataComponents.WAND_CAPACITY.get());
-        Integer index = wand.get(ModDataComponents.WAND_INDEX.get());
-        if(index == null){
-            index = 0;
-            wand.set(ModDataComponents.WAND_INDEX.get(), index);
+
+    public List<ItemStack> destroyEmpty(List<ItemStack> list){
+        List<ItemStack> nonEmpty = new ArrayList<>();
+        for(ItemStack stack : list){
+            if(stack.is(Items.DIRT)) continue;
+            nonEmpty.add(stack);
         }
-        return Math.floorMod(index, capacity);
+        return nonEmpty;
     }
 
-    public void setCurrentIndex(ItemStack wand, int index){
-        wand.set(ModDataComponents.WAND_INDEX.get(), index);
+    public void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
+         List<ItemStack> allList = destroyEmpty(list);
+         List<ItemStack> spellList = new ArrayList<>();
+
+         int index = 0;
+         for (ItemStack stack : allList){
+             if (stack.getItem() instanceof IModifier modifier){
+                 applyModifierToNextSpell(allList, modifier, index, level);
+
+             }
+             if (stack.getItem() instanceof ISpell) spellList.add(stack);
+             index++;
+         }
+        saveCompactSpells(wand, spellList, level);
     }
 
+    public void applyModifierToNextSpell(List<ItemStack> list, IModifier modifier, int index, Level level){
+        for (int i = index; i<list.size(); i++){
+            if (list.get(i).getItem() instanceof ISpell){
+                modifier.applyChanges(level, list.get(i));
+                break;
+            }
+        }
 
+    }
+
+    public void saveCompactSpells(ItemStack wand, List<ItemStack> listS, Level level){
+        ListTag listTag = new ListTag();
+        int count = 0;
+
+        for (ItemStack stack : listS){
+            CompoundTag tag = new CompoundTag();
+            stack.save(level.registryAccess(), tag);
+            tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+            tag.putByte("Count", (byte) stack.getCount());
+            tag.putString("proj_name", "");
+            listTag.add(tag);
+            count++;
+
+        }
+        CompoundTag rootTag = new CompoundTag();
+        rootTag.put("Spells", listTag);
+        wand.set(ModDataComponents.WAND_SPELLS_COMPACT.get(), rootTag);
+        wand.set(ModDataComponents.WAND_CAPACITY_COMPACT.get(), count);
+    }
+
+    public List<ItemStack> getCompactSpells(ItemStack wand, Level level){
+        List<ItemStack> list = new ArrayList<>();
+        CompoundTag wandSpells = wand.get(ModDataComponents.WAND_SPELLS_COMPACT.get());
+        int capacity = wand.get(ModDataComponents.WAND_CAPACITY_COMPACT.get());
+
+        if (wandSpells != null && wandSpells.contains("Spells", ListTag.TAG_LIST)){
+            ListTag listTag = wandSpells.getList("Spells", Tag.TAG_COMPOUND);
+
+            for (int i=0; i<capacity; i++){
+                CompoundTag tag = listTag.getCompound(i);
+                ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
+                list.add(stack);
+            }
+        }
+        return list;
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack wand = player.getItemInHand(usedHand);
+        if(level.isClientSide()){return InteractionResultHolder.pass(wand);}
+
         int capacity = getCapacity(wand);
         int index = getCurrentIndex(wand);
-        List<ItemStack> storedSpells = getSavedSpells(wand, level);
+        List<ItemStack> storedSpells = getCompactSpells(wand, level);
+
+        ItemStack currentSpell = storedSpells.get(index);
 
 
-
-        if(level.isClientSide()){
-            return InteractionResultHolder.pass(wand);
-        }
-
-        int checked=0;
-        ItemStack currentSpell = ItemStack.EMPTY;
-        while(checked < capacity){
-            currentSpell = storedSpells.get(index);
-            if(!currentSpell.is(Items.DIRT)){
-                break;
-            }
-            index = (index+1)%capacity;
-        }
+//        int checked=0;
+//        ItemStack currentSpell = ItemStack.EMPTY;
+//        while(checked < capacity){
+//                currentSpell = storedSpells.get(index);
+//                if(!currentSpell.is(Items.DIRT)){
+//                        break;
+//                    }
+//                index = (index+1)%capacity;
+//            }
 
         if(currentSpell.getItem() instanceof ISpell spellCast){
 
             Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, player.getLookAngle(), wand, currentSpell, index);
             Explosion explosion = spellCast.createExplosion(level, player.getOnPos(), player, wand);
 
-            index = (index+1)%capacity;
-            setCurrentIndex(wand, index);
+
+            increaseIndex(wand);
 
            return InteractionResultHolder.success(wand);
         }
-
-
-
-
         return InteractionResultHolder.pass(wand);
     }
 

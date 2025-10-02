@@ -20,8 +20,22 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.INT)
                             .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> WAND_CAPACITY_COMPACT =
+            DATA_COMPONENTS.register("wand_capacity_compact",
+                    () -> new DataComponentType.Builder<Integer>()
+                            .persistent(Codec.INT)
+                            .networkSynchronized(ByteBufCodecs.INT)
+                            .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> WAND_SPELLS =
             DATA_COMPONENTS.register("wand_spells",
+                    () -> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> WAND_SPELLS_COMPACT =
+            DATA_COMPONENTS.register("wand_spells_compact",
                     () -> new DataComponentType.Builder<CompoundTag>()
                             .persistent(CompoundTag.CODEC)
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
