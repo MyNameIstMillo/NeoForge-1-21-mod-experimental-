@@ -26,20 +26,18 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
 
     @Override
     public ResourceLocation getTextureLocation(BasicProjectileEntity entity) {
-        EntityDataTextures e = new EntityDataTextures();
-        return e.getTxtPathFront("spark_bolt");
+        return EntityDataTextures.getTxtPathFront("spark_bolt");
     }
 
     @Override
     public void render(BasicProjectileEntity entity, float entityYaw, float partialTicks,
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
-        EntityDataTextures eDT = new EntityDataTextures();
 
-        ResourceLocation side = eDT.getTxtPathSide(entity.getProjName());
-        ResourceLocation front = eDT.getTxtPathFront(entity.getProjName());
+        ResourceLocation side = EntityDataTextures.getTxtPathSide(entity.getProjName());
+        ResourceLocation front = EntityDataTextures.getTxtPathFront(entity.getProjName());
 
-        float shift = eDT.getFrontAxisShift(entity.getProjName());
+        float shift = EntityDataTextures.getFrontAxisShift(entity.getProjName());
 
         float size = 0.25f;
         poseStack.scale(size, size, size);

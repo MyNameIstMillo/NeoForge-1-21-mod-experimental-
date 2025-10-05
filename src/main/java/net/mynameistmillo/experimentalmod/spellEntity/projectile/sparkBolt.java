@@ -1,11 +1,12 @@
 package net.mynameistmillo.experimentalmod.spellEntity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
@@ -42,6 +43,7 @@ public class sparkBolt extends Item implements ISpell {
     @Override
     public Entity spawnSpell(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell, int index) {
         if(level.isClientSide()) return null;
+        if (!(thisSpell.getItem() instanceof ISpell iSpell)) return null;
         //create projectile
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
@@ -54,12 +56,13 @@ public class sparkBolt extends Item implements ISpell {
         proj.setSpellStack(thisSpell.copy());
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
-        //here you can decide final stats on the spells, afer this player can't change them
-        //this.baseStats.set(StatsKey.GRAVITY, 0.03f);
-        //that's not how it works anymore
 
+        SpellStats stats = new SpellStats();
+        stats = stats.loadStatsFromStack(thisSpell);
+
+        
         //apply stats
-        this.baseStats.applyToProjectile(proj, pos, normal, caster);
+        this.baseStats.applyToProjectile(proj, pos, normal, caster, stats);
         //add projectile to the world
         level.addFreshEntity(proj);
 
@@ -72,11 +75,19 @@ public class sparkBolt extends Item implements ISpell {
                       @Nullable BlockPos hitBlock,
                       Player caster,
                       Vec3 normal,
-                      ItemStack wandStack) {
+                      ItemStack wandStack,
+                      ItemStack thisSpell) {
         if(level.isClientSide()) return;
-        LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
+        //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
+        LOGGER.info("hit!");
 
+        SpellStats stats = new SpellStats();
+        stats = stats.loadStatsFromStack(thisSpell);
 
+        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
+            living.hurt(living.damageSources().generic() , stats.get(StatsKey.DAMAGE));
+
+        }
 
 
 
@@ -84,17 +95,11 @@ public class sparkBolt extends Item implements ISpell {
     }
 
     @Override
-    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack) {
-        LOGGER.info("expire!");
+    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
+
 
 
     }
-
-    @Override
-    public Explosion createExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
-        return null;
-    }
-
 
 
 }

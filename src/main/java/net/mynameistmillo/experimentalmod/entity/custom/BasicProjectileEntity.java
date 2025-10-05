@@ -72,7 +72,7 @@ public class BasicProjectileEntity extends Projectile {
 
     public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
 
-    public void setMinSpeed(float minSpeed){this.minSpeed = minSpeed;}
+    //public void setMinSpeed(float minSpeed){this.minSpeed = minSpeed;} <- not work
 
     public void setSpellStack(ItemStack stack){ this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
@@ -213,6 +213,7 @@ public class BasicProjectileEntity extends Projectile {
 
     private boolean handledHit = false;
     private static final double EPS = 1e-8;
+
     private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta) {
         //if (this.tickCount <= 2) return false;
 
@@ -320,7 +321,7 @@ public class BasicProjectileEntity extends Projectile {
 
                 ISpell spellLogic = (ISpell) item;
 
-                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack);
+                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.spellStack);
                 handleOnExpire(hitBlock, normal);
 
 
@@ -344,7 +345,7 @@ public class BasicProjectileEntity extends Projectile {
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
                 ISpell spellLogic = (ISpell) item;
-                spellLogic.onExpire(this.level(), pos, caster, normal, this.wandStack);
+                spellLogic.onExpire(this.level(), pos, caster, normal, this.wandStack, this.spellStack);
             }
         }
     }

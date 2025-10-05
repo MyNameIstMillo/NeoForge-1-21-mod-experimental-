@@ -5,7 +5,7 @@ import net.minecraft.world.level.Level;
 
 public interface IModifier {
 
-    void applyChanges(Level level,
+    ItemStack applyChanges(Level level,
                       ItemStack stack);
 
 

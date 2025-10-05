@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
 import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,18 @@ public class SpeedUp extends Item implements IModifier {
     }
 
     @Override
-    public void applyChanges(Level level, ItemStack stack) {
-        if (level.isClientSide()) return;
+    public ItemStack applyChanges(Level level, ItemStack stack) {
+        if (level.isClientSide()) return null;
+        if (!(stack.getItem() instanceof ISpell spell)) return null;
 
-        if (stack.getItem() instanceof ISpell spell){
-            float speed = spell.getBaseStats().get(StatsKey.SPEED);
-            speed *=2;
-            spell.getBaseStats().set(StatsKey.SPEED, speed);
-        }
+        SpellStats stats = new SpellStats();
+        stats = stats.loadStatsFromStack(stack);
+
+        float speed = stats.get(StatsKey.SPEED);
+        speed *= 2;
+        stats.set(StatsKey.SPEED, speed);
+
+        return stats.saveStatsToSpell(stats, stack);
 
     }
 }

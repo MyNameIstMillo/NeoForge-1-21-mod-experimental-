@@ -1,7 +1,11 @@
 package net.mynameistmillo.experimentalmod.spellEntity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,29 +55,35 @@ public class bubbleSpark extends Item implements ISpell {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
+        SpellStats stats = new SpellStats();
+        stats = stats.loadStatsFromStack(thisSpell);
 
-        this.baseStats.applyToProjectile(proj, pos, normal, caster);
+
+        this.baseStats.applyToProjectile(proj, pos, normal, caster, stats);
 
         level.addFreshEntity(proj);
-
-
 
         return proj;
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack) {
+    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
+
+        SpellStats stats = new SpellStats();
+        stats = stats.loadStatsFromStack(thisSpell);
+
+
+        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
+            living.hurt(living.damageSources().generic() , stats.get(StatsKey.DAMAGE));
+        }
 
     }
 
     @Override
-    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack) {
+    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
 
     }
 
-    @Override
-    public Explosion createExplosion(Level level, BlockPos pos, Player caster, ItemStack wandStack) {
-        return null;
-    }
+
 
 }
