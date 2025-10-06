@@ -8,6 +8,7 @@ import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.spellEntity.projectile.bubbleSpark;
 import net.mynameistmillo.experimentalmod.spellEntity.projectile.sparkBolt;
+import net.mynameistmillo.experimentalmod.spellEntity.projectile.teleportBolt;
 import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedDown;
 import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedUp;
 import net.neoforged.bus.api.IEventBus;
@@ -37,6 +38,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> BUBBLE_SPARK = ITEMS.register("bubble_spark",
             ()-> new bubbleSpark(new Item.Properties()));
+
+    public static final DeferredItem<Item> TELEPORT_BOLT = ITEMS.register("teleport_bolt",
+            ()-> new teleportBolt(new Item.Properties()));
 
     public static final DeferredItem<Item> SPEED_UP = ITEMS.register("speed_up",
             () -> new SpeedUp(new Item.Properties()));

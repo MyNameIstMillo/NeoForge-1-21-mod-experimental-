@@ -12,6 +12,7 @@ public class EntityDataTextures {
         switch (name){
             case "spark_bolt" -> res = "spark_bolt_side";
             case "bubble_spark" -> res = "bubble_spark_side";
+            case "teleport_bolt" -> res = "teleport_bolt_side";
             default -> res = "default_side";
         }
         res = "textures/entity/basic_projectile/"+res+".png";
@@ -29,6 +30,7 @@ public class EntityDataTextures {
         switch (name){
             case "spark_bolt" -> res = "spark_bolt_front";
             case "bubble_spark" -> res = "bubble_spark_side";
+            case "teleport_bolt" -> res = "teleport_bolt_side";
             default -> res = "default_front";
         }
         res = "textures/entity/basic_projectile/"+res+".png";
