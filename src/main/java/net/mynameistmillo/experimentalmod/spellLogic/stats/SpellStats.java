@@ -53,7 +53,7 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
                                   Vec3 look,
                                   Player caster,
                                   SpellStats stats){
-        LOGGER.info("spell stats -> {}", stats);
+        //LOGGER.info("spell stats -> {}", stats);
         double shift = stats.get(StatsKey.DISPLACEMENT);
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();

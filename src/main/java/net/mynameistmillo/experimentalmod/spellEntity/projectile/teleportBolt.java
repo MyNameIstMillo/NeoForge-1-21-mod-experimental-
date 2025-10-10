@@ -2,20 +2,28 @@ package net.mynameistmillo.experimentalmod.spellEntity.projectile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class teleportBolt extends Item implements ISpell {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public final SpellStats baseStats;
 
@@ -80,13 +88,12 @@ public class teleportBolt extends Item implements ISpell {
     public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
         if (level.isClientSide()) return;
         if(pos != null && normal != null) {
-            double x =  pos.getX() + normal.x();
-            double y =  pos.getY() + normal.y();
-            double z =  pos.getZ() + normal.z();
+            double x = pos.getX() ;
+            double y = pos.getY() ;
+            double z = pos.getZ() ;
 
 
-
-            caster.teleportTo(x, y, z);
+            caster.teleportTo(x +0.5f, y, z +0.5f);
         }
 
     }
