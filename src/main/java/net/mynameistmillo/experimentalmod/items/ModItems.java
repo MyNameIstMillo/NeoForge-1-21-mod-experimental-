@@ -9,6 +9,7 @@ import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.spellEntity.projectile.bubbleSpark;
 import net.mynameistmillo.experimentalmod.spellEntity.projectile.sparkBolt;
 import net.mynameistmillo.experimentalmod.spellEntity.projectile.teleportBolt;
+import net.mynameistmillo.experimentalmod.spellModifier.draw.Double;
 import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedDown;
 import net.mynameistmillo.experimentalmod.spellModifier.speed.SpeedUp;
 import net.neoforged.bus.api.IEventBus;
@@ -42,11 +43,18 @@ public class ModItems {
     public static final DeferredItem<Item> TELEPORT_BOLT = ITEMS.register("teleport_bolt",
             ()-> new teleportBolt(new Item.Properties()));
 
+
+
     public static final DeferredItem<Item> SPEED_UP = ITEMS.register("speed_up",
             () -> new SpeedUp(new Item.Properties()));
 
     public static final DeferredItem<Item> SPEED_DOWN = ITEMS.register("speed_down",
             () -> new SpeedDown(new Item.Properties()));
+
+
+
+    public static final DeferredItem<Item> DOUBLE = ITEMS.register("double",
+            () -> new Double(new Item.Properties()));
 
 
 

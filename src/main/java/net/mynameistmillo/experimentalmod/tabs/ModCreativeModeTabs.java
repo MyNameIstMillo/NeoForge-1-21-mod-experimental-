@@ -39,6 +39,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.TELEPORT_BOLT);
                         output.accept(ModItems.SPEED_UP);
                         output.accept(ModItems.SPEED_DOWN);
+                        output.accept(ModItems.DOUBLE);
 
 
 

@@ -41,6 +41,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.SPEED_DOWN.get())
 
 
+                .add(ModItems.DOUBLE.get())
+
+
         ;
     }
 }

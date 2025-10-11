@@ -4,6 +4,7 @@
     "experimentalmodid:spark_bolt",
     "experimentalmodid:teleport_bolt",
     "experimentalmodid:speed_up",
-    "experimentalmodid:speed_down"
+    "experimentalmodid:speed_down",
+    "experimentalmodid:double"
   ]
 }

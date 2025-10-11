@@ -16,10 +16,10 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class DrawLogic implements INBTSerializable<CompoundTag> {
+public class DrawStats implements INBTSerializable<CompoundTag> {
     private final EnumMap<DrawKey, Integer> map = new EnumMap<DrawKey, Integer>(DrawKey.class);
 
-    public DrawLogic(){
+    public DrawStats(){
         for (DrawKey k : DrawKey.values()){
             map.put(k, k.getDefaultValue());
         }
@@ -33,20 +33,44 @@ public class DrawLogic implements INBTSerializable<CompoundTag> {
         map.put(key, value);
     }
 
-    public DrawLogic copy(){
-        DrawLogic drawLogic = new DrawLogic();
-        for (DrawKey key : DrawKey.values()) drawLogic.set(key, this.get(key));
-        return drawLogic;
+    public DrawStats copy(){
+        DrawStats drawStats = new DrawStats();
+        for (DrawKey key : DrawKey.values()) drawStats.set(key, this.get(key));
+        return drawStats;
     }
 
-    public void saveModifiersIntoStack(Level level, ItemStack modifier, ItemStack drawStack){
+    public ItemStack saveStatsDraw(DrawStats stats, ItemStack stack){
+        CompoundTag tag = new CompoundTag();
+        for (DrawKey key : DrawKey.values()){
+            tag.putInt(key.name(), stats.get(key));
+        }
+        stack.set(ModDataComponents.DRAW_STATS.get(), tag);
+        return stack;
+    }
+
+    public DrawStats loadStatsFromDraw(ItemStack stack){
+        CompoundTag tag = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
+
+        DrawStats stats = new DrawStats();
+        for (DrawKey key : DrawKey.values()){
+            if (tag.contains(key.name())){
+                stats.set(key, tag.getInt(key.name()));
+            }
+            else {
+                stats.set(key, key.getDefaultValue());
+            }
+        }
+        return stats;
+    }
+
+
+    public ItemStack saveModifiersIntoStack(Level level, ItemStack modifier, ItemStack drawStack){
         List<ItemStack> list = loadModifiersFormStack(level, drawStack);
         list.add(modifier);
 
         ListTag listTag = new ListTag();
 
-        for (int i=0; i<list.size(); i++){
-            ItemStack stack = list.get(i);
+        for (ItemStack stack : list){
             CompoundTag tag = new CompoundTag();
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
@@ -57,6 +81,8 @@ public class DrawLogic implements INBTSerializable<CompoundTag> {
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Modifiers", listTag);
         drawStack.set(ModDataComponents.SAVED_MODIFIERS.get(), rootTag);
+
+        return drawStack;
     }
 
 

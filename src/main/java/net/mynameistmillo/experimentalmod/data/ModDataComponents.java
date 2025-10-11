@@ -52,6 +52,8 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.INT)
                             .build());
 
+    //Projectile
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SPELL_STATS =
             DATA_COMPONENTS.register("spell_stats",
                     ()-> new DataComponentType.Builder<CompoundTag>()
@@ -59,8 +61,18 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
                             .build());
 
+
+    //Draw
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SAVED_MODIFIERS =
             DATA_COMPONENTS.register("saved_modifiers",
+                    ()-> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> DRAW_STATS =
+            DATA_COMPONENTS.register("draw_stats",
                     ()-> new DataComponentType.Builder<CompoundTag>()
                             .persistent(CompoundTag.CODEC)
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)

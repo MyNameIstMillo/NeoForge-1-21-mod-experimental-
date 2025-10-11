@@ -16,8 +16,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
 import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
 import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
+import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawKey;
+import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawStats;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,26 +188,42 @@ public class WandItem extends Item {
              ItemStack stack = allList.get(i);
 
              if (stack.getItem() instanceof IModifier modifier) {
-                 int spellIndex = findIndexOfNextSpell(allList, i);
-                 if (spellIndex > 0) {
+                 int nextIndexOfSomeThing = findIndexOfNextSpell(allList, i);
+                 if (nextIndexOfSomeThing > 0) {
+                     ItemStack nextItemStackSomeThing = allList.get(nextIndexOfSomeThing);
 
-                     ItemStack target = allList.get(spellIndex).copy();
-                     ItemStack editedStack = modifier.applyChanges(level, target);
+                     if(nextItemStackSomeThing.getItem() instanceof IProjectile){
 
-                     allList.set(spellIndex, editedStack.copy());
+                         ItemStack editedStack = modifier.applyChanges(level, nextItemStackSomeThing);
+
+                         allList.set(nextIndexOfSomeThing, editedStack.copy());
+                     }
+
+                     if (nextItemStackSomeThing.getItem() instanceof IDraw){
+
+                         DrawStats drawStats = new DrawStats();
+                         ItemStack drawStack = drawStats.saveModifiersIntoStack(level, stack, nextItemStackSomeThing);
+
+                         LOGGER.info("drawStack -> {}", drawStack);
+
+                         allList.set(nextIndexOfSomeThing, drawStack.copy());
+
+                     }
                  }
              }
 
-             if (stack.getItem() instanceof IProjectile) {
+             if (stack.getItem() instanceof IProjectile || stack.getItem() instanceof IDraw) {
                  spellList.add(stack.copy());
              }
          }
+         LOGGER.info("list -> {}", spellList);
          saveCompactSpells(wand, spellList, level);
     }
 
     public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
         for (int i=index; i<list.size(); i++){
             if (list.get(i).getItem() instanceof IProjectile) return i;
+            if (list.get(i).getItem() instanceof IDraw) return i;
         }
 
         return -1;
@@ -252,6 +271,7 @@ public class WandItem extends Item {
                 list.add(stack.copy());
             }
         }
+        LOGGER.info("list 2 -> {}", list);
         return list;
     }
 
@@ -263,29 +283,56 @@ public class WandItem extends Item {
         //int capacity = getCapacity(wand);
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = getCompactSpells(wand, level);
+        int maxIndex = storedSpells.size();
 
-        ItemStack currentSpell = storedSpells.get(index);
+        ItemStack currentStack = storedSpells.get(index);
 
 //        int checked=0;
-//        ItemStack currentSpell = ItemStack.EMPTY;
+//        ItemStack currentStack = ItemStack.EMPTY;
 //        while(checked < capacity){
-//                currentSpell = storedSpells.get(index);
-//                if(!currentSpell.is(Items.DIRT)){
+//                currentStack = storedSpells.get(index);
+//                if(!currentStack.is(Items.DIRT)){
 //                        break;
 //                    }
 //                index = (index+1)%capacity;
 //            }
 
-        if(currentSpell.getItem() instanceof IProjectile spellCast){
+        if(currentStack.getItem() instanceof IProjectile projectile){
 
-            Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, player.getLookAngle(), wand, currentSpell, index);
-
-
+            Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
+                    player.getLookAngle(), wand, currentStack, index);
 
             increaseIndex(wand);
 
            return InteractionResultHolder.success(wand);
         }
+
+        if(currentStack.getItem() instanceof IDraw draw){
+
+            DrawStats stats = new DrawStats();
+            stats = stats.loadStatsFromDraw(currentStack);
+            int draw_max = stats.get(DrawKey.DRAW) + index;
+            int indexEnd = index;
+
+
+            for (int i=index; i<draw_max; i++){
+                if (i > maxIndex) {
+                    setCurrentIndex(wand, 0);
+                    break;
+                }
+                if (currentStack.getItem() instanceof IProjectile projectile){
+                    Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
+                            player.getLookAngle(), wand, currentStack, index);
+
+                }
+                indexEnd++;
+
+            }
+
+            setCurrentIndex(wand, indexEnd);
+        }
+
+
         return InteractionResultHolder.pass(wand);
     }
 
