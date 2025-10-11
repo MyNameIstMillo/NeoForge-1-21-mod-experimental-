@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
-import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
@@ -107,8 +107,8 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
     }
 
     public ItemStack resetStats(ItemStack stack){
-        if (!(stack.getItem() instanceof ISpell iSpell)) return null;
-        SpellStats stats = iSpell.getBaseStats().copy();
+        if (!(stack.getItem() instanceof IProjectile iProjectile)) return null;
+        SpellStats stats = iProjectile.getBaseStats().copy();
 
         CompoundTag tag = new CompoundTag();
         for (StatsKey key : StatsKey.values()) {

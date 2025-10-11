@@ -10,7 +10,7 @@ import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public interface ISpell {
+public interface IProjectile {
 
     SpellStats getBaseStats();
 

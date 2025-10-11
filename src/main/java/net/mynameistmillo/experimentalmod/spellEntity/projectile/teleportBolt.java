@@ -1,28 +1,23 @@
 package net.mynameistmillo.experimentalmod.spellEntity.projectile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
-import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class teleportBolt extends Item implements ISpell {
+public class teleportBolt extends Item implements IProjectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public final SpellStats baseStats;
@@ -46,7 +41,7 @@ public class teleportBolt extends Item implements ISpell {
     @Override
     public Entity spawnSpell(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell, int index) {
         if(level.isClientSide()) return null;
-        if (!(thisSpell.getItem() instanceof ISpell iSpell)) return null;
+        if (!(thisSpell.getItem() instanceof IProjectile iProjectile)) return null;
         //create projectile
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 

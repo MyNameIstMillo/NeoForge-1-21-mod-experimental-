@@ -13,12 +13,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
-import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
 import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class WandItem extends Item {
         List<ItemStack> l2 = new ArrayList<>();
 
         for (ItemStack stack : list){
-            if (!(stack.getItem() instanceof ISpell)) {
+            if (!(stack.getItem() instanceof IProjectile)) {
                 l2.add(stack);
                 continue;
             }
@@ -196,7 +195,7 @@ public class WandItem extends Item {
                  }
              }
 
-             if (stack.getItem() instanceof ISpell) {
+             if (stack.getItem() instanceof IProjectile) {
                  spellList.add(stack.copy());
              }
          }
@@ -205,7 +204,7 @@ public class WandItem extends Item {
 
     public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
         for (int i=index; i<list.size(); i++){
-            if (list.get(i).getItem() instanceof ISpell) return i;
+            if (list.get(i).getItem() instanceof IProjectile) return i;
         }
 
         return -1;
@@ -277,7 +276,7 @@ public class WandItem extends Item {
 //                index = (index+1)%capacity;
 //            }
 
-        if(currentSpell.getItem() instanceof ISpell spellCast){
+        if(currentSpell.getItem() instanceof IProjectile spellCast){
 
             Entity entity = spellCast.spawnSpell(level, player.getOnPos(), player, player.getLookAngle(), wand, currentSpell, index);
 

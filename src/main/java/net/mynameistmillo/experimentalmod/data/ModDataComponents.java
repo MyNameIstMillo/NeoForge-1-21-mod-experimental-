@@ -59,6 +59,13 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
                             .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SAVED_MODIFIERS =
+            DATA_COMPONENTS.register("saved_modifiers",
+                    ()-> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
 
 
 }

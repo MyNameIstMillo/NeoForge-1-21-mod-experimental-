@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
-import net.mynameistmillo.experimentalmod.spellLogic.ISpell;
+import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,7 +310,7 @@ public class BasicProjectileEntity extends Projectile {
 
         if(!this.spellStack.isEmpty()){
             Item item = this.spellStack.getItem();
-            if(item instanceof ISpell){
+            if(item instanceof IProjectile){
 
                 Player caster = null;
                 if(this.casterUUID != null){
@@ -319,7 +319,7 @@ public class BasicProjectileEntity extends Projectile {
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
-                ISpell spellLogic = (ISpell) item;
+                IProjectile spellLogic = (IProjectile) item;
 
                 spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.spellStack);
                 handleOnExpire(hitBlock, normal);
@@ -335,7 +335,7 @@ public class BasicProjectileEntity extends Projectile {
 
         if(!this.spellStack.isEmpty()){
             Item item = this.spellStack.getItem();
-            if(item instanceof ISpell){
+            if(item instanceof IProjectile){
 
                 Player caster = null;
                 if(this.casterUUID != null){
@@ -344,7 +344,7 @@ public class BasicProjectileEntity extends Projectile {
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
-                ISpell spellLogic = (ISpell) item;
+                IProjectile spellLogic = (IProjectile) item;
                 spellLogic.onExpire(this.level(), pos, caster, normal, this.wandStack, this.spellStack);
             }
         }
