@@ -29,11 +29,6 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public SpellStats(SpellStats other){
-        this();
-        this.map.putAll(other.map);
-    }
-
     public float get(StatsKey key){
         return map.getOrDefault(key, key.getDefaultValue());
     }

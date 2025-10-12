@@ -8,6 +8,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -61,6 +62,18 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             }
         }
         return stats;
+    }
+
+    public ItemStack resetsStats(ItemStack stack){
+        if (!(stack.getItem() instanceof IDraw iDraw)) return null;
+        DrawStats stats = iDraw.getBaseDrawStats().copy();
+
+        CompoundTag tag = new CompoundTag();
+        for (DrawKey key : DrawKey.values()){
+            tag.putInt(key.name(), stats.get(key));
+        }
+        stack.set(ModDataComponents.DRAW_STATS.get(), tag);
+        return stack;
     }
 
 
@@ -123,5 +136,10 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
                 map.put(key, key.getDefaultValue());
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return map.toString();
     }
 }

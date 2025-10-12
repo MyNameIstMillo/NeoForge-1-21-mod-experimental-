@@ -26,6 +26,7 @@ public class SpeedDown extends Item implements IModifier {
         SpellStats stats = new SpellStats();
         stats = stats.loadStatsFromStack(stack);
 
+        LOGGER.info("stats -> {}", stats);
 
         float speed = stats.get(StatsKey.SPEED);
         speed *=0.5f;

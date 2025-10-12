@@ -72,13 +72,19 @@ public class WandItem extends Item {
         List<ItemStack> l2 = new ArrayList<>();
 
         for (ItemStack stack : list){
-            if (!(stack.getItem() instanceof IProjectile)) {
-                l2.add(stack);
+            if (stack.getItem() instanceof IProjectile) {
+                SpellStats stats = new SpellStats();
+                ItemStack s2 = stats.resetStats(stack);
+                l2.add(s2);
                 continue;
             }
-            SpellStats stats = new SpellStats();
-            ItemStack s2 = stats.resetStats(stack);
-            l2.add(s2);
+            if (stack.getItem() instanceof IDraw){
+                DrawStats stats = new DrawStats();
+                ItemStack s2 = stats.resetsStats(stack);
+                l2.add(s2);
+                continue;
+            }
+            l2.add(stack);
         }
         return l2;
     }
@@ -239,8 +245,17 @@ public class WandItem extends Item {
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
-            CompoundTag comp = stack.getOrDefault(ModDataComponents.SPELL_STATS.get(), new CompoundTag());
-            tag.put("SpellStats", comp);
+            if (stack.getItem() instanceof IProjectile) {
+                CompoundTag comp = stack.getOrDefault(ModDataComponents.SPELL_STATS.get(), new CompoundTag());
+                tag.put("SpellStats", comp);
+            }
+            if (stack.getItem() instanceof IDraw){
+                CompoundTag comp = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
+                tag.put("DrawStats", comp);
+                LOGGER.info("stats -> {}", comp);
+
+            }
+
             tag.putString("proj_name", "");
             listTag.add(tag);
             count++;
@@ -267,6 +282,10 @@ public class WandItem extends Item {
                 if (tag.contains("SpellStats", Tag.TAG_COMPOUND)){
                     CompoundTag comp = tag.getCompound("SpellStats");
                     stack.set(ModDataComponents.SPELL_STATS.get(), comp);
+                }
+                if (tag.contains("DrawStats", Tag.TAG_COMPOUND)){
+                    CompoundTag comp = tag.getCompound("DrawStats");
+                    stack.set(ModDataComponents.DRAW_STATS.get(), comp);
                 }
                 list.add(stack.copy());
             }
@@ -314,22 +333,28 @@ public class WandItem extends Item {
             int draw_max = stats.get(DrawKey.DRAW) + index;
             int indexEnd = index;
 
+            LOGGER.info("stack -> {} , index - draw_max -> {} {} , stats -> {}",
+                    currentStack, index, draw_max, stats);
 
-            for (int i=index; i<draw_max; i++){
+            for (int i=index+1; i<draw_max+1; i++){
                 if (i > maxIndex) {
                     setCurrentIndex(wand, 0);
                     break;
                 }
-                if (currentStack.getItem() instanceof IProjectile projectile){
+                ItemStack proj = storedSpells.get(i);
+                LOGGER.info("proj -> {}", proj);
+                if (proj.getItem() instanceof IProjectile projectile){
                     Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
-                            player.getLookAngle(), wand, currentStack, index);
+                            player.getLookAngle(), wand, proj, i);
 
                 }
                 indexEnd++;
 
             }
-
+            LOGGER.info("end {}", indexEnd);
             setCurrentIndex(wand, indexEnd);
+            increaseIndex(wand);
+            return InteractionResultHolder.success(wand);
         }
 
 

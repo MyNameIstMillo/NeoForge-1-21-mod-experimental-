@@ -29,7 +29,7 @@ public class sparkBolt extends Item implements IProjectile {
         this.baseStats.set(StatsKey.DRAG, 1.0f);
         this.baseStats.set(StatsKey.SPEED, 0.9f);
         this.baseStats.set(StatsKey.LIFETIME, 60);
-        this.baseStats.set(StatsKey.DAMAGE, 1.0f);
+        this.baseStats.set(StatsKey.DAMAGE, 20.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT, 0);
 
     }
