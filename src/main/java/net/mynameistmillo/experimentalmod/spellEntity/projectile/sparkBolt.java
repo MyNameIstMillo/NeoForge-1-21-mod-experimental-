@@ -78,7 +78,7 @@ public class sparkBolt extends Item implements IProjectile {
                       ItemStack thisSpell) {
         if(level.isClientSide()) return;
         //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
-        LOGGER.info("hit!");
+        //LOGGER.info("hit!");
 
         SpellStats stats = new SpellStats();
         stats = stats.loadStatsFromStack(thisSpell);

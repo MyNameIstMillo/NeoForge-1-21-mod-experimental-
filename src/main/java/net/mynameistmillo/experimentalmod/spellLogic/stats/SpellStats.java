@@ -48,7 +48,6 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
                                   Vec3 look,
                                   Player caster,
                                   SpellStats stats){
-        //LOGGER.info("spell stats -> {}", stats);
         double shift = stats.get(StatsKey.DISPLACEMENT);
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
@@ -111,28 +110,6 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
         }
         stack.set(ModDataComponents.SPELL_STATS.get(), tag);
         return stack;
-    }
-
-
-
-    public void writeToBuffer(FriendlyByteBuf buf){
-        buf.writeByte(map.size());
-        for (StatsKey k : StatsKey.values()){
-            buf.writeUtf(k.getId());
-            buf.writeFloat(get(k));
-        }
-    }
-
-    public static SpellStats readFromBuffer(FriendlyByteBuf buf){
-        SpellStats stats = new SpellStats();
-        int count = buf.readByte();
-        for (int i=0; i<count; i++){
-            String id = buf.readUtf(128);
-            float val = buf.readFloat();
-            StatsKey key = StatsKey.byName(id);
-            if (key != null) stats.set(key, val);
-        }
-        return stats;
     }
 
     @Override

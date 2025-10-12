@@ -7,10 +7,13 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DrawStats implements INBTSerializable<CompoundTag> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     private final EnumMap<DrawKey, Integer> map = new EnumMap<DrawKey, Integer>(DrawKey.class);
 
     public DrawStats(){
@@ -73,6 +77,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             tag.putInt(key.name(), stats.get(key));
         }
         stack.set(ModDataComponents.DRAW_STATS.get(), tag);
+        LOGGER.info("tag -> {}", tag);
         return stack;
     }
 
@@ -113,6 +118,11 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             }
         }
         return list;
+    }
+
+    public boolean areSavedModifiers(Level level, ItemStack stack){
+        CompoundTag tag = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
+        return (tag != null && tag.contains("Modifiers", ListTag.TAG_LIST));
     }
 
 
