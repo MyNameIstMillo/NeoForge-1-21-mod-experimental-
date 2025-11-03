@@ -31,8 +31,8 @@ public class sparkBolt extends Item implements IProjectile {
         this.baseStats.set(StatsKey.ACCELERATION_L_R, 0.0f);
         this.baseStats.set(StatsKey.ACCELERATION_U_D, 0.0f);
         this.baseStats.set(StatsKey.ACCELERATION_F_B, 0.0f);
-        this.baseStats.set(StatsKey.VERTICAL_SPREAD, 0.0f);
-        this.baseStats.set(StatsKey.HORIZONTAL_SPREAD, 0.0f);
+        this.baseStats.set(StatsKey.VERTICAL_SPREAD, 30.0f);
+        this.baseStats.set(StatsKey.HORIZONTAL_SPREAD, 30.0f);
         this.baseStats.set(StatsKey.RECOIL, 0.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT_L_R, 0.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT_U_D, 0.0f);
