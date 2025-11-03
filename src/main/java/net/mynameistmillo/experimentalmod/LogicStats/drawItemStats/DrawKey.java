@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.spellLogic.drawLogic;
+package net.mynameistmillo.experimentalmod.LogicStats.drawItemStats;
 
 public enum DrawKey {
     DRAW("draw_size",0);

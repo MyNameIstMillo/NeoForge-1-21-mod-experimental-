@@ -1,16 +1,15 @@
-package net.mynameistmillo.experimentalmod.spellLogic.stats;
+package net.mynameistmillo.experimentalmod.LogicStats.projItemStats;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
-import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class SpellStats implements INBTSerializable<CompoundTag> {
                                   Vec3 look,
                                   Player caster,
                                   SpellStats stats){
-        double shift = stats.get(StatsKey.DISPLACEMENT);
+        double shift = stats.get(StatsKey.DISPLACEMENT_F_B);
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
         double baseOffset = 1.0;

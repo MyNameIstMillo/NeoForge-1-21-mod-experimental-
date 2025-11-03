@@ -4,10 +4,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
-import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
-import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
-import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.SpellStats;
+import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.StatsKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

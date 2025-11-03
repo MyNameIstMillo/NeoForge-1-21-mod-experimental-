@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
-import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

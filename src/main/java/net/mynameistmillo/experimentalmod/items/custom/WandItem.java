@@ -16,12 +16,12 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
-import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
-import net.mynameistmillo.experimentalmod.spellLogic.IModifier;
-import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
-import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawKey;
-import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawStats;
-import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawKey;
+import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawStats;
+import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.SpellStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -349,16 +349,6 @@ public class WandItem extends Item {
         //LOGGER.info("storedSpells -> {}", storedSpells);
 
         ItemStack currentStack = storedSpells.get(index);
-
-//        int checked=0;
-//        ItemStack currentStack = ItemStack.EMPTY;
-//        while(checked < capacity){
-//                currentStack = storedSpells.get(index);
-//                if(!currentStack.is(Items.DIRT)){
-//                        break;
-//                    }
-//                index = (index+1)%capacity;
-//            }
 
         if(currentStack.getItem() instanceof IProjectile projectile){
 

@@ -1,9 +1,9 @@
 package net.mynameistmillo.experimentalmod.spellModifier.draw;
 
 import net.minecraft.world.item.Item;
-import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
-import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawKey;
-import net.mynameistmillo.experimentalmod.spellLogic.drawLogic.DrawStats;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
+import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawKey;
+import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawStats;
 
 
 

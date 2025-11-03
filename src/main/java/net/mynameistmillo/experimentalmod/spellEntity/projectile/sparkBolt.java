@@ -10,9 +10,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
-import net.mynameistmillo.experimentalmod.spellLogic.IProjectile;
-import net.mynameistmillo.experimentalmod.spellLogic.stats.SpellStats;
-import net.mynameistmillo.experimentalmod.spellLogic.stats.StatsKey;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.SpellStats;
+import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.StatsKey;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +25,28 @@ public class sparkBolt extends Item implements IProjectile {
     public sparkBolt(Properties properties) {
         super(properties);
         this.baseStats = new SpellStats();
-        this.baseStats.set(StatsKey.GRAVITY, 0.03f);
-        this.baseStats.set(StatsKey.DRAG, 1.0f);
         this.baseStats.set(StatsKey.SPEED, 0.9f);
+        this.baseStats.set(StatsKey.DRAG, 1.0f);
+        this.baseStats.set(StatsKey.GRAVITY, 0.03f);
+        this.baseStats.set(StatsKey.ACCELERATION_L_R, 0.0f);
+        this.baseStats.set(StatsKey.ACCELERATION_U_D, 0.0f);
+        this.baseStats.set(StatsKey.ACCELERATION_F_B, 0.0f);
+        this.baseStats.set(StatsKey.VERTICAL_SPREAD, 0.0f);
+        this.baseStats.set(StatsKey.HORIZONTAL_SPREAD, 0.0f);
+        this.baseStats.set(StatsKey.RECOIL, 0.0f);
+        this.baseStats.set(StatsKey.DISPLACEMENT_L_R, 0.0f);
+        this.baseStats.set(StatsKey.DISPLACEMENT_U_D, 0.0f);
+        this.baseStats.set(StatsKey.DISPLACEMENT_F_B, 0.0f);
+        this.baseStats.set(StatsKey.COLOUR, 17.0f); // purple
+        this.baseStats.set(StatsKey.EFFECT_ON_HIT, 0.0f);
+        this.baseStats.set(StatsKey.TOLERANCE, 100.0f);
+        this.baseStats.set(StatsKey.SPAGHETTI_TOLERANCE, 0.0f);
+        this.baseStats.set(StatsKey.TRIGGER_TYPE, 0.0f);
+        this.baseStats.set(StatsKey.PIERCING, 0.0f);
+        this.baseStats.set(StatsKey.TICK_EVENT, 30.0f);
+        this.baseStats.set(StatsKey.FRIENDLY_FIRE, 0.0f);
         this.baseStats.set(StatsKey.LIFETIME, 60);
         this.baseStats.set(StatsKey.DAMAGE, 20.0f);
-        this.baseStats.set(StatsKey.DISPLACEMENT, 0);
 
     }
 
@@ -56,8 +72,7 @@ public class sparkBolt extends Item implements IProjectile {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        SpellStats stats = new SpellStats();
-        stats = stats.loadStatsFromStack(thisSpell);
+        SpellStats stats = new SpellStats().loadStatsFromStack(thisSpell);
 
         
         //apply stats

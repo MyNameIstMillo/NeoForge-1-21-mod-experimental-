@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.spellLogic.drawLogic;
+package net.mynameistmillo.experimentalmod.LogicStats.drawItemStats;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
-import net.mynameistmillo.experimentalmod.spellLogic.IDraw;
+import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
