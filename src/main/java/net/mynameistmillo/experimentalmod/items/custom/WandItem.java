@@ -15,8 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.GetSavedSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveType;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveOrGetType;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
@@ -91,17 +92,6 @@ public class WandItem extends Item {
         return l2;
     }
 
-    public void saveSpellsType(ItemStack wand, List<ItemStack> list,
-                               Level level, SaveType type){
-        int cap = getCapacity(wand);
-
-        SaveSpells.saveSpells(wand, resetSpellStats(list), level, cap, type);
-        setCurrentIndex(wand, 0);
-        compactSpells(wand, list, level);
-        //compact
-
-    }
-
 
 
     public void saveSpells(ItemStack wand, List<ItemStack> list, Level level) {
@@ -133,7 +123,7 @@ public class WandItem extends Item {
 
         wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
         setCurrentIndex(wand, 0);
-        compactSpells(wand, spellList, level);
+        //compactSpells(wand, spellList, level);
     }
 
     public NonNullList<ItemStack> getSavedSpells(ItemStack wand, Level level) {
@@ -147,7 +137,8 @@ public class WandItem extends Item {
             for (int i = 0; i < capacity; i++) {
                 CompoundTag spellTag = listTag.getCompound(i);
                 int slot = spellTag.getInt("Slot");
-                ItemStack spell = ItemStack.parse(level.registryAccess(), spellTag).orElse(new ItemStack(Items.DIRT));
+                ItemStack spell = ItemStack.parse(level.registryAccess(),
+                                    spellTag).orElse(new ItemStack(Items.DIRT));
 
                 if(slot >= 0 && slot < list.size()){
                     list.set(slot, spell);
@@ -155,21 +146,6 @@ public class WandItem extends Item {
             }
         }
         return list;
-    }
-
-    public boolean areThereSpellsInWand(ItemStack wand, Level level) {
-        if (!(wand.getItem() instanceof WandItem wandItem)) {
-            return false;
-        }
-        NonNullList<ItemStack> contents = wandItem.getSavedSpells(wand, level);
-
-        for (ItemStack stack : contents) {
-
-            if (!stack.is(Items.DIRT)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void saveWithDirt(ItemStack wand, Level level){
@@ -191,6 +167,26 @@ public class WandItem extends Item {
 
     }
 
+
+
+    public boolean areThereSpellsInWand(ItemStack wand, Level level) {
+        if (!(wand.getItem() instanceof WandItem wandItem)) {
+            return false;
+        }
+        List<ItemStack> contents = GetSavedSpells.getSavedSpellsType(wand,level,
+                getCapacity(wand), SaveOrGetType.NORMAL);
+
+        for (ItemStack stack : contents) {
+
+            if (!stack.is(Items.DIRT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     public List<ItemStack> destroyEmpty(List<ItemStack> list){
         List<ItemStack> nonEmpty = new ArrayList<>();
         for(ItemStack stack : list){
@@ -201,7 +197,8 @@ public class WandItem extends Item {
     }
 
     public void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
-         List<ItemStack> allList = destroyEmpty(list);
+         List<ItemStack> allList = destroyEmpty(resetSpellStats(list));
+
          List<ItemStack> spellList = new ArrayList<>();
          List<Integer> deleteIndexList = new ArrayList<>();
          int maxIndex = allList.size();
@@ -264,7 +261,7 @@ public class WandItem extends Item {
          }
 
          spellList = deleteIndexList(spellList, deleteIndexList);
-         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveType.COMPACT);
+         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveOrGetType.COMPACT);
          //saveCompactSpells(wand, spellList, level);
     }
 
@@ -295,6 +292,8 @@ public class WandItem extends Item {
         }
         return list;
     }
+
+
 
     public void saveCompactSpells(ItemStack wand, List<ItemStack> list, Level level){
         ListTag listTag = new ListTag();
@@ -340,7 +339,7 @@ public class WandItem extends Item {
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
 
                 if (tag.contains("ProjStats", Tag.TAG_COMPOUND)){
-                    CompoundTag comp = tag.getCompound("SpellStats");
+                    CompoundTag comp = tag.getCompound("ProjStats");
                     stack.set(ModDataComponents.SPELL_STATS.get(), comp);
                 }
                 if (tag.contains("DrawStats", Tag.TAG_COMPOUND)){
@@ -353,16 +352,18 @@ public class WandItem extends Item {
         return list;
     }
 
+
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack wand = player.getItemInHand(usedHand);
         if(level.isClientSide())    return InteractionResultHolder.pass(wand);
 
-        //int capacity = getCapacity(wand);
         int index = getCurrentIndex(wand);
-        List<ItemStack> storedSpells = getCompactSpells(wand, level);
+        //List<ItemStack> storedSpells = getCompactSpells(wand, level);
+        List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
+                                                    0, SaveOrGetType.COMPACT);
         int maxIndex = storedSpells.size();
-        //LOGGER.info("storedSpells -> {}", storedSpells);
 
         ItemStack currentStack = storedSpells.get(index);
 
@@ -411,8 +412,11 @@ public class WandItem extends Item {
         int capacity = getCapacity(wand);
 
         if (Screen.hasShiftDown()){
-            NonNullList<ItemStack> spells = getSavedSpells(wand, level);
+            //NonNullList<ItemStack> spells = getSavedSpells(wand, level);
+            List<ItemStack> spells = GetSavedSpells.getSavedSpellsType(wand, level,
+                                                capacity, SaveOrGetType.NORMAL);
             tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
+            LOGGER.info("spells -> {}",spells);
 
 
             for(int i=0; i<capacity; i++){

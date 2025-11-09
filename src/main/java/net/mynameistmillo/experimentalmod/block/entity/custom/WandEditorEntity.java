@@ -23,8 +23,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.GetSavedSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveType;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveOrGetType;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorMenu;
@@ -111,19 +112,21 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
-        NonNullList<ItemStack> SpellsToSend = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
+        NonNullList<ItemStack> spellsToSend = NonNullList.withSize(capacity, new ItemStack(Items.DIRT));
 
         for(int i=0; i<capacity; i++){
             ItemStack stack = inventory.getStackInSlot(i);
             if(stack.is(Items.AIR)) continue;
 
-            SpellsToSend.set(i, stack);
+            spellsToSend.set(i, stack);
             inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
 
-        if(SpellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
-            wandItem.saveSpellsType(wand, SpellsToSend, this.level, SaveType.NORMAL);
-            //wandItem.saveSpells(wand, SpellsToSend, this.level);
+        if(spellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
+            LOGGER.info("{}",spellsToSend);
+            SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), SaveOrGetType.NORMAL);
+            wandItem.compactSpells(wand, spellsToSend, this.level);
+
             playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
         }
         else{
@@ -138,7 +141,9 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
             return;
         }
-        List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
+        List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, this.level,
+                                            wandItem.getCapacity(wand), SaveOrGetType.NORMAL);
+        //List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
 
         for(int i=0; i<capacity; i++){
             if(storedSpells.get(i).is(Items.DIRT)) continue;

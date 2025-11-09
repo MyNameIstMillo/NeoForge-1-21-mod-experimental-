@@ -16,7 +16,7 @@ public class SaveSpells {
 
     public static void saveSpells(ItemStack wand, List<ItemStack> list,
                                   Level level, int cap,
-                                  SaveType type){
+                                  SaveOrGetType type){
         ListTag spellsListTag = new ListTag();
 
         for (int i=0;i<cap;i++){
@@ -28,7 +28,7 @@ public class SaveSpells {
             }
             else spellTag.putString("id", "minecraft:dirt");
 
-            if (type==SaveType.COMPACT){
+            if (type== SaveOrGetType.COMPACT){
                 if(spell.getItem() instanceof IProjectile){
                     CompoundTag cT = spell.getOrDefault(ModDataComponents.SPELL_STATS.get(),
                             new CompoundTag());

@@ -1,0 +1,75 @@
+package net.mynameistmillo.experimentalmod.WandLogic;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GetSavedSpells {
+
+    public static List<ItemStack> getSavedSpellsType(ItemStack wand, Level level,
+                                                     int cap, SaveOrGetType type) {
+        List<ItemStack> list = new ArrayList<>();
+        CompoundTag wandSpells = new CompoundTag();
+        switch (type) {
+            case NORMAL ->{
+                for(int i = 0; i < cap; i++) {
+                    list.add(new ItemStack(Items.DIRT));
+                }
+                 wandSpells = wand.get(ModDataComponents.WAND_SPELLS.get());
+            }
+            case COMPACT -> {
+                wandSpells = wand.get(ModDataComponents.WAND_SPELLS_COMPACT.get());
+                cap = wand.get(ModDataComponents.WAND_CAPACITY_COMPACT.get());
+            }
+        }
+
+        if (wandSpells !=null && wandSpells.contains("Spells", ListTag.TAG_LIST)){
+            ListTag listTag = wandSpells.getList("Spells", Tag.TAG_COMPOUND);
+
+            for (int i=0;i<cap;i++){
+                CompoundTag spellTag = listTag.getCompound(i);
+
+                switch (type){
+                    case NORMAL -> {
+                        int index = spellTag.getInt("Slot");
+                        ItemStack spell = ItemStack.parse(level.registryAccess(),
+                                spellTag).orElse(new ItemStack(Items.DIRT));
+
+                        if(index>=0 && index>=list.size()) {
+                            list.set(index, spell);
+                        }
+                    }
+                    case COMPACT -> {
+                        ItemStack spell = ItemStack.parseOptional(level.registryAccess(), spellTag);
+                        if(spellTag.contains("ProjStats", Tag.TAG_COMPOUND)){
+                            CompoundTag cp = spellTag.getCompound("ProjStats");
+                            spell.set(ModDataComponents.SPELL_STATS.get(), cp);
+                        }
+                        if(spellTag.contains("DrawStats", Tag.TAG_COMPOUND)){
+                            CompoundTag cp = spellTag.getCompound("DrawStats");
+                            spell.set(ModDataComponents.DRAW_STATS, cp);
+                        }
+                        list.add(spell);
+                    }
+                }
+
+
+            }
+        }
+        return list;
+    }
+
+
+
+
+
+
+
+}
