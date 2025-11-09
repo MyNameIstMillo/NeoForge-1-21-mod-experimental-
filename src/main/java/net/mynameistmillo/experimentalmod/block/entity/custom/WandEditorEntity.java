@@ -23,6 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveType;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorMenu;
@@ -120,8 +122,8 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         }
 
         if(SpellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
-            wandItem.saveSpells(wand, SpellsToSend, this.level);
-            //LOGGER.info("sendSpellsToWand -> list to send -> {}", SpellsToSend);
+            wandItem.saveSpellsType(wand, SpellsToSend, this.level, SaveType.NORMAL);
+            //wandItem.saveSpells(wand, SpellsToSend, this.level);
             playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
         }
         else{
@@ -137,7 +139,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             return;
         }
         List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
-        //LOGGER.info("downloadSpellsFromWand -> list recived -> {}", storedSpells);
 
         for(int i=0; i<capacity; i++){
             if(storedSpells.get(i).is(Items.DIRT)) continue;
@@ -155,7 +156,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                 level.addFreshEntity(entity);
                 inventory.setStackInSlot(i, storedSpells.get(i).copy());
             }
-            wandItem.saveWithDirt(wand, level);
+            SaveSpells.saveWithDirt(wand, wandItem.getCapacity(wand));
         }
         playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
 

@@ -77,7 +77,6 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             tag.putInt(key.name(), stats.get(key));
         }
         stack.set(ModDataComponents.DRAW_STATS.get(), tag);
-        LOGGER.info("tag -> {}", tag);
         return stack;
     }
 

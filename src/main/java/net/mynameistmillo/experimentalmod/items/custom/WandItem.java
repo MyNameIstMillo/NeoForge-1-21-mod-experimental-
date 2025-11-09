@@ -15,6 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveType;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
@@ -88,6 +90,19 @@ public class WandItem extends Item {
         }
         return l2;
     }
+
+    public void saveSpellsType(ItemStack wand, List<ItemStack> list,
+                               Level level, SaveType type){
+        int cap = getCapacity(wand);
+
+        SaveSpells.saveSpells(wand, resetSpellStats(list), level, cap, type);
+        setCurrentIndex(wand, 0);
+        compactSpells(wand, list, level);
+        //compact
+
+    }
+
+
 
     public void saveSpells(ItemStack wand, List<ItemStack> list, Level level) {
         int capacity = getCapacity(wand);
@@ -176,7 +191,6 @@ public class WandItem extends Item {
 
     }
 
-
     public List<ItemStack> destroyEmpty(List<ItemStack> list){
         List<ItemStack> nonEmpty = new ArrayList<>();
         for(ItemStack stack : list){
@@ -250,7 +264,8 @@ public class WandItem extends Item {
          }
 
          spellList = deleteIndexList(spellList, deleteIndexList);
-         saveCompactSpells(wand, spellList, level);
+         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveType.COMPACT);
+         //saveCompactSpells(wand, spellList, level);
     }
 
     public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
@@ -286,10 +301,12 @@ public class WandItem extends Item {
         int count = 0;
 
         for (ItemStack stack : list){
+
             CompoundTag tag = new CompoundTag();
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
+
             if (stack.getItem() instanceof IProjectile) {
                 CompoundTag comp = stack.getOrDefault(ModDataComponents.SPELL_STATS.get(), new CompoundTag());
                 tag.put("SpellStats", comp);
@@ -297,7 +314,6 @@ public class WandItem extends Item {
             if (stack.getItem() instanceof IDraw){
                 CompoundTag comp = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
                 tag.put("DrawStats", comp);
-
             }
 
             tag.putString("proj_name", "");
@@ -323,7 +339,7 @@ public class WandItem extends Item {
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
 
-                if (tag.contains("SpellStats", Tag.TAG_COMPOUND)){
+                if (tag.contains("ProjStats", Tag.TAG_COMPOUND)){
                     CompoundTag comp = tag.getCompound("SpellStats");
                     stack.set(ModDataComponents.SPELL_STATS.get(), comp);
                 }
