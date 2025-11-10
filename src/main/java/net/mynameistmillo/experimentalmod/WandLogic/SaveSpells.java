@@ -6,13 +6,17 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class SaveSpells {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static void saveSpells(ItemStack wand, List<ItemStack> list,
                                   Level level, int cap,
@@ -48,6 +52,7 @@ public class SaveSpells {
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Spells", spellsListTag);
+        LOGGER.info("type -> {}, spells -> {}",type, spellsListTag);
         switch (type){
             case NORMAL -> wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
             case COMPACT -> {

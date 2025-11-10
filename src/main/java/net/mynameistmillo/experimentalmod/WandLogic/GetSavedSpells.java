@@ -6,12 +6,16 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetSavedSpells {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static List<ItemStack> getSavedSpellsType(ItemStack wand, Level level,
                                                      int cap, SaveOrGetType type) {
@@ -42,7 +46,7 @@ public class GetSavedSpells {
                         ItemStack spell = ItemStack.parse(level.registryAccess(),
                                 spellTag).orElse(new ItemStack(Items.DIRT));
 
-                        if(index>=0 && index>=list.size()) {
+                        if(index>=0 && index<=list.size()) {
                             list.set(index, spell);
                         }
                     }

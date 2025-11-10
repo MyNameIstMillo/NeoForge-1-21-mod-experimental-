@@ -123,7 +123,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         }
 
         if(spellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
-            LOGGER.info("{}",spellsToSend);
             SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), SaveOrGetType.NORMAL);
             wandItem.compactSpells(wand, spellsToSend, this.level);
 
