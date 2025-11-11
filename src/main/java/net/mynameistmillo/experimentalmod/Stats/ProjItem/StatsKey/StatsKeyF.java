@@ -1,6 +1,6 @@
-package net.mynameistmillo.experimentalmod.LogicStats.projItemStats;
+package net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey;
 
-public enum StatsKey {
+public enum StatsKeyF {
     //movement
     SPEED("speed", 1.0f),
     DRAG("drag", 1.0f),
@@ -17,18 +17,6 @@ public enum StatsKey {
     DISPLACEMENT_U_D("displacement_u_d", 0),
     DISPLACEMENT_F_B("displacement_f_b", 0),
 
-    //one time use
-    COLOUR("colour", 0.0f),
-    EFFECT_ON_HIT("effect_on_hit", 0.0f),
-    TOLERANCE("tolerance", 0.0f),
-    SPAGHETTI_TOLERANCE("spaghetti_tolerance", 0.0f),
-
-    //bollen stats
-    TRIGGER_TYPE("trigger_type",0.0F),
-    PIERCING("piercing", 0.0f),
-    TICK_EVENT("tick_event", 40.0f),
-    FRIENDLY_FIRE("friendly_fire", 0.0f),
-
     //stats
     LIFETIME("lifetime", 60.0f),
     DAMAGE("damage", 1.0f);
@@ -41,7 +29,7 @@ public enum StatsKey {
     private final String id;
     private final float defaultValue;
 
-    StatsKey(String id, float defaultValue){
+    StatsKeyF(String id, float defaultValue){
         this.id = id;
         this.defaultValue = defaultValue;
     }
@@ -49,10 +37,6 @@ public enum StatsKey {
     public String getId(){return id;}
     public float getDefaultValue(){return defaultValue;}
 
-    public static StatsKey byName(String name){
-        for (StatsKey s : values()) if (s.id.equals(name) || s.name().equalsIgnoreCase(name)) return s;
-        return null;
-    }
 
 
 }

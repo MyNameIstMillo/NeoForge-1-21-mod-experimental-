@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.LogicStats.Interface;
+package net.mynameistmillo.experimentalmod.Interface;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.WandLogic;
+package net.mynameistmillo.experimentalmod.WandLogic.SaveGet;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -54,7 +54,7 @@ public class GetSavedSpells {
                         ItemStack spell = ItemStack.parseOptional(level.registryAccess(), spellTag);
                         if(spellTag.contains("ProjStats", Tag.TAG_COMPOUND)){
                             CompoundTag cp = spellTag.getCompound("ProjStats");
-                            spell.set(ModDataComponents.SPELL_STATS.get(), cp);
+                            spell.set(ModDataComponents.SPELL_STATS_F.get(), cp);
                         }
                         if(spellTag.contains("DrawStats", Tag.TAG_COMPOUND)){
                             CompoundTag cp = spellTag.getCompound("DrawStats");

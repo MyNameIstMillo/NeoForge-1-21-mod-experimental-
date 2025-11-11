@@ -2,11 +2,6 @@ package net.mynameistmillo.experimentalmod.items.custom;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,16 +10,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.WandLogic.GetSavedSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveOrGetType;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetType;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawKey;
-import net.mynameistmillo.experimentalmod.LogicStats.drawItemStats.DrawStats;
-import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.SpellStats;
+import net.mynameistmillo.experimentalmod.Interface.IDraw;
+import net.mynameistmillo.experimentalmod.Interface.IModifier;
+import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawKey;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,8 +71,10 @@ public class WandItem extends Item {
 
         for (ItemStack stack : list){
             if (stack.getItem() instanceof IProjectile) {
-                SpellStats stats = new SpellStats();
-                ItemStack s2 = stats.resetStats(stack);
+                ProjStatsF stats = new ProjStatsF();
+                ProjStatsI statsI = new ProjStatsI();
+                ItemStack s2 = stats.resetStats(statsI.resetStats(stack));
+
                 l2.add(s2);
                 continue;
             }
@@ -186,7 +184,6 @@ public class WandItem extends Item {
 
          spellList = deleteIndexList(spellList, deleteIndexList);
          SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveOrGetType.COMPACT);
-         //saveCompactSpells(wand, spellList, level);
     }
 
     public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
@@ -204,7 +201,7 @@ public class WandItem extends Item {
         for (ItemStack mod : drawList){
             if (mod.getItem() instanceof IModifier modifier){
                 editedProj = modifier.applyChanges(level, editedProj);
-                SpellStats stats = new SpellStats().loadStatsFromStack(editedProj);
+                //ProjStatsF stats = new ProjStatsF().loadStatsFromStack(editedProj);
             }
         }
         return editedProj;

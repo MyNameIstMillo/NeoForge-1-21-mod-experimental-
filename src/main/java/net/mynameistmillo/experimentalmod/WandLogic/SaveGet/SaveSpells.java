@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.WandLogic;
+package net.mynameistmillo.experimentalmod.WandLogic.SaveGet;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -7,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IDraw;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.Interface.IDraw;
+import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class SaveSpells {
 
             if (type== SaveOrGetType.COMPACT){
                 if(spell.getItem() instanceof IProjectile){
-                    CompoundTag cT = spell.getOrDefault(ModDataComponents.SPELL_STATS.get(),
+                    CompoundTag cT = spell.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
                             new CompoundTag());
                     spellTag.put("ProjStats", cT);
                 }

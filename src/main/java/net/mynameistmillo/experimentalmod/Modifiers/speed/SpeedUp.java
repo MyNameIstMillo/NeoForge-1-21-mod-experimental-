@@ -1,13 +1,13 @@
-package net.mynameistmillo.experimentalmod.spellModifier.speed;
+package net.mynameistmillo.experimentalmod.Modifiers.speed;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IModifier;
-import net.mynameistmillo.experimentalmod.LogicStats.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.SpellStats;
-import net.mynameistmillo.experimentalmod.LogicStats.projItemStats.StatsKey;
+import net.mynameistmillo.experimentalmod.Interface.IModifier;
+import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +23,12 @@ public class SpeedUp extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile spell)) return null;
 
-        SpellStats stats = new SpellStats();
+        ProjStatsF stats = new ProjStatsF();
         stats = stats.loadStatsFromStack(stack);
 
-        float speed = stats.get(StatsKey.SPEED);
+        float speed = stats.get(StatsKeyF.SPEED);
         speed *= 2;
-        stats.set(StatsKey.SPEED, speed);
+        stats.set(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.SPEED, speed);
 
         return stats.saveStatsToSpell(stats, stack);
 

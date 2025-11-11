@@ -1,4 +1,4 @@
-this.baseStats.set(StatsKey.SPEED, 0.7f);
+        this.baseStats.set(StatsKey.SPEED, 0.7f);
         this.baseStats.set(StatsKey.DRAG, 0.80f);
         this.baseStats.set(StatsKey.GRAVITY, 0.00f);
         this.baseStats.set(StatsKey.ACCELERATION_L_R, 0.0f);
@@ -10,13 +10,15 @@ this.baseStats.set(StatsKey.SPEED, 0.7f);
         this.baseStats.set(StatsKey.DISPLACEMENT_L_R, 0.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT_U_D, 0.0f);
         this.baseStats.set(StatsKey.DISPLACEMENT_F_B, 0.0f);
-        this.baseStats.set(StatsKey.COLOUR, 0.0f);
-        this.baseStats.set(StatsKey.EFFECT_ON_HIT, 0.0f);
-        this.baseStats.set(StatsKey.TOLERANCE, 100.0f);
-        this.baseStats.set(StatsKey.SPAGHETTI_TOLERANCE, 0.0f);
-        this.baseStats.set(StatsKey.TRIGGER_TYPE, 0.0f);
-        this.baseStats.set(StatsKey.PIERCING, 0.0f);
-        this.baseStats.set(StatsKey.TICK_EVENT, 30.0f);
-        this.baseStats.set(StatsKey.FRIENDLY_FIRE, 0.0f);
         this.baseStats.set(StatsKey.LIFETIME, 60.0f);
         this.baseStats.set(StatsKey.DAMAGE, 1.0f);
+
+       this.baseStatsI.set(StatsKeyI.COLOUR , 0);
+       this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
+       this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
+       this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
+       this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 0);
+       this.baseStatsI.set(StatsKeyI.PIERCING , 0);
+       this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
+       this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 0);
+

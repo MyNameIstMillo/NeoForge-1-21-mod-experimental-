@@ -1,7 +1,8 @@
-package net.mynameistmillo.experimentalmod.LogicStats.drawItemStats;
+package net.mynameistmillo.experimentalmod.Stats.DrawItem;
 
 public enum DrawKey {
-    DRAW("draw_size",0);
+    DRAW("draw_size",0),
+    FREE_SPACE("free_space",0);
 
     private final String id;
     private final int size;

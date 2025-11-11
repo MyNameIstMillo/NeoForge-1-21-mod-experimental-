@@ -50,8 +50,15 @@ public class ModDataComponents {
 
     //Projectile
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SPELL_STATS =
-            DATA_COMPONENTS.register("spell_stats",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SPELL_STATS_F =
+            DATA_COMPONENTS.register("spell_stats_f",
+                    ()-> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SPELL_STATS_I =
+            DATA_COMPONENTS.register("spell_stats_i",
                     ()-> new DataComponentType.Builder<CompoundTag>()
                             .persistent(CompoundTag.CODEC)
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
