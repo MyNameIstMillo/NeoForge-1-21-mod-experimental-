@@ -20,7 +20,7 @@ public class SaveSpells {
 
     public static void saveSpells(ItemStack wand, List<ItemStack> list,
                                   Level level, int cap,
-                                  SaveOrGetType type){
+                                  SaveOrGetTypeW type){
         ListTag spellsListTag = new ListTag();
 
         for (int i=0;i<cap;i++){
@@ -32,7 +32,7 @@ public class SaveSpells {
             }
             else spellTag.putString("id", "minecraft:dirt");
 
-            if (type== SaveOrGetType.COMPACT){
+            if (type== SaveOrGetTypeW.COMPACT){
                 if(spell.getItem() instanceof IProjectile){
                     CompoundTag cT = spell.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
                             new CompoundTag());
@@ -52,7 +52,6 @@ public class SaveSpells {
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Spells", spellsListTag);
-        LOGGER.info("type -> {}, spells -> {}",type, spellsListTag);
         switch (type){
             case NORMAL -> wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
             case COMPACT -> {

@@ -1,6 +1,6 @@
 package net.mynameistmillo.experimentalmod.WandLogic.SaveGet;
 
-public enum SaveOrGetType {
+public enum SaveOrGetTypeW {
     NORMAL,
     COMPACT
 }

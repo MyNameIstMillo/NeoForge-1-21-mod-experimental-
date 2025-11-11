@@ -10,10 +10,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.SaveOrGetTypeD;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetType;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
@@ -96,7 +97,7 @@ public class WandItem extends Item {
             return false;
         }
         List<ItemStack> contents = GetSavedSpells.getSavedSpellsType(wand,level,
-                getCapacity(wand), SaveOrGetType.NORMAL);
+                getCapacity(wand), SaveOrGetTypeW.NORMAL);
 
         for (ItemStack stack : contents) {
 
@@ -118,8 +119,8 @@ public class WandItem extends Item {
         return nonEmpty;
     }
 
-    public void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
-         List<ItemStack> allList = destroyEmpty(resetSpellStats(list));
+    public void compactSpells(ItemStack wand, List<ItemStack> allList, Level level){
+
 
          List<ItemStack> spellList = new ArrayList<>();
          List<Integer> deleteIndexList = new ArrayList<>();
@@ -141,7 +142,7 @@ public class WandItem extends Item {
 
                      if (nextItemStackSomeThing.getItem() instanceof IDraw){
                          DrawStats drawStats = new DrawStats();
-                         ItemStack drawStack = drawStats.saveModifiersIntoStack(level, stack, nextItemStackSomeThing);
+                         ItemStack drawStack = drawStats.saveModOrProjIntoDrawType(level, stack, nextItemStackSomeThing, SaveOrGetTypeD.MOD);
 
                          allList.set(nextIndexOfSomeThing, drawStack.copy());
 
@@ -152,7 +153,7 @@ public class WandItem extends Item {
              if (stack.getItem() instanceof  IDraw draw){
                 DrawStats stats = new DrawStats().loadStatsFromDraw(stack);
 
-                List<ItemStack> modList = stats.loadModifiersFormStack(level, stack);
+                List<ItemStack> modList = stats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.MOD);
                 int drawSize = stats.get(DrawKey.DRAW), projCount = 0, index = i, temp = i ;
 
                 while (projCount < drawSize && index < maxIndex) {
@@ -183,7 +184,7 @@ public class WandItem extends Item {
          }
 
          spellList = deleteIndexList(spellList, deleteIndexList);
-         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveOrGetType.COMPACT);
+         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveOrGetTypeW.COMPACT);
     }
 
     public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
@@ -201,7 +202,6 @@ public class WandItem extends Item {
         for (ItemStack mod : drawList){
             if (mod.getItem() instanceof IModifier modifier){
                 editedProj = modifier.applyChanges(level, editedProj);
-                //ProjStatsF stats = new ProjStatsF().loadStatsFromStack(editedProj);
             }
         }
         return editedProj;
@@ -223,7 +223,7 @@ public class WandItem extends Item {
 
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
-                                                    0, SaveOrGetType.COMPACT);
+                                                    0, SaveOrGetTypeW.COMPACT);
         int maxIndex = storedSpells.size();
 
         ItemStack currentStack = storedSpells.get(index);
@@ -274,7 +274,7 @@ public class WandItem extends Item {
 
         if (Screen.hasShiftDown()){
             List<ItemStack> spells = GetSavedSpells.getSavedSpellsType(wand, level,
-                                                capacity, SaveOrGetType.NORMAL);
+                                                capacity, SaveOrGetTypeW.NORMAL);
             tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
 
 

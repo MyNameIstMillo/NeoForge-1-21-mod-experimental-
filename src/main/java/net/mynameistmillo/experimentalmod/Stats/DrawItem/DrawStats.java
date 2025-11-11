@@ -38,6 +38,11 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         map.put(key, value);
     }
 
+    public void subtractFromFree(){
+        int f = this.get(DrawKey.FREE_SPACE);
+        this.set(DrawKey.FREE_SPACE, f-1);
+    }
+
     public DrawStats copy(){
         DrawStats drawStats = new DrawStats();
         for (DrawKey key : DrawKey.values()) drawStats.set(key, this.get(key));
@@ -81,9 +86,9 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
     }
 
 
-    public ItemStack saveModifiersIntoStack(Level level, ItemStack modifier, ItemStack drawStack){
-        List<ItemStack> list = loadModifiersFormStack(level, drawStack);
-        list.add(modifier);
+    public ItemStack saveModOrProjIntoDrawType(Level level, ItemStack modOrProj, ItemStack draw, SaveOrGetTypeD type){
+        List<ItemStack> list = loadModOrProjFormDrawType(level, draw, type);
+        list.add(modOrProj);
 
         ListTag listTag = new ListTag();
 
@@ -96,19 +101,25 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
-        rootTag.put("Modifiers", listTag);
-        drawStack.set(ModDataComponents.SAVED_MODIFIERS.get(), rootTag);
-
-        return drawStack;
+        rootTag.put(type.getId(), listTag);
+        switch (type){
+            case MOD -> draw.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
+            case PROJ -> draw.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
+        }
+        return draw;
     }
 
 
-    public List<ItemStack> loadModifiersFormStack(Level level, ItemStack drawStack){
-        CompoundTag compoundTag = drawStack.getOrDefault(ModDataComponents.SAVED_MODIFIERS.get(), new CompoundTag());
+    public List<ItemStack> loadModOrProjFormDrawType(Level level, ItemStack draw, SaveOrGetTypeD type){
+        CompoundTag cT = new CompoundTag();
+        switch (type){
+            case MOD -> cT = draw.get(ModDataComponents.DRAW_MOD_SAVED.get());
+            case PROJ -> cT = draw.get(ModDataComponents.DRAW_PROJ_SAVED.get());
+        }
         List<ItemStack> list = new ArrayList<>();
 
-        if(compoundTag != null && compoundTag.contains("Modifiers", ListTag.TAG_LIST)){
-            ListTag listTag = compoundTag.getList("Modifiers", Tag.TAG_COMPOUND);
+        if(cT != null && cT.contains(type.getId(), ListTag.TAG_LIST)){
+            ListTag listTag = cT.getList(type.getId(), Tag.TAG_COMPOUND);
 
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);
@@ -118,6 +129,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         }
         return list;
     }
+
 
     public boolean areSavedModifiers(Level level, ItemStack stack){
         CompoundTag tag = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());

@@ -66,16 +66,23 @@ public class ModDataComponents {
 
 
     //Draw
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> SAVED_MODIFIERS =
-            DATA_COMPONENTS.register("saved_modifiers",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> DRAW_STATS =
+            DATA_COMPONENTS.register("draw_stats",
                     ()-> new DataComponentType.Builder<CompoundTag>()
                             .persistent(CompoundTag.CODEC)
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
                             .build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> DRAW_STATS =
-            DATA_COMPONENTS.register("draw_stats",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> DRAW_MOD_SAVED =
+            DATA_COMPONENTS.register("draw_mod_saved",
+                    ()-> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> DRAW_PROJ_SAVED =
+            DATA_COMPONENTS.register("draw_proj_saved",
                     ()-> new DataComponentType.Builder<CompoundTag>()
                             .persistent(CompoundTag.CODEC)
                             .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)

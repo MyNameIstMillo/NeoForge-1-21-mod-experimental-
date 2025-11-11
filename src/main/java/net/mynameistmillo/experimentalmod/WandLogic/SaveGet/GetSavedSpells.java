@@ -18,7 +18,7 @@ public class GetSavedSpells {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static List<ItemStack> getSavedSpellsType(ItemStack wand, Level level,
-                                                     int cap, SaveOrGetType type) {
+                                                     int cap, SaveOrGetTypeW type) {
         List<ItemStack> list = new ArrayList<>();
         CompoundTag wandSpells = new CompoundTag();
         switch (type) {
