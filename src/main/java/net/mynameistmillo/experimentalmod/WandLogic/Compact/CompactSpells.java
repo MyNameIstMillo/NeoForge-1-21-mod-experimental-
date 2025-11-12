@@ -35,6 +35,7 @@ public class CompactSpells {
 
             if (stack.getItem() instanceof IDraw){
                 drawQueue.add(stack);
+                showContent(stack, level);
                 continue;
             }
 
@@ -46,23 +47,26 @@ public class CompactSpells {
                     stack = applyModifiersFromDraw(stack, lastDraw, level);
                     lastDraw = DrawStats.subtractFromFree(DrawStats.saveModOrProjIntoDrawType(
                             level, stack, null, lastDraw, SaveOrGetTypeD.PROJ));
+                    showContent(lastDraw, level);
 
                 }
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)==0){
-                    for (int i=drawQueue.size())
-
-
-
-                    finalList.add(lastDraw);
-                    drawQueue.removeLast();
-
-
+                    if (drawQueue.size()>1){
+                        for (int i = drawQueue.size(); i >= 0; i--) {
+                            ItemStack beforeDraw = DrawStats.transferContentsDrawDrawType(level,
+                                    drawQueue.get(drawQueue.size()-1),
+                                    drawQueue.get(drawQueue.size()-2), SaveOrGetTypeD.PROJ);
+                            drawQueue.removeLast();
+                            drawQueue.set(drawQueue.size()-1, beforeDraw);
+                            if (DrawStats.loadStatsFromDraw(drawQueue.getLast()).get(DrawKey.FREE_SPACE)!=0) break;
+                        }
+                    }
 
                 } else drawQueue.set(drawQueue.size()-1, lastDraw);
-//                LOGGER.info("2stack -> {}", stack);
-//                LOGGER.info("2dQ    -> {}", drawQueue);
-//                LOGGER.info("2fL    -> {}", finalList);
-//                LOGGER.info("2                 dsa");
+                LOGGER.info("2stack -> {}", stack);
+                LOGGER.info("2dQ    -> {}", drawQueue);
+                LOGGER.info("2fL    -> {}", finalList);
+                LOGGER.info("2                 dsa");
                 continue;
             }
             finalList.add(stack);
@@ -94,6 +98,9 @@ public class CompactSpells {
 
 
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
+        for(ItemStack stack : finalList){
+            if (stack.getItem() instanceof  IDraw) showContent(stack, level);
+        }
     }
 
     private static ItemStack applyModifiersFromDraw(ItemStack proj, ItemStack draw, Level level){
@@ -106,6 +113,13 @@ public class CompactSpells {
         }
         return proj;
     }
+
+    private static void showContent(ItemStack draw, Level level){
+        List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, draw, SaveOrGetTypeD.PROJ);
+        LOGGER.info("spells proj from draw -> {}", projList);
+
+    }
+
 
 
     private static List<ItemStack> applyModifiersFromRawList(List<ItemStack> list, Level level){

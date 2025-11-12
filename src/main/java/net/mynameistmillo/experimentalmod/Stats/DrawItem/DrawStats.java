@@ -40,7 +40,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
     }
 
     public static ItemStack subtractFromFree(ItemStack draw){
-        DrawStats s = new DrawStats().loadStatsFromDraw(draw);
+        DrawStats s = loadStatsFromDraw(draw);
         s.set(DrawKey.FREE_SPACE, s.get(DrawKey.FREE_SPACE)-1);
         return saveStatsDraw(s, draw);
     }
@@ -131,6 +131,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
                 list.add(stack);
             }
         }
+        LOGGER.info("load -> {}", list);
         return list;
     }
 

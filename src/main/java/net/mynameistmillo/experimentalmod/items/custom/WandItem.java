@@ -224,13 +224,13 @@ public class WandItem extends Item {
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
                                                     0, SaveOrGetTypeW.COMPACT);
-        int maxIndex = storedSpells.size();
+        //int maxIndex = storedSpells.size();
 
         ItemStack currentStack = storedSpells.get(index);
 
-        if(currentStack.getItem() instanceof IProjectile projectile){
+        if(currentStack.getItem() instanceof IProjectile p){
 
-            Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
+            p.spawnSpell(level, player.getOnPos(), player,
                     player.getLookAngle(), wand, currentStack, index);
 
             increaseIndex(wand);
@@ -238,27 +238,34 @@ public class WandItem extends Item {
            return InteractionResultHolder.success(wand);
         }
 
-        if(currentStack.getItem() instanceof IDraw draw){
+        if(currentStack.getItem() instanceof IDraw ){
 
-            DrawStats stats = new DrawStats().loadStatsFromDraw(currentStack);
-            int draw_max = stats.get(DrawKey.DRAW) + index;
-            int indexEnd = index;
-
-            for (int i=index+1; i<draw_max+1; i++){
-                if (i > maxIndex) {
-                    setCurrentIndex(wand, 0);
-                    break;
+            List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, currentStack, SaveOrGetTypeD.PROJ);
+            LOGGER.info("spells proj from draw -> {}", projList);
+            for (ItemStack stack : projList){
+                if (stack.getItem() instanceof IProjectile p){
+                    p.spawnSpell(level, player.getOnPos(), player,
+                            player.getLookAngle(), wand, stack, 0);
                 }
-                ItemStack proj = storedSpells.get(i);
-                if (proj.getItem() instanceof IProjectile projectile){
-                    Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
-                            player.getLookAngle(), wand, proj, i);
-
-                }
-                indexEnd++;
-
             }
-            setCurrentIndex(wand, indexEnd);
+//            DrawStats stats = new DrawStats().loadStatsFromDraw(currentStack);
+//            int draw_max = stats.get(DrawKey.DRAW) + index;
+//            int indexEnd = index;
+//
+//            for (int i=index+1; i<draw_max+1; i++){
+//                if (i > maxIndex) {
+//                    setCurrentIndex(wand, 0);
+//                    break;
+//                }
+//                ItemStack proj = storedSpells.get(i);
+//                if (proj.getItem() instanceof IProjectile projectile){
+//                    Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
+//                            player.getLookAngle(), wand, proj, i);
+//
+//                }
+//                indexEnd++;
+//
+//            }
             increaseIndex(wand);
             return InteractionResultHolder.success(wand);
         }
