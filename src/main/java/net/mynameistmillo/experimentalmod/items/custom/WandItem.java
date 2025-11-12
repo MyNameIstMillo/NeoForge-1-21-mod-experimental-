@@ -142,7 +142,7 @@ public class WandItem extends Item {
 
                      if (nextItemStackSomeThing.getItem() instanceof IDraw){
                          DrawStats drawStats = new DrawStats();
-                         ItemStack drawStack = drawStats.saveModOrProjIntoDrawType(level, stack, nextItemStackSomeThing, SaveOrGetTypeD.MOD);
+                         ItemStack drawStack = drawStats.saveModOrProjIntoDrawType(level, stack, null, nextItemStackSomeThing, SaveOrGetTypeD.MOD);
 
                          allList.set(nextIndexOfSomeThing, drawStack.copy());
 

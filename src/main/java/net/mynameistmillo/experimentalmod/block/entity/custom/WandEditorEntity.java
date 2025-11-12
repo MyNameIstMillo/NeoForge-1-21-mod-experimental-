@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.Compact.CompactSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetTypeW;
@@ -124,7 +125,8 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
 
         if(spellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
             SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), SaveOrGetTypeW.NORMAL);
-            wandItem.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
+            //wandItem.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
+            CompactSpells.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
 
             playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
         }

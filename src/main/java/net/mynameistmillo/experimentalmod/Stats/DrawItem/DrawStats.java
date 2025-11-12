@@ -11,6 +11,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +39,10 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         map.put(key, value);
     }
 
-    public void subtractFromFree(){
-        int f = this.get(DrawKey.FREE_SPACE);
-        this.set(DrawKey.FREE_SPACE, f-1);
+    public static ItemStack subtractFromFree(ItemStack draw){
+        DrawStats s = new DrawStats().loadStatsFromDraw(draw);
+        s.set(DrawKey.FREE_SPACE, s.get(DrawKey.FREE_SPACE)-1);
+        return saveStatsDraw(s, draw);
     }
 
     public DrawStats copy(){
@@ -49,7 +51,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return drawStats;
     }
 
-    public ItemStack saveStatsDraw(DrawStats stats, ItemStack stack){
+    public static ItemStack saveStatsDraw(DrawStats stats, ItemStack stack){
         CompoundTag tag = new CompoundTag();
         for (DrawKey key : DrawKey.values()){
             tag.putInt(key.name(), stats.get(key));
@@ -58,7 +60,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-    public DrawStats loadStatsFromDraw(ItemStack stack){
+    public static DrawStats loadStatsFromDraw(ItemStack stack){
         CompoundTag tag = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
 
         DrawStats stats = new DrawStats();
@@ -86,9 +88,11 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
     }
 
 
-    public ItemStack saveModOrProjIntoDrawType(Level level, ItemStack modOrProj, ItemStack draw, SaveOrGetTypeD type){
+    public static ItemStack saveModOrProjIntoDrawType(Level level, @Nullable ItemStack modOrProj,
+                                               @Nullable List<ItemStack> moreMOP, ItemStack draw, SaveOrGetTypeD type){
         List<ItemStack> list = loadModOrProjFormDrawType(level, draw, type);
-        list.add(modOrProj);
+        if (modOrProj != null) list.add(modOrProj);
+        if (moreMOP != null) list.addAll(moreMOP);
 
         ListTag listTag = new ListTag();
 
@@ -110,7 +114,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
     }
 
 
-    public List<ItemStack> loadModOrProjFormDrawType(Level level, ItemStack draw, SaveOrGetTypeD type){
+    public static List<ItemStack> loadModOrProjFormDrawType(Level level, ItemStack draw, SaveOrGetTypeD type){
         CompoundTag cT = new CompoundTag();
         switch (type){
             case MOD -> cT = draw.get(ModDataComponents.DRAW_MOD_SAVED.get());
@@ -129,6 +133,14 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         }
         return list;
     }
+
+    public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, SaveOrGetTypeD type){
+        List<ItemStack> list = loadModOrProjFormDrawType(level, fromDraw, type);
+        return saveModOrProjIntoDrawType(level, null, list, finalDraw, type);
+    }
+
+
+
 
 
     public boolean areSavedModifiers(Level level, ItemStack stack){
