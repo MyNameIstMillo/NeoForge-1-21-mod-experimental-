@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.SaveOrGetTypeD;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +36,24 @@ public class SaveSpells {
 
             if (type== SaveOrGetTypeW.COMPACT){
                 if(spell.getItem() instanceof IProjectile){
-                    CompoundTag cT = spell.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
-                            new CompoundTag());
-                    spellTag.put("ProjStats", cT);
+                    spellTag.put("ProjStats", spell.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
+                                                                new CompoundTag()));
                 }
                 if(spell.getItem() instanceof IDraw){
-                    CompoundTag cT = spell.getOrDefault(ModDataComponents.DRAW_STATS.get(),
+                    spellTag.put("DrawStats", spell.getOrDefault(ModDataComponents.DRAW_STATS.get(),
+                                                                new CompoundTag()));
+                    spellTag.put("DrawSavedProj", spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
+                            new CompoundTag()));
+                    CompoundTag cT = spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                             new CompoundTag());
-                    spellTag.put("DrawStats", cT);
+
+                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawType(level, spell, SaveOrGetTypeD.PROJ);
+                    ListTag lt = new ListTag();
+                    for (ItemStack s : l){
+                        lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+                    }
+
+                    LOGGER.info("  !!!!   cT -> {} l -> {}, lt -> {}", cT, l, lt);
                 }
             }
 
@@ -59,6 +71,7 @@ public class SaveSpells {
                 wand.set(ModDataComponents.WAND_CAPACITY_COMPACT.get(), cap);
             }
         }
+        LOGGER.info("rootTag -> {}", rootTag);
     }
 
     public static void saveWithDirt(ItemStack wand, int cap){

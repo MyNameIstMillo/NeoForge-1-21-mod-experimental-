@@ -225,6 +225,7 @@ public class WandItem extends Item {
         List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
                                                     0, SaveOrGetTypeW.COMPACT);
         //int maxIndex = storedSpells.size();
+        LOGGER.info("stored Spells -> {}", storedSpells);
 
         ItemStack currentStack = storedSpells.get(index);
 
@@ -241,8 +242,9 @@ public class WandItem extends Item {
         if(currentStack.getItem() instanceof IDraw ){
 
             List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, currentStack, SaveOrGetTypeD.PROJ);
-            LOGGER.info("spells proj from draw -> {}", projList);
+
             for (ItemStack stack : projList){
+                LOGGER.info("spells proj from draww stack -> {}", stack);
                 if (stack.getItem() instanceof IProjectile p){
                     p.spawnSpell(level, player.getOnPos(), player,
                             player.getLookAngle(), wand, stack, 0);

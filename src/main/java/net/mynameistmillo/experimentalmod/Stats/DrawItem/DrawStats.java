@@ -8,6 +8,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -101,7 +102,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
-
+            if (stack.getItem() instanceof IProjectile) LOGGER.info(" !!  stats -> {}", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),new CompoundTag()));
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
@@ -128,10 +129,11 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
+                LOGGER.info("stack stats -> {}", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),new CompoundTag()));
                 list.add(stack);
             }
         }
-        LOGGER.info("load -> {}", list);
+        LOGGER.info(" list ->{}", list);
         return list;
     }
 
@@ -139,17 +141,6 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         List<ItemStack> list = loadModOrProjFormDrawType(level, fromDraw, type);
         return saveModOrProjIntoDrawType(level, null, list, finalDraw, type);
     }
-
-
-
-
-
-    public boolean areSavedModifiers(Level level, ItemStack stack){
-        CompoundTag tag = stack.getOrDefault(ModDataComponents.DRAW_STATS.get(), new CompoundTag());
-        return (tag != null && tag.contains("Modifiers", ListTag.TAG_LIST));
-    }
-
-
 
 
     @Override

@@ -53,27 +53,19 @@ public class GetSavedSpells {
                     case COMPACT -> {
                         ItemStack spell = ItemStack.parseOptional(level.registryAccess(), spellTag);
                         if(spellTag.contains("ProjStats", Tag.TAG_COMPOUND)){
-                            CompoundTag cp = spellTag.getCompound("ProjStats");
-                            spell.set(ModDataComponents.SPELL_STATS_F.get(), cp);
+                            spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("ProjStats"));
                         }
                         if(spellTag.contains("DrawStats", Tag.TAG_COMPOUND)){
-                            CompoundTag cp = spellTag.getCompound("DrawStats");
-                            spell.set(ModDataComponents.DRAW_STATS, cp);
+                            spell.set(ModDataComponents.DRAW_STATS, spellTag.getCompound("DrawStats"));
+                        }
+                        if(spellTag.contains("DrawSavedProj", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.DRAW_PROJ_SAVED, spellTag.getCompound("DrawSavedProj"));
                         }
                         list.add(spell);
                     }
                 }
-
-
             }
         }
         return list;
     }
-
-
-
-
-
-
-
 }
