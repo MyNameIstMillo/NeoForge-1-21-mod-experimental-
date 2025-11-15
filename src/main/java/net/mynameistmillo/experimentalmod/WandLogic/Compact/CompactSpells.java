@@ -28,10 +28,6 @@ public class CompactSpells {
 
 
         for (ItemStack stack : list){
-//            LOGGER.info("1stack -> {}", stack);
-//            LOGGER.info("1dQ    -> {}", drawQueue);
-//            LOGGER.info("1fL    -> {}", finalList);
-//            LOGGER.info("1              dsa");
 
             if (stack.getItem() instanceof IDraw){
                 drawQueue.add(stack);
@@ -40,12 +36,10 @@ public class CompactSpells {
 
             if (!drawQueue.isEmpty()){
                 ItemStack lastDraw = drawQueue.getLast();
-                DrawStats dS = DrawStats.loadStatsFromDraw(lastDraw);
-//                LOGGER.info("                                ds -> {}", dS);
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)>0){
                     stack = applyModifiersFromDraw(stack, lastDraw, level);
-                    lastDraw = DrawStats.subtractFromFree(DrawStats.saveModOrProjIntoDrawType(
-                            level, stack, null, lastDraw, SaveOrGetTypeD.PROJ));
+                    lastDraw = DrawStats.saveModOrProjIntoDrawType(level, stack, null, DrawStats.subtractFromFree(lastDraw), SaveOrGetTypeD.PROJ);
+
 
                 }
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)==0){
@@ -61,17 +55,9 @@ public class CompactSpells {
                     }
 
                 } else drawQueue.set(drawQueue.size()-1, lastDraw);
-//                LOGGER.info("2stack -> {}", stack);
-//                LOGGER.info("2dQ    -> {}", drawQueue);
-//                LOGGER.info("2fL    -> {}", finalList);
-//                LOGGER.info("2                 dsa");
                 continue;
             }
             finalList.add(stack);
-//            LOGGER.info("3stack -> {}", stack);
-//            LOGGER.info("3dQ    -> {}", drawQueue);
-//            LOGGER.info("3fL    -> {}", finalList);
-//            LOGGER.info("3                 dsa");
 
 
         }
@@ -90,11 +76,6 @@ public class CompactSpells {
 
             }while (!drawQueue.isEmpty());
         }
-//        LOGGER.info("4dQ    -> {}", drawQueue);
-//        LOGGER.info("4fL    -> {}", finalList);
-//        LOGGER.info("4                      dsa");
-
-
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
     }
 
@@ -140,8 +121,6 @@ public class CompactSpells {
                 }
                 default -> finalList.add(stack);
             }
-
-
         }
         return finalList;
     }

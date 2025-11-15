@@ -96,13 +96,14 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         if (moreMOP != null) list.addAll(moreMOP);
 
         ListTag listTag = new ListTag();
-
         for (ItemStack stack : list){
             CompoundTag tag = new CompoundTag();
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
-            if (stack.getItem() instanceof IProjectile) LOGGER.info(" !!  stats -> {}", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),new CompoundTag()));
+            if (stack.getItem() instanceof IProjectile && type==SaveOrGetTypeD.PROJ) {
+                tag.put("ThisProjStats", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+            }
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
@@ -129,11 +130,13 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
-                LOGGER.info("stack stats -> {}", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),new CompoundTag()));
+                if (stack.getItem() instanceof IProjectile && type==SaveOrGetTypeD.PROJ) {
+                    CompoundTag statsProj = tag.getCompound("ThisProjStats");
+                    stack.set(ModDataComponents.SPELL_STATS_F.get(), statsProj);
+                }
                 list.add(stack);
             }
         }
-        LOGGER.info(" list ->{}", list);
         return list;
     }
 

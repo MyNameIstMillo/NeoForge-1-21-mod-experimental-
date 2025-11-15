@@ -56,10 +56,6 @@ public class WandItem extends Item {
         return Math.floorMod(index, capacity);
     }
 
-    public void setCurrentIndex(ItemStack wand, int index){
-        wand.set(ModDataComponents.WAND_INDEX.get(), index);
-    }
-
     public void increaseIndex(ItemStack wand){
         int index = wand.get(ModDataComponents.WAND_INDEX.get());
         int capacity = wand.get(ModDataComponents.WAND_CAPACITY_COMPACT.get());
@@ -91,7 +87,6 @@ public class WandItem extends Item {
     }
 
 
-
     public boolean areThereSpellsInWand(ItemStack wand, Level level) {
         if (!(wand.getItem() instanceof WandItem wandItem)) {
             return false;
@@ -109,113 +104,6 @@ public class WandItem extends Item {
     }
 
 
-
-    public List<ItemStack> destroyEmpty(List<ItemStack> list){
-        List<ItemStack> nonEmpty = new ArrayList<>();
-        for(ItemStack stack : list){
-            if(stack.is(Items.DIRT)) continue;
-            nonEmpty.add(stack);
-        }
-        return nonEmpty;
-    }
-
-    public void compactSpells(ItemStack wand, List<ItemStack> allList, Level level){
-
-
-         List<ItemStack> spellList = new ArrayList<>();
-         List<Integer> deleteIndexList = new ArrayList<>();
-         int maxIndex = allList.size();
-
-         for (int i=0; i<maxIndex; i++) {
-             ItemStack stack = allList.get(i);
-
-             if (stack.getItem() instanceof IModifier modifier) {
-                 int nextIndexOfSomeThing = findIndexOfNextSpell(allList, i);
-                 if (nextIndexOfSomeThing > 0) {
-                     ItemStack nextItemStackSomeThing = allList.get(nextIndexOfSomeThing);
-
-                     if(nextItemStackSomeThing.getItem() instanceof IProjectile){
-                         ItemStack editedStack = modifier.applyChanges(level, nextItemStackSomeThing);
-
-                         allList.set(nextIndexOfSomeThing, editedStack.copy());
-                     }
-
-                     if (nextItemStackSomeThing.getItem() instanceof IDraw){
-                         DrawStats drawStats = new DrawStats();
-                         ItemStack drawStack = drawStats.saveModOrProjIntoDrawType(level, stack, null, nextItemStackSomeThing, SaveOrGetTypeD.MOD);
-
-                         allList.set(nextIndexOfSomeThing, drawStack.copy());
-
-                     }
-                 }
-             }
-
-             if (stack.getItem() instanceof  IDraw draw){
-                DrawStats stats = new DrawStats().loadStatsFromDraw(stack);
-
-                List<ItemStack> modList = stats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.MOD);
-                int drawSize = stats.get(DrawKey.DRAW), projCount = 0, index = i, temp = i ;
-
-                while (projCount < drawSize && index < maxIndex) {
-                    ItemStack proj = allList.get(index);
-
-                    if (proj.getItem() instanceof IDraw iDraw && index>temp){
-                        DrawStats drawStats = new DrawStats().loadStatsFromDraw(proj);
-                        int drawTemp = drawStats.get(DrawKey.DRAW) - 1;
-                        drawSize += drawTemp;
-                        stats.set(DrawKey.DRAW, drawSize);
-                        deleteIndexList.add(index);
-                    }
-                    if (proj.getItem() instanceof IProjectile iProj) {
-                        ItemStack editedProj = applyModifiersToProjFromDraw(level, modList, proj);
-                        allList.set(index, editedProj);
-                        projCount++;
-                    }
-                    index++;
-                }
-
-                stack = stats.saveStatsDraw(stats, stack);
-                spellList.add(stack);
-             }
-
-             if (stack.getItem() instanceof IProjectile) {
-                 spellList.add(stack.copy());
-             }
-         }
-
-         spellList = deleteIndexList(spellList, deleteIndexList);
-         SaveSpells.saveSpells(wand, spellList, level, spellList.size(), SaveOrGetTypeW.COMPACT);
-    }
-
-    public Integer findIndexOfNextSpell(List<ItemStack> list, int index){
-        for (int i=index; i<list.size(); i++){
-            if (list.get(i).getItem() instanceof IProjectile) return i;
-            if (list.get(i).getItem() instanceof IDraw) return i;
-        }
-
-        return -1;
-    }
-
-    public ItemStack applyModifiersToProjFromDraw(Level level, List<ItemStack> drawList, ItemStack proj){
-
-        ItemStack editedProj = proj;
-        for (ItemStack mod : drawList){
-            if (mod.getItem() instanceof IModifier modifier){
-                editedProj = modifier.applyChanges(level, editedProj);
-            }
-        }
-        return editedProj;
-    }
-
-    public List<ItemStack> deleteIndexList(List<ItemStack> list, List<Integer> deleteList){
-        for (int index : deleteList){
-            list.remove(index);
-        }
-        return list;
-    }
-
-
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack wand = player.getItemInHand(usedHand);
@@ -224,8 +112,6 @@ public class WandItem extends Item {
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
                                                     0, SaveOrGetTypeW.COMPACT);
-        //int maxIndex = storedSpells.size();
-        LOGGER.info("stored Spells -> {}", storedSpells);
 
         ItemStack currentStack = storedSpells.get(index);
 
@@ -244,30 +130,11 @@ public class WandItem extends Item {
             List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, currentStack, SaveOrGetTypeD.PROJ);
 
             for (ItemStack stack : projList){
-                LOGGER.info("spells proj from draww stack -> {}", stack);
                 if (stack.getItem() instanceof IProjectile p){
                     p.spawnSpell(level, player.getOnPos(), player,
                             player.getLookAngle(), wand, stack, 0);
                 }
             }
-//            DrawStats stats = new DrawStats().loadStatsFromDraw(currentStack);
-//            int draw_max = stats.get(DrawKey.DRAW) + index;
-//            int indexEnd = index;
-//
-//            for (int i=index+1; i<draw_max+1; i++){
-//                if (i > maxIndex) {
-//                    setCurrentIndex(wand, 0);
-//                    break;
-//                }
-//                ItemStack proj = storedSpells.get(i);
-//                if (proj.getItem() instanceof IProjectile projectile){
-//                    Entity entity = projectile.spawnSpell(level, player.getOnPos(), player,
-//                            player.getLookAngle(), wand, proj, i);
-//
-//                }
-//                indexEnd++;
-//
-//            }
             increaseIndex(wand);
             return InteractionResultHolder.success(wand);
         }

@@ -52,8 +52,6 @@ public class SaveSpells {
                     for (ItemStack s : l){
                         lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
                     }
-
-                    LOGGER.info("  !!!!   cT -> {} l -> {}, lt -> {}", cT, l, lt);
                 }
             }
 
@@ -71,7 +69,6 @@ public class SaveSpells {
                 wand.set(ModDataComponents.WAND_CAPACITY_COMPACT.get(), cap);
             }
         }
-        LOGGER.info("rootTag -> {}", rootTag);
     }
 
     public static void saveWithDirt(ItemStack wand, int cap){
