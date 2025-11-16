@@ -38,17 +38,17 @@ public class CompactSpells {
                 ItemStack lastDraw = drawQueue.getLast();
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)>0){
                     stack = applyModifiersFromDraw(stack, lastDraw, level);
-                    lastDraw = DrawStats.saveModOrProjIntoDrawType(level, stack, null, null, DrawStats.subtractFromFree(lastDraw),  SaveOrGetTypeD.PROJ);
+                    lastDraw = DrawStats.saveModOrProjIntoDrawType(level, stack, null, null,
+                                                        DrawStats.subtractFromFree(lastDraw),  SaveOrGetTypeD.PROJ);
 
                 }
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)==0){
                     if (drawQueue.size()>1){
                         for (int i = drawQueue.size(); i >= 0; i--) {
-
-                            ItemStack endDraw = applyModDrawToProjDraw(drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1), level);
+                            ItemStack endDraw = applyModDrawToProjDraw(drawQueue.get(drawQueue.size()-2),
+                                                                        drawQueue.get(drawQueue.size()-1), level);
                             ItemStack beforeDraw = DrawStats.transferContentsDrawDrawType(level,
                                     endDraw, drawQueue.get(drawQueue.size()-2), SaveOrGetTypeD.PROJ);
-
 
                             drawQueue.removeLast();
                             drawQueue.set(drawQueue.size()-1, beforeDraw);
@@ -78,7 +78,6 @@ public class CompactSpells {
 
             }while (!drawQueue.isEmpty());
         }
-        //finalList = applyFinalModFromDraw(finalList, level);
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
     }
 
@@ -108,34 +107,6 @@ public class CompactSpells {
         }
         return DrawStats.saveModOrProjIntoDrawType(level, null, null, projList, projDraw, SaveOrGetTypeD.PROJ);
     }
-
-
-    private static List<ItemStack> applyFinalModFromDraw(List<ItemStack> list, Level level){
-        List<ItemStack> toReturn = new ArrayList<>();
-        for (ItemStack stack : list){
-            if (stack.getItem() instanceof IDraw){
-                List<ItemStack> modList = DrawStats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.MOD);
-                List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.PROJ);
-                List<ItemStack> projToSave = new ArrayList<>();
-                for (ItemStack proj : projList){
-                    if (proj.getItem() instanceof IProjectile){
-                        for (ItemStack mod : modList){
-                            if (mod.getItem() instanceof IModifier modifier){
-                                proj = modifier.applyChanges(level, proj);
-                            }
-                        }
-                        projToSave.add(proj);
-                    }
-                }
-                toReturn.add(DrawStats.saveModOrProjIntoDrawType(level,null, null, projToSave, stack, SaveOrGetTypeD.PROJ));
-            }
-            else toReturn.add(stack);
-
-        }
-        return toReturn;
-    }
-
-
 
     private static List<ItemStack> applyModifiersFromRawList(List<ItemStack> list, Level level){
         List<ItemStack> finalList = new ArrayList<>();
@@ -170,12 +141,9 @@ public class CompactSpells {
         return finalList;
     }
 
-    private static List<ItemStack> destroyDirt(List<ItemStack> D){
+    private static List<ItemStack> destroyDirt(List<ItemStack> D) {
         List<ItemStack> nD = new ArrayList<>();
         for (ItemStack s : D) if (!s.is(Items.DIRT)) nD.add(s);
         return nD;
     }
-
-
-
 }

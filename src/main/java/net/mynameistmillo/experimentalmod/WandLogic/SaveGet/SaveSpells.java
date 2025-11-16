@@ -25,7 +25,6 @@ public class SaveSpells {
                                   SaveOrGetTypeW type){
         ListTag spellsListTag = new ListTag();
 
-        LOGGER.info("list -> {}", list);
         for (int i=0;i<cap;i++){
             ItemStack spell = list.get(i);
             CompoundTag spellTag = new CompoundTag();
@@ -61,7 +60,6 @@ public class SaveSpells {
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Spells", spellsListTag);
-        LOGGER.info("rootTag -> {}", rootTag);
         switch (type){
             case NORMAL -> wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
             case COMPACT -> {

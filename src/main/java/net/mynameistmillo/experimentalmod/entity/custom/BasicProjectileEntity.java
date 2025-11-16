@@ -64,15 +64,11 @@ public class BasicProjectileEntity extends Projectile {
         this.refreshDimensions();
     }
 
-    //public void setAcceleration(Vec3 acceleration) { this.acceleration = acceleration;}
-
     public void setGravity(float gravity) { this.gravity = gravity;}
 
     public void setDrag(float drag) { this.drag = drag;}
 
     public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
-
-    //public void setMinSpeed(float minSpeed){this.minSpeed = minSpeed;} <- not work
 
     public void setSpellStack(ItemStack stack){ this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
@@ -137,12 +133,15 @@ public class BasicProjectileEntity extends Projectile {
         }
         //acceleration
         Vec3 vector = this.getDeltaMovement();
-        //gravity
-        vector = vector.add(0, -this.gravity, 0);
-        //drag
-        vector = vector.multiply(this.drag, this.drag, this.drag);
-        //apply changes
-        this.setDeltaMovement(vector);
+        if(vector.length()>=0.006) {
+            //gravity
+            vector = vector.add(0, -this.gravity, 0);
+            //drag
+            vector = vector.multiply(this.drag, this.drag, this.drag);
+            //apply changes
+            this.setDeltaMovement(vector);
+        }
+
         this.moveDesc();
     }
 
@@ -150,10 +149,7 @@ public class BasicProjectileEntity extends Projectile {
         Vec3 start = this.position();
         Vec3 delta = this.getDeltaMovement();
         double distance = delta.length();
-        if(this.minSpeed >= 0) {
-            if (distance <= this.minSpeed)
-                this.handleOnExpire(this.blockPosition(), this.getDeltaMovement().normalize());
-        }
+
 
         int steps = (int)Math.ceil(distance / MAX_STEP);
         steps = Math.max(1, Math.min(steps, MAX_STEPS));
@@ -164,38 +160,20 @@ public class BasicProjectileEntity extends Projectile {
         for (int s = 0; s < steps; s++) {
             Vec3 end = currentPos.add(stepDelta);
 
-//            HitResult blockHit = this.level().clip(new ClipContext(currentPos, end,
-//                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-            AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.04D);
+            AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.06D);
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
-//
-//            double blockDist = Double.POSITIVE_INFINITY;
-//            double entityDist = Double.POSITIVE_INFINITY;
-//
-//            if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
-//                blockDist = blockHit.getLocation().distanceTo(currentPos);
-//                LOGGER.info("blockHit");
-//            }
-//            else { blockHit = null; }
+
             if (entityHit != null) {
-                //entityDist = entityHit.getLocation().distanceTo(currentPos);
-                //LOGGER.info("entity?");
-                this.handleSpellHit(entityHit.getEntity(), null, null);
+                this.handleSpellHit(entityHit.getEntity(), null, delta.normalize());
                 return;
             }else {
                 entityHit = null;
             }
-//            if (blockHit != null && blockDist <= entityDist) {
-//                BlockHitResult bhr = (BlockHitResult) blockHit;
-//                this.onBlockHit(bhr);
-//                return;
-//
-//            } els
             this.move(MoverType.SELF, stepDelta);
             currentPos = this.position();
 
             if(entityHit == null) {
-                if (checkBounceGuessAndHandle(this.getDeltaMovement(), this.prevDelta)) {
+                if (checkBounceGuessAndHandle(this.getDeltaMovement(), this.prevDelta, delta.normalize())) {
                     return;
                 }
             }
@@ -214,9 +192,7 @@ public class BasicProjectileEntity extends Projectile {
     private boolean handledHit = false;
     private static final double EPS = 1e-8;
 
-    private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta) {
-        //if (this.tickCount <= 2) return false;
-
+    private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta, Vec3 normal) {
 
         boolean xHit = Math.abs(delta.x) < EPS && Math.abs(prevDelta.x) > EPS;
         boolean yHit = Math.abs(delta.y) < EPS && Math.abs(prevDelta.y) > EPS;
@@ -232,27 +208,22 @@ public class BasicProjectileEntity extends Projectile {
         AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
-            //LOGGER.info("perhaps entity? -> {}, start -> {} , end -> {}", entityHit, start, end);
             this.handleSpellHit(entityHit.getEntity(), null, null);
             return true;
         }
 
         BlockPos pos = this.blockPosition();
 
-        Vec3 normal;
         Direction faceGuess;
 
         if (xHit) {
             double sign = Math.signum(prevDelta.x);
-            normal = new Vec3(-sign, 0.0, 0.0);
             faceGuess = sign > 0 ? Direction.WEST : Direction.EAST;
         } else if (yHit) {
             double sign = Math.signum(prevDelta.y);
-            normal = new Vec3(0.0, -sign, 0.0);
             faceGuess = sign > 0 ? Direction.DOWN : Direction.UP;
         } else {
             double sign = Math.signum(prevDelta.z);
-            normal = new Vec3(0.0, 0.0, -sign);
             faceGuess = sign > 0 ? Direction.NORTH : Direction.SOUTH;
         }
 
@@ -263,8 +234,8 @@ public class BasicProjectileEntity extends Projectile {
 
         BlockPos hitPos = pos.relative(faceGuess.getOpposite());
         BlockHitResult bhr = new BlockHitResult(hitVec, faceGuess, hitPos, false);
-        //LOGGER.info("perhaps?");
-        this.onBlockHit(bhr);
+
+        this.onBlockHit(bhr, normal);
 
         return true;
     }
@@ -284,12 +255,11 @@ public class BasicProjectileEntity extends Projectile {
         }
     }
 
-    private void onBlockHit(BlockHitResult result){
+    private void onBlockHit(BlockHitResult result, Vec3 normal){
         if(this.handledHit) return;
         this.handledHit  = true;
         Vec3 hitVec = result.getLocation();
         Direction face = result.getDirection();
-        Vec3 normal = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
 
         Vec3 safePos = hitVec.subtract(this.getDeltaMovement().normalize().scale(0.001));
         this.setPos(safePos.x, safePos.y, safePos.z);
@@ -310,7 +280,7 @@ public class BasicProjectileEntity extends Projectile {
 
         if(!this.spellStack.isEmpty()){
             Item item = this.spellStack.getItem();
-            if(item instanceof IProjectile){
+            if(item instanceof IProjectile spellLogic){
 
                 Player caster = null;
                 if(this.casterUUID != null){
@@ -318,8 +288,6 @@ public class BasicProjectileEntity extends Projectile {
                     if(e instanceof Player p) caster =p;
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
-
-                IProjectile spellLogic = (IProjectile) item;
 
                 spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.spellStack);
                 handleOnExpire(hitBlock, normal);
@@ -335,7 +303,7 @@ public class BasicProjectileEntity extends Projectile {
 
         if(!this.spellStack.isEmpty()){
             Item item = this.spellStack.getItem();
-            if(item instanceof IProjectile){
+            if(item instanceof IProjectile spellLogic){
 
                 Player caster = null;
                 if(this.casterUUID != null){
@@ -344,7 +312,6 @@ public class BasicProjectileEntity extends Projectile {
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
-                IProjectile spellLogic = (IProjectile) item;
                 spellLogic.onExpire(this.level(), pos, caster, normal, this.wandStack, this.spellStack);
             }
         }
