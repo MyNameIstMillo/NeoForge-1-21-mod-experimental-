@@ -25,6 +25,7 @@ public class SaveSpells {
                                   SaveOrGetTypeW type){
         ListTag spellsListTag = new ListTag();
 
+        LOGGER.info("list -> {}", list);
         for (int i=0;i<cap;i++){
             ItemStack spell = list.get(i);
             CompoundTag spellTag = new CompoundTag();
@@ -44,8 +45,6 @@ public class SaveSpells {
                                                                 new CompoundTag()));
                     spellTag.put("DrawSavedProj", spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                             new CompoundTag()));
-                    CompoundTag cT = spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
-                            new CompoundTag());
 
                     List<ItemStack> l = DrawStats.loadModOrProjFormDrawType(level, spell, SaveOrGetTypeD.PROJ);
                     ListTag lt = new ListTag();
@@ -62,6 +61,7 @@ public class SaveSpells {
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put("Spells", spellsListTag);
+        LOGGER.info("rootTag -> {}", rootTag);
         switch (type){
             case NORMAL -> wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
             case COMPACT -> {

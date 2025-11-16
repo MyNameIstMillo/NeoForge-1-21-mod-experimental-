@@ -90,10 +90,11 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
 
 
     public static ItemStack saveModOrProjIntoDrawType(Level level, @Nullable ItemStack modOrProj,
-                                               @Nullable List<ItemStack> moreMOP, ItemStack draw, SaveOrGetTypeD type){
+                                               @Nullable List<ItemStack> moreMOP, @Nullable List<ItemStack> resetAndSave,  ItemStack draw, SaveOrGetTypeD type){
         List<ItemStack> list = loadModOrProjFormDrawType(level, draw, type);
         if (modOrProj != null) list.add(modOrProj);
         if (moreMOP != null) list.addAll(moreMOP);
+        if (resetAndSave != null) list = resetAndSave;
 
         ListTag listTag = new ListTag();
         for (ItemStack stack : list){
@@ -142,7 +143,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
 
     public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, SaveOrGetTypeD type){
         List<ItemStack> list = loadModOrProjFormDrawType(level, fromDraw, type);
-        return saveModOrProjIntoDrawType(level, null, list, finalDraw, type);
+        return saveModOrProjIntoDrawType(level, null, list,null, finalDraw, type);
     }
 
 

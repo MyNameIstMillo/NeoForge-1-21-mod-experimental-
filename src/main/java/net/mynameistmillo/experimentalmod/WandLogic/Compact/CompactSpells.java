@@ -38,16 +38,18 @@ public class CompactSpells {
                 ItemStack lastDraw = drawQueue.getLast();
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)>0){
                     stack = applyModifiersFromDraw(stack, lastDraw, level);
-                    lastDraw = DrawStats.saveModOrProjIntoDrawType(level, stack, null, DrawStats.subtractFromFree(lastDraw), SaveOrGetTypeD.PROJ);
-
+                    lastDraw = DrawStats.saveModOrProjIntoDrawType(level, stack, null, null, DrawStats.subtractFromFree(lastDraw),  SaveOrGetTypeD.PROJ);
 
                 }
                 if (DrawStats.loadStatsFromDraw(lastDraw).get(DrawKey.FREE_SPACE)==0){
                     if (drawQueue.size()>1){
                         for (int i = drawQueue.size(); i >= 0; i--) {
+
+                            ItemStack endDraw = applyModDrawToProjDraw(drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1), level);
                             ItemStack beforeDraw = DrawStats.transferContentsDrawDrawType(level,
-                                    drawQueue.get(drawQueue.size()-1),
-                                    drawQueue.get(drawQueue.size()-2), SaveOrGetTypeD.PROJ);
+                                    endDraw, drawQueue.get(drawQueue.size()-2), SaveOrGetTypeD.PROJ);
+
+
                             drawQueue.removeLast();
                             drawQueue.set(drawQueue.size()-1, beforeDraw);
                             if (DrawStats.loadStatsFromDraw(drawQueue.getLast()).get(DrawKey.FREE_SPACE)!=0) break;
@@ -76,6 +78,7 @@ public class CompactSpells {
 
             }while (!drawQueue.isEmpty());
         }
+        //finalList = applyFinalModFromDraw(finalList, level);
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
     }
 
@@ -88,6 +91,48 @@ public class CompactSpells {
             }
         }
         return proj;
+    }
+
+    private static ItemStack applyModDrawToProjDraw(ItemStack modDraw, ItemStack projDraw, Level level){
+        List<ItemStack> modList = DrawStats.loadModOrProjFormDrawType(level, modDraw, SaveOrGetTypeD.MOD);
+        List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, projDraw, SaveOrGetTypeD.PROJ);
+
+        for (ItemStack p : projList){
+            if (p.getItem() instanceof IProjectile){
+                for (ItemStack m : modList){
+                    if (m.getItem() instanceof IModifier modifier){
+                        p = modifier.applyChanges(level, p);
+                    }
+                }
+            }
+        }
+        return DrawStats.saveModOrProjIntoDrawType(level, null, null, projList, projDraw, SaveOrGetTypeD.PROJ);
+    }
+
+
+    private static List<ItemStack> applyFinalModFromDraw(List<ItemStack> list, Level level){
+        List<ItemStack> toReturn = new ArrayList<>();
+        for (ItemStack stack : list){
+            if (stack.getItem() instanceof IDraw){
+                List<ItemStack> modList = DrawStats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.MOD);
+                List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, stack, SaveOrGetTypeD.PROJ);
+                List<ItemStack> projToSave = new ArrayList<>();
+                for (ItemStack proj : projList){
+                    if (proj.getItem() instanceof IProjectile){
+                        for (ItemStack mod : modList){
+                            if (mod.getItem() instanceof IModifier modifier){
+                                proj = modifier.applyChanges(level, proj);
+                            }
+                        }
+                        projToSave.add(proj);
+                    }
+                }
+                toReturn.add(DrawStats.saveModOrProjIntoDrawType(level,null, null, projToSave, stack, SaveOrGetTypeD.PROJ));
+            }
+            else toReturn.add(stack);
+
+        }
+        return toReturn;
     }
 
 
@@ -113,7 +158,7 @@ public class CompactSpells {
                 case IDraw iDraw when !modList.isEmpty() -> {
                     for (ItemStack mod : modList) {
                         if (mod.getItem() instanceof IModifier) {
-                            stack = DrawStats.saveModOrProjIntoDrawType(level, mod, null, stack, SaveOrGetTypeD.MOD);
+                            stack = DrawStats.saveModOrProjIntoDrawType(level, mod,null, null, stack, SaveOrGetTypeD.MOD);
                         }
                     }
                     finalList.add(stack);

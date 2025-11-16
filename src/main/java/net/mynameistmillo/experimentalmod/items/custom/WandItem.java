@@ -112,6 +112,7 @@ public class WandItem extends Item {
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
                                                     0, SaveOrGetTypeW.COMPACT);
+        LOGGER.info("stored spells -> {}", storedSpells);
 
         ItemStack currentStack = storedSpells.get(index);
 
