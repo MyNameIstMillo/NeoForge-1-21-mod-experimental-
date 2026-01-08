@@ -111,7 +111,7 @@ public class sparkBolt extends Item implements IProjectile {
         stats = stats.loadStatsFromStack(thisSpell);
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
-            living.hurt(living.damageSources().generic() , stats.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.DAMAGE));
+            living.hurt(living.damageSources().indirectMagic(thisSpell.getEntityRepresentation(), caster) , stats.get(StatsKeyF.DAMAGE));
 
         }
 

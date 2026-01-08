@@ -98,7 +98,7 @@ public class bubbleSpark extends Item implements IProjectile {
 
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
-            living.hurt(living.damageSources().generic() , stats.get(StatsKeyF.DAMAGE));
+            living.hurt(living.damageSources().playerAttack(caster) , stats.get(StatsKeyF.DAMAGE));
         }
 
     }
