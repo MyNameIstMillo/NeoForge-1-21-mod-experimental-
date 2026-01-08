@@ -3,12 +3,16 @@ package net.mynameistmillo.experimentalmod.Stats.ProjItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ApplyStatsToProj {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static void applyStatsToProjectile(
             BasicProjectileEntity e,
@@ -29,13 +33,13 @@ public class ApplyStatsToProj {
                 new Vec3(0,0,1) : look.normalize();
 
         Vec3 worldUp = new Vec3(0,1,0);
-        Vec3 right = worldUp.cross(lookNorn);
+        Vec3 right = lookNorn.cross(worldUp);
 
         if (right.lengthSqr()==0.0){
             right = new Vec3(1,0,0);
         }else right = right.normalize();
 
-        Vec3 up = lookNorn.cross(right).normalize();
+        Vec3 up = right.cross(lookNorn).normalize();
 
         double baseOffset = 1.0;
         double distFB = baseOffset + sFB;
@@ -58,8 +62,8 @@ public class ApplyStatsToProj {
         double yawRad = Math.toRadians((Math.random()*2-1.0)*hSpread);
         double pitchRad = Math.toRadians((Math.random()*2-1.0)*vSpread);
 
-        Vec3 forwardYaw = rotateAroundAxis(lookNorn, worldUp, yawRad);
-        Vec3 right1 = worldUp.cross(forwardYaw);
+        Vec3 forwardYaw = rotateAroundAxis(lookNorn, up, yawRad);
+        Vec3 right1 = up.cross(forwardYaw);
         if (right1.lengthSqr()==0.0){
             right1 = new Vec3(1,0,0);
         }else right1 = right1.normalize();
