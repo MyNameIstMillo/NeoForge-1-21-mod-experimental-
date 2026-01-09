@@ -1,8 +1,12 @@
-// 1.21	2025-10-11T21:48:35.3717288	Item Models: experimentalmodid
+// 1.21	2026-01-09T12:38:38.2526226	Item Models: experimentalmodid
 0fab5a0744e50a57c64d7bb9f67ff0128d379a48 assets/experimentalmodid/models/item/bubble_spark.json
 888005a76c8bdff7a47e624cc7a126ee4626e5ca assets/experimentalmodid/models/item/double.json
 63ba9fa2d3f6ccf8b58cdc09d3446e3559ba8625 assets/experimentalmodid/models/item/fancy_item.json
 1fff2476bfb2af7ff9271cfb9dc4b2e20a6d17ce assets/experimentalmodid/models/item/key.json
+c290173d26992b91e4034640e452e80d258e7404 assets/experimentalmodid/models/item/life_time_down.json
+e80d486a68cbc577118bf818a68cdf193d9005db assets/experimentalmodid/models/item/life_time_up.json
+f0bb463ebd801427c73b11ca2648918a95b53a07 assets/experimentalmodid/models/item/middle_distance_cast_fb.json
+02c0040ae3970fecb447b911bd6a26bc4697dd9d assets/experimentalmodid/models/item/no_gravity.json
 b05be7c379ae1f2b6b848a5589680f1ad8392d70 assets/experimentalmodid/models/item/spark_bolt.json
 2fd7f8bb7b27b8bb98a730bbc621314cffe0de5a assets/experimentalmodid/models/item/speed_down.json
 794e749224c9107dc2f4784066c8fddc93fde1fd assets/experimentalmodid/models/item/speed_up.json

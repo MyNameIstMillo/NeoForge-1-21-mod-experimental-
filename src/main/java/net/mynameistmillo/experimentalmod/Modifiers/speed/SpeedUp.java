@@ -21,14 +21,13 @@ public class SpeedUp extends Item implements IModifier {
     @Override
     public ItemStack applyChanges(Level level, ItemStack stack) {
         if (level.isClientSide()) return null;
-        if (!(stack.getItem() instanceof IProjectile spell)) return null;
+        if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = new ProjStatsF();
-        stats = stats.loadStatsFromStack(stack);
+        ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
 
-        float speed = stats.get(StatsKeyF.SPEED);
-        speed *= 2;
-        stats.set(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.SPEED, speed);
+        float speed = stats.get(StatsKeyF.SPEED) * 2f;
+
+        stats.set(StatsKeyF.SPEED, speed);
 
         return stats.saveStatsToSpell(stats, stack);
 

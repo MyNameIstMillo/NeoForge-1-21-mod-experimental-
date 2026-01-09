@@ -5,6 +5,10 @@
     "experimentalmodid:teleport_bolt",
     "experimentalmodid:speed_up",
     "experimentalmodid:speed_down",
+    "experimentalmodid:middle_distance_cast_fb",
+    "experimentalmodid:life_time_up",
+    "experimentalmodid:life_time_down",
+    "experimentalmodid:no_gravity",
     "experimentalmodid:double"
   ]
 }

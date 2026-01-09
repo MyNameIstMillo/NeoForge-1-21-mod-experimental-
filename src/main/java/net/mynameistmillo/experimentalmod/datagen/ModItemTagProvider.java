@@ -39,6 +39,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
                 .add(ModItems.SPEED_UP.get())
                 .add(ModItems.SPEED_DOWN.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_FB.get())
+                .add(ModItems.LIFE_TIME_UP.get())
+                .add(ModItems.LIFE_TIME_DOWN.get())
+                .add(ModItems.NO_GRAVITY.get())
 
 
                 .add(ModItems.DOUBLE.get())

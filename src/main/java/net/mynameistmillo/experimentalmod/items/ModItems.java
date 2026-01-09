@@ -4,14 +4,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.Modifiers.DistanceCast.MiddleDistanceCastFB;
+import net.mynameistmillo.experimentalmod.Modifiers.LifeTime.LifeTimeDown;
+import net.mynameistmillo.experimentalmod.Modifiers.LifeTime.LifeTimeUp;
+import net.mynameistmillo.experimentalmod.Modifiers.gravity.NoGravity;
+import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedDown;
+import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedUp;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.bubbleSpark;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.sparkBolt;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.teleportBolt;
 import net.mynameistmillo.experimentalmod.Draw.Double;
-import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedDown;
-import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedUp;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -32,7 +36,7 @@ public class ModItems {
                     , 9));
 
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
-            ()-> new Item(new Item.Properties().stacksTo(1)));
+            ()-> new Item(new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final DeferredItem<Item> SPARK_BOLT = ITEMS.register("spark_bolt",
             ()-> new sparkBolt(new Item.Properties()));
@@ -50,6 +54,18 @@ public class ModItems {
 
     public static final DeferredItem<Item> SPEED_DOWN = ITEMS.register("speed_down",
             () -> new SpeedDown(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_FB = ITEMS.register("middle_distance_cast_fb",
+            () -> new MiddleDistanceCastFB(new Item.Properties()));
+
+    public static final DeferredItem<Item> LIFE_TIME_UP = ITEMS.register("life_time_up",
+            () -> new LifeTimeUp(new Item.Properties()));
+
+    public static final DeferredItem<Item> LIFE_TIME_DOWN = ITEMS.register("life_time_down",
+            () -> new LifeTimeDown(new Item.Properties()));
+
+    public static final DeferredItem<Item> NO_GRAVITY = ITEMS.register("no_gravity",
+            () -> new NoGravity(new Item.Properties()));
 
 
 
