@@ -107,11 +107,12 @@ public class sparkBolt extends Item implements IProjectile {
         //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
         //LOGGER.info("hit!");
 
-        ProjStatsF stats = new ProjStatsF();
-        stats = stats.loadStatsFromStack(thisSpell);
+        ProjStatsF statsF = new ProjStatsF().loadStatsFromStack(thisSpell);
+        ProjStatsI statsI = new ProjStatsI().loadStatsFromStack(thisSpell);
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
-            living.hurt(living.damageSources().indirectMagic(thisSpell.getEntityRepresentation(), caster) , stats.get(StatsKeyF.DAMAGE));
+            if(hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE)==0) return;
+            living.hurt(living.damageSources().indirectMagic(thisSpell.getEntityRepresentation(), caster) , statsF.get(StatsKeyF.DAMAGE));
 
         }
 

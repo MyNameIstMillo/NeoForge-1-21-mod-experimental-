@@ -98,11 +98,12 @@ public class teleportBolt extends Item implements IProjectile {
     @Override
     public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
         if (level.isClientSide()) return;
-        ProjStatsF stats = new ProjStatsF();
-        stats = stats.loadStatsFromStack(thisSpell);
+        ProjStatsF statsF = new ProjStatsF().loadStatsFromStack(thisSpell);
+        ProjStatsI statsI = new ProjStatsI().loadStatsFromStack(thisSpell);
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
-            living.hurt(living.damageSources().generic() , stats.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.DAMAGE));
+            if(hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE)==0) return;
+            living.hurt(living.damageSources().indirectMagic(thisSpell.getEntityRepresentation(), caster) , statsF.get(StatsKeyF.DAMAGE));
 
         }
     }
