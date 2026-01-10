@@ -25,7 +25,7 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
 
         ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
 
-        float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 10f;
+        float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 4f;
 
         stats.set(StatsKeyF.DISPLACEMENT_F_B, displacement);
 
