@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -89,12 +90,30 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
     }
 
 
-    public static ItemStack saveModOrProjIntoDrawType(Level level, @Nullable ItemStack modOrProj,
-                                               @Nullable List<ItemStack> moreMOP, @Nullable List<ItemStack> resetAndSave,  ItemStack draw, SaveOrGetTypeD type){
-        List<ItemStack> list = loadModOrProjFormDrawType(level, draw, type);
-        if (modOrProj != null) list.add(modOrProj);
-        if (moreMOP != null) list.addAll(moreMOP);
-        if (resetAndSave != null) list = resetAndSave;
+    public static ItemStack saveModOrProjIntoDrawOrTriggerTypeType(Level level,
+                                                                   @Nullable ItemStack modOrProj,
+                                                                   @Nullable List<ItemStack> moreMOP,
+                                                                   @Nullable List<ItemStack> resetAndSave,
+                                                                   ItemStack DrawOrTrigger,
+                                                                   ModOrProjType MOP, DrawOrTriggerType DOT){
+        //never SAVE: MOD -> TRIGGER
+        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return DrawOrTrigger;
+
+        List<ItemStack> list = new ArrayList<>();
+
+        //when PROJ -> TRIGGER
+        if (MOP== ModOrProjType.PROJ && DOT==DrawOrTriggerType.TRIGGER){
+            if (modOrProj != null) list.add(modOrProj);
+            if (moreMOP != null) list.addAll(moreMOP);
+        }
+
+        //when MOD or PROJ -> DRAW
+        else {
+            list = loadModOrProjFormDrawOrTriggerTypeType(level, DrawOrTrigger, MOP, DrawOrTriggerType.DRAW);
+            if (modOrProj != null) list.add(modOrProj);
+            if (moreMOP != null) list.addAll(moreMOP);
+            if (resetAndSave != null) list = resetAndSave;
+        }
 
         ListTag listTag = new ListTag();
         for (ItemStack stack : list){
@@ -102,36 +121,49 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             stack.save(level.registryAccess(), tag);
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
-            if (stack.getItem() instanceof IProjectile && type==SaveOrGetTypeD.PROJ) {
+            if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
                 tag.put("ThisProjStats", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
             }
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
-        rootTag.put(type.getId(), listTag);
-        switch (type){
-            case MOD -> draw.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
-            case PROJ -> draw.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
+        rootTag.put(MOP.getId(), listTag);
+
+        //save in DRAW
+        if (DOT==DrawOrTriggerType.DRAW) {
+            switch (MOP) {
+                case MOD -> DrawOrTrigger.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
+                case PROJ -> DrawOrTrigger.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
+            }
         }
-        return draw;
+        //save in TRIGGER
+        else DrawOrTrigger.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
+
+        return DrawOrTrigger;
     }
 
 
-    public static List<ItemStack> loadModOrProjFormDrawType(Level level, ItemStack draw, SaveOrGetTypeD type){
+    public static List<ItemStack> loadModOrProjFormDrawOrTriggerTypeType(Level level, ItemStack fromStack,
+                                                                         ModOrProjType MOP, DrawOrTriggerType DOT){
+        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return null;
         CompoundTag cT = new CompoundTag();
-        switch (type){
-            case MOD -> cT = draw.get(ModDataComponents.DRAW_MOD_SAVED.get());
-            case PROJ -> cT = draw.get(ModDataComponents.DRAW_PROJ_SAVED.get());
+        if(DOT==DrawOrTriggerType.DRAW) {
+            switch (MOP) {
+                case MOD -> cT = fromStack.get(ModDataComponents.DRAW_MOD_SAVED.get());
+                case PROJ -> cT = fromStack.get(ModDataComponents.DRAW_PROJ_SAVED.get());
+            }
         }
+        else cT = fromStack.get(ModDataComponents.TRIGGER_PROJ_SAVED.get());
+
         List<ItemStack> list = new ArrayList<>();
 
-        if(cT != null && cT.contains(type.getId(), ListTag.TAG_LIST)){
-            ListTag listTag = cT.getList(type.getId(), Tag.TAG_COMPOUND);
+        if(cT != null && cT.contains(MOP.getId(), ListTag.TAG_LIST)){
+            ListTag listTag = cT.getList(MOP.getId(), Tag.TAG_COMPOUND);
 
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
-                if (stack.getItem() instanceof IProjectile && type==SaveOrGetTypeD.PROJ) {
+                if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
                     CompoundTag statsProj = tag.getCompound("ThisProjStats");
                     stack.set(ModDataComponents.SPELL_STATS_F.get(), statsProj);
                 }
@@ -141,9 +173,9 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return list;
     }
 
-    public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, SaveOrGetTypeD type){
-        List<ItemStack> list = loadModOrProjFormDrawType(level, fromDraw, type);
-        return saveModOrProjIntoDrawType(level, null, list,null, finalDraw, type);
+    public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, ModOrProjType type){
+        List<ItemStack> list = loadModOrProjFormDrawOrTriggerTypeType(level, fromDraw, type, DrawOrTriggerType.DRAW);
+        return saveModOrProjIntoDrawOrTriggerTypeType(level, null, list,null, finalDraw, type, DrawOrTriggerType.DRAW);
     }
 
 

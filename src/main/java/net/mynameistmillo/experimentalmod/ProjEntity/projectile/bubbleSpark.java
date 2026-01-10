@@ -9,16 +9,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class bubbleSpark extends Item implements IProjectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
@@ -50,6 +56,8 @@ public class bubbleSpark extends Item implements IProjectile {
         this.baseStatsI.set(StatsKeyI.PIERCING , 0);
         this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
         this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 0);
+        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 0);
+
 
     }
 
@@ -66,23 +74,24 @@ public class bubbleSpark extends Item implements IProjectile {
         return baseStatsI;
     }
 
-
     @Override
-    public Entity spawnSpell(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell, int index) {
+    public Entity spawnProj(Level level,
+                            BlockPos pos, Player caster, Vec3 normal,
+                            ItemStack wandStack, ItemStack thisProj) {
         if (level.isClientSide()) return null;
+        if (!(thisProj.getItem() instanceof IProjectile )) return null;
 
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
         String name = "bubble_spark";
         proj.setProjName(name);
 
-        proj.setSpellStack(thisSpell.copy());
+        proj.setProjStack(thisProj.copy());
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        ProjStatsF stats = new ProjStatsF().loadStatsFromStack(thisSpell);
-        ProjStatsI statsI = new ProjStatsI().loadStatsFromStack(thisSpell);
-
+        ProjStatsF stats = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
         ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, stats, statsI);
 
@@ -92,23 +101,58 @@ public class bubbleSpark extends Item implements IProjectile {
     }
 
     @Override
-    public void onHit(Level level, @Nullable Entity hitEntity, @Nullable BlockPos hitBlock, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
+    public void triggerAction(Level level,
+                              @Nullable Entity hitEntity,
+                              @Nullable BlockPos hitBlock,
+                              Player caster, Vec3 normal,
+                              ItemStack wandStack, ItemStack thisSpell,
+                              TriggerType type) {
+        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
+        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
-        ProjStatsF statsF = new ProjStatsF().loadStatsFromStack(thisSpell);
-        ProjStatsI statsI = new ProjStatsI().loadStatsFromStack(thisSpell);
+        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
 
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()){
-            if(hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE)==0) return;
-            living.hurt(living.damageSources().indirectMagic(thisSpell.getEntityRepresentation(), caster) , statsF.get(StatsKeyF.DAMAGE));
+        if (v==2 || v==20 || v==60) {
+            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
+        }
+    }
 
+    @Override
+    public void onHit(Level level,
+                      @Nullable Entity hitEntity,
+                      @Nullable BlockPos hitBlock,
+                      Player caster, Vec3 normal,
+                      ItemStack wandStack, ItemStack thisProj) {
+        if(level.isClientSide()) return;
+
+        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
+
+        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
+            if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
+            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(), caster), statsF.get(StatsKeyF.DAMAGE));
+
+        }
+    }
+
+
+    @Override
+    public void spawnSelfSavedProj(Level level,
+                                   BlockPos pos, Player caster, Vec3 normal,
+                                   ItemStack wandStack, ItemStack thisProj,
+                                   ProjStatsF statsF, ProjStatsI statsI) {
+        List<ItemStack> spellsToSpawn = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, thisProj, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+
+        for(ItemStack stack : spellsToSpawn){
+            if (stack.getItem() instanceof IProjectile proj){
+                proj.spawnProj(level, pos, caster, normal, wandStack, thisProj);
+            }
         }
 
     }
 
-    @Override
-    public void onExpire(Level level, BlockPos pos, Player caster, Vec3 normal, ItemStack wandStack, ItemStack thisSpell) {
 
-    }
+
 
 
 

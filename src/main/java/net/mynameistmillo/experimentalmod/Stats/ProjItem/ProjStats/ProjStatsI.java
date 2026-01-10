@@ -40,8 +40,13 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
         return stats;
     }
 
+    public static ItemStack subtractFromFree(ItemStack proj){
+        ProjStatsI s = loadStatsFromProj(proj);
+        s.set(StatsKeyI.FREE_DRAW_TRIGGER, s.get(StatsKeyI.FREE_DRAW_TRIGGER)-1);
+        return saveStatsToProj(s, proj);
+    }
 
-    public ItemStack saveStatsToSpell(ProjStatsI stats, ItemStack stack){
+    public static ItemStack saveStatsToProj(ProjStatsI stats, ItemStack stack){
         CompoundTag tag = new CompoundTag();
         for (StatsKeyI key : StatsKeyI.values()){
             tag.putInt(key.name(), stats.get(key));
@@ -50,7 +55,7 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-    public ProjStatsI loadStatsFromStack(ItemStack stack){
+    public static ProjStatsI loadStatsFromProj(ItemStack stack){
         CompoundTag tag = stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag());
 
         ProjStatsI stats = new ProjStatsI();

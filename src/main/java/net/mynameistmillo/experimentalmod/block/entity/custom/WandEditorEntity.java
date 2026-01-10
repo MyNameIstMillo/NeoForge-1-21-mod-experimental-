@@ -26,7 +26,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.CompactSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorMenu;

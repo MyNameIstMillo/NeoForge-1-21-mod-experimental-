@@ -89,5 +89,13 @@ public class ModDataComponents {
                             .build());
 
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> TRIGGER_PROJ_SAVED =
+            DATA_COMPONENTS.register("trigger_proj_saved",
+                    ()-> new DataComponentType.Builder<CompoundTag>()
+                            .persistent(CompoundTag.CODEC)
+                            .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+                            .build());
+
+
 
 }

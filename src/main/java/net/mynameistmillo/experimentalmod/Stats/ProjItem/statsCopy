@@ -22,3 +22,8 @@
        this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
        this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 0);
 
+
+trigger type
+1 - trigger
+10 - timer
+30 - expire

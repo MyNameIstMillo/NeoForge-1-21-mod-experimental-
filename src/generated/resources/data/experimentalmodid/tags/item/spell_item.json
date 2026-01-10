@@ -1,7 +1,8 @@
 {
   "values": [
-    "experimentalmodid:bubble_spark",
     "experimentalmodid:spark_bolt",
+    "experimentalmodid:spark_bolt_trigger",
+    "experimentalmodid:bubble_spark",
     "experimentalmodid:teleport_bolt",
     "experimentalmodid:speed_up",
     "experimentalmodid:speed_down",

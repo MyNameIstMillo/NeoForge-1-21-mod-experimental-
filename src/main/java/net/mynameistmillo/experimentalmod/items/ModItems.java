@@ -10,6 +10,7 @@ import net.mynameistmillo.experimentalmod.Modifiers.LifeTime.LifeTimeUp;
 import net.mynameistmillo.experimentalmod.Modifiers.gravity.NoGravity;
 import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedDown;
 import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedUp;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.sparkBoltTrigger;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.bubbleSpark;
@@ -40,6 +41,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> SPARK_BOLT = ITEMS.register("spark_bolt",
             ()-> new sparkBolt(new Item.Properties()));
+
+    public static final DeferredItem<Item> SPARK_BOLT_TRIGGER = ITEMS.register("spark_bolt_trigger",
+            ()-> new sparkBoltTrigger(new Item.Properties()));
 
     public static final DeferredItem<Item> BUBBLE_SPARK = ITEMS.register("bubble_spark",
             ()-> new bubbleSpark(new Item.Properties()));

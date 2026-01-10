@@ -11,7 +11,10 @@ public enum StatsKeyI {
     TRIGGER_TYPE("trigger_type",0),
     PIERCING("piercing", 0),
     TICK_EVENT("tick_event", 40),
-    FRIENDLY_FIRE("friendly_fire", 0);
+    FRIENDLY_FIRE("friendly_fire", 0),
+
+    //something 2
+    FREE_DRAW_TRIGGER("free_draw_trigger",0);
 
     private final String id;
     private final Integer defaultValue;

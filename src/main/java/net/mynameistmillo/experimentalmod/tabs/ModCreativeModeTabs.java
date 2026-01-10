@@ -35,6 +35,7 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable("creativetab.experimentalmodid.mod_spells_tab"))
                     .displayItems((itemDisplayParameters,output)-> {
                         output.accept(ModItems.SPARK_BOLT);
+                        output.accept(ModItems.SPARK_BOLT_TRIGGER);
                         output.accept(ModItems.BUBBLE_SPARK);
                         output.accept(ModItems.TELEPORT_BOLT);
                         output.accept(ModItems.SPEED_UP);

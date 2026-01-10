@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -37,12 +38,11 @@ public class BasicProjectileEntity extends Projectile {
 
     private float gravity = 0f;
     private float drag = 1f;
-    private float minSpeed = 0.001f;
 
     private float lifeTime = 60;
     private Vec3 prevDelta = Vec3.ZERO;
 
-    private ItemStack spellStack = ItemStack.EMPTY;
+    private ItemStack projStack = ItemStack.EMPTY;
     private ItemStack wandStack = ItemStack.EMPTY;
     private UUID casterUUID = null;
 
@@ -70,7 +70,7 @@ public class BasicProjectileEntity extends Projectile {
 
     public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
 
-    public void setSpellStack(ItemStack stack){ this.spellStack = stack == null? ItemStack.EMPTY :stack.copy();}
+    public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
     public void setWandStack(ItemStack stack){ this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
 
@@ -86,9 +86,9 @@ public class BasicProjectileEntity extends Projectile {
         nbt.putFloat("ProjDrag", this.drag);
         nbt.putDouble("lifeTime", this.lifeTime);
 
-        if(this.spellStack.isEmpty()) {
+        if(this.projStack.isEmpty()) {
             CompoundTag spellTag = new CompoundTag();
-            this.spellStack.save(level().registryAccess(), spellTag);
+            this.projStack.save(level().registryAccess(), spellTag);
             nbt.put("SpellStack", spellTag);
         }
         if(this.wandStack.isEmpty()) {
@@ -111,8 +111,8 @@ public class BasicProjectileEntity extends Projectile {
         if (nbt.contains("lifeTime")) this.lifeTime = nbt.getFloat("lifeTime");
 
         if(nbt.contains("SpellStack", Tag.TAG_COMPOUND)){
-            this.spellStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("SpellStack"));
-        } else this.spellStack = ItemStack.EMPTY;
+            this.projStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("SpellStack"));
+        } else this.projStack = ItemStack.EMPTY;
 
         if(nbt.hasUUID("CasterUUID")){
             this.casterUUID = nbt.getUUID("CasterUUID");
@@ -127,7 +127,7 @@ public class BasicProjectileEntity extends Projectile {
         if(!this.level().isClientSide()){
             this.lifeTime--;
             if(this.lifeTime<=0){
-                this.handleOnExpire(this.blockPosition(), this.getDeltaMovement().normalize());
+                handleProjHit(null,this.blockPosition(), this.getDeltaMovement().normalize(), TriggerType.EXPIRE);
                 return;
             }
         }
@@ -164,7 +164,7 @@ public class BasicProjectileEntity extends Projectile {
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
 
             if (entityHit != null) {
-                this.handleSpellHit(entityHit.getEntity(), null, delta.normalize());
+                this.handleProjHit(entityHit.getEntity(), null, delta.normalize(), TriggerType.TRIGGER);
                 return;
             }else {
                 entityHit = null;
@@ -208,7 +208,7 @@ public class BasicProjectileEntity extends Projectile {
         AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
-            this.handleSpellHit(entityHit.getEntity(), null, null);
+            this.handleProjHit(entityHit.getEntity(), null, null, TriggerType.TRIGGER);
             return true;
         }
 
@@ -268,18 +268,19 @@ public class BasicProjectileEntity extends Projectile {
         BlockPos hit = result.getBlockPos();
         BlockPos beforeHit = hit.relative(face);
 
-        this.handleSpellHit(null, beforeHit, normal);
+        this.handleProjHit(null, beforeHit, normal, TriggerType.TRIGGER);
     }
 
 
-    private void handleSpellHit(@Nullable Entity hitEntity,
-                                @Nullable BlockPos hitBlock,
-                                @Nullable Vec3 normal){
+    private void handleProjHit(@Nullable Entity hitEntity,
+                               @Nullable BlockPos hitBlock,
+                               @Nullable Vec3 normal,
+                               TriggerType type){
         this.discard();
         if(level().isClientSide()) return;
 
-        if(!this.spellStack.isEmpty()){
-            Item item = this.spellStack.getItem();
+        if(!this.projStack.isEmpty()){
+            Item item = this.projStack.getItem();
             if(item instanceof IProjectile spellLogic){
 
                 Player caster = null;
@@ -289,33 +290,15 @@ public class BasicProjectileEntity extends Projectile {
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
-                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.spellStack);
-                handleOnExpire(hitBlock, normal);
+                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.projStack);
+                spellLogic.triggerAction(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.projStack, type);
+
 
 
             }
         }
     }
 
-    private void handleOnExpire(BlockPos pos, Vec3 normal){
-        this.discard();
-        if(level().isClientSide()) return;
-
-        if(!this.spellStack.isEmpty()){
-            Item item = this.spellStack.getItem();
-            if(item instanceof IProjectile spellLogic){
-
-                Player caster = null;
-                if(this.casterUUID != null){
-                    Entity e = ((ServerLevel)this.level()).getEntity(this.casterUUID);
-                    if(e instanceof Player p) caster =p;
-                }
-                if(caster == null && this.getOwner() instanceof Player p) caster = p;
-
-                spellLogic.onExpire(this.level(), pos, caster, normal, this.wandStack, this.spellStack);
-            }
-        }
-    }
 
 
     @Override

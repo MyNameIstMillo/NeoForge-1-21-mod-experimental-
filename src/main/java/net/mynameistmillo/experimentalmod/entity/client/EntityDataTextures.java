@@ -5,7 +5,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 
 public class EntityDataTextures {
 
-    // gets name of the projectile ane return resource location
+    // gets name of the projectile and return resource location
     public static ResourceLocation getTxtPathSide(String name){
         String  res;
 
@@ -23,7 +23,7 @@ public class EntityDataTextures {
 
 
 
-    // gets name of the projectile ane return resource location
+    // gets name of the projectile and return resource location
     public static ResourceLocation getTxtPathFront(String name){
         String  res;
 
@@ -40,16 +40,14 @@ public class EntityDataTextures {
 
 
 
-    // gets name of the projectile ane return shift
+    // gets name of the projectile and return shift
     public static Float getFrontAxisShift(String name){
         float shift;
 
         switch (name){
             case "spark_bolt" -> shift = 0.5f;
             default -> shift = 0f;
-
         }
-
         return shift;
     }
 

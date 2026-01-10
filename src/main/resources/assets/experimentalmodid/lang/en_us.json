@@ -3,7 +3,8 @@
   "item.experimentalmodid.wand": "Wand",
   "item.experimentalmodid.key": "Key",
 
-  "item.experimentalmodid.spark_bolt": "spark bolt",
+  "item.experimentalmodid.spark_bolt": "Spark bolt",
+  "item.experimentalmodid.spark_bolt_trigger": "Spark bolt with trigger",
   "item.experimentalmodid.bubble_spark": "Bubble spark",
   "item.experimentalmodid.teleport_bolt": "Teleport bolt",
 

@@ -5,21 +5,18 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.SaveOrGetTypeD;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
-import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawKey;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import org.slf4j.Logger;
@@ -117,8 +114,8 @@ public class WandItem extends Item {
 
         if(currentStack.getItem() instanceof IProjectile p){
 
-            p.spawnSpell(level, player.getOnPos(), player,
-                    player.getLookAngle(), wand, currentStack, index);
+            p.spawnProj(level, player.getOnPos(), player,
+                    player.getLookAngle(), wand, currentStack);
 
             increaseIndex(wand);
 
@@ -127,12 +124,12 @@ public class WandItem extends Item {
 
         if(currentStack.getItem() instanceof IDraw ){
 
-            List<ItemStack> projList = DrawStats.loadModOrProjFormDrawType(level, currentStack, SaveOrGetTypeD.PROJ);
+            List<ItemStack> projList = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, currentStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
 
             for (ItemStack stack : projList){
                 if (stack.getItem() instanceof IProjectile p){
-                    p.spawnSpell(level, player.getOnPos(), player,
-                            player.getLookAngle(), wand, stack, 0);
+                    p.spawnProj(level, player.getOnPos(), player,
+                            player.getLookAngle(), wand, stack);
                 }
             }
             increaseIndex(wand);

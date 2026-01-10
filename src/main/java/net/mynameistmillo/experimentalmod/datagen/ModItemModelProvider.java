@@ -18,6 +18,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.KEY.get());
 
         basicItem(ModItems.SPARK_BOLT.get());
+        basicItem(ModItems.SPARK_BOLT_TRIGGER.get());
         basicItem(ModItems.BUBBLE_SPARK.get());
         basicItem(ModItems.TELEPORT_BOLT.get());
 

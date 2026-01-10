@@ -10,7 +10,9 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.SaveOrGetTypeD;
+import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +47,7 @@ public class SaveSpells {
                     spellTag.put("DrawSavedProj", spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                             new CompoundTag()));
 
-                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawType(level, spell, SaveOrGetTypeD.PROJ);
+                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, spell, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
                     ListTag lt = new ListTag();
                     for (ItemStack s : l){
                         lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));

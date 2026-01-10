@@ -1,12 +1,12 @@
 package net.mynameistmillo.experimentalmod.Stats.DrawItem;
 
-public enum SaveOrGetTypeD {
+public enum ModOrProjType {
     MOD("Modifiers"),
     PROJ("Projectile");
 
     private final String id;
 
-    SaveOrGetTypeD(String id){
+    ModOrProjType(String id){
         this.id = id;
     }
 

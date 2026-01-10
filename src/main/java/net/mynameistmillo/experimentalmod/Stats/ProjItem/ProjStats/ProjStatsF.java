@@ -40,7 +40,7 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
     }
 
 
-    public ItemStack saveStatsToSpell(ProjStatsF stats, ItemStack stack){
+    public static ItemStack saveStatsToSpell(ProjStatsF stats, ItemStack stack){
         CompoundTag tag = new CompoundTag();
         for (StatsKeyF key : StatsKeyF.values()){
             tag.putFloat(key.name(), stats.get(key));
@@ -49,7 +49,7 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-    public ProjStatsF loadStatsFromStack(ItemStack stack){
+    public static ProjStatsF loadStatsFromStack(ItemStack stack){
         CompoundTag tag = stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag());
         
         ProjStatsF stats = new ProjStatsF();
