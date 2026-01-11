@@ -17,6 +17,7 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
@@ -38,7 +39,7 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         this.baseStatsF.set(StatsKeyF.ACCELERATION_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_U_D, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_F_B, 0.0f);
-        this.baseStatsF.set(StatsKeyF.VERTICAL_SPREAD, 10.0f);
+        this.baseStatsF.set(StatsKeyF.VERTICAL_SPREAD, 0.0f);
         this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 50.0f);
         this.baseStatsF.set(StatsKeyF.RECOIL, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
@@ -76,7 +77,8 @@ public class sparkBoltTrigger extends Item implements IProjectile {
     @Override
     public Entity spawnProj(Level level,
                             BlockPos pos, Player caster, Vec3 normal,
-                            ItemStack wandStack, ItemStack thisProj) {
+                            ItemStack wandStack, ItemStack thisProj,
+                            CasterOrBlockPosType COP) {
         if(level.isClientSide()) return null;
         if (!(thisProj.getItem() instanceof IProjectile )) return null;
         //create projectile
@@ -92,11 +94,11 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
         //apply stats
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, stats, statsI);
+        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
         //add projectile to the world
         level.addFreshEntity(proj);
 
@@ -115,8 +117,10 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
         int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
+        LOGGER.info("hit maybe?");
 
-        if (v==2 || v==20 || v==60) {
+        if (v==2 || v==20 || v==60 || true) {
+            LOGGER.info("yes, hit, but proj?");
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
 
@@ -143,15 +147,16 @@ public class sparkBoltTrigger extends Item implements IProjectile {
 
     @Override
     public void spawnSelfSavedProj(Level level,
-                                   BlockPos pos, Player caster, Vec3 normal,
+                                   BlockPos pos,
+                                   Player caster,
+                                   Vec3 normal,
                                    ItemStack wandStack,
                                    ItemStack thisProj,
                                    ProjStatsF statsF, ProjStatsI statsI) {
         List<ItemStack> spellsToSpawn = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, thisProj, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
-
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, normal, wandStack, thisProj);
+                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
             }
         }
 

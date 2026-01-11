@@ -15,6 +15,7 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
@@ -77,7 +78,8 @@ public class bubbleSpark extends Item implements IProjectile {
     @Override
     public Entity spawnProj(Level level,
                             BlockPos pos, Player caster, Vec3 normal,
-                            ItemStack wandStack, ItemStack thisProj) {
+                            ItemStack wandStack, ItemStack thisProj,
+                            CasterOrBlockPosType COP) {
         if (level.isClientSide()) return null;
         if (!(thisProj.getItem() instanceof IProjectile )) return null;
 
@@ -90,10 +92,10 @@ public class bubbleSpark extends Item implements IProjectile {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, stats, statsI);
+        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
 
         level.addFreshEntity(proj);
 
@@ -145,7 +147,7 @@ public class bubbleSpark extends Item implements IProjectile {
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, normal, wandStack, thisProj);
+                proj.spawnProj(level, pos, caster, normal, wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
             }
         }
 

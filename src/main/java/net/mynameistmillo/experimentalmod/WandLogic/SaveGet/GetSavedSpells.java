@@ -56,6 +56,9 @@ public class GetSavedSpells {
                         if(spellTag.contains("ProjStats", Tag.TAG_COMPOUND)){
                             spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("ProjStats"));
                         }
+                        if(spellTag.contains("SavedProjForTrigger", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), spellTag.getCompound("SavedProjForTrigger"));
+                        }
                         if(spellTag.contains("DrawStats", Tag.TAG_COMPOUND)){
                             spell.set(ModDataComponents.DRAW_STATS, spellTag.getCompound("DrawStats"));
                         }

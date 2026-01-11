@@ -34,6 +34,7 @@ public class CompactSpells {
 
         for (ItemStack stack : list){
 
+
             //if DRAW -> dQ
             if (stack.getItem() instanceof IDraw){
                 drawQueue.add(stack);
@@ -44,7 +45,7 @@ public class CompactSpells {
             if (stack.getItem() instanceof IProjectile){
                 ProjStatsI statsI = new ProjStatsI().loadStatsFromProj(stack);
                 int tt = statsI.get(StatsKeyI.TRIGGER_TYPE);
-                if (tt==1 || tt==2 || tt==3) {
+                if (tt==1 || tt==10 || tt==30) {
                     drawQueue.add(stack);
                     continue;
                 }
@@ -84,9 +85,9 @@ public class CompactSpells {
                     case IDraw draw -> {
                         if (DrawStats.loadStatsFromDraw(lastDrawStack).get(DrawKey.FREE_SPACE) == 0) {
                             if (drawQueue.size() > 1) {
-                                for (int i = drawQueue.size(); i >= 0; i--) {
+                                for (int i = drawQueue.size(); i >= 1; i--) {
                                     ItemStack endStack = drawQueue.get(drawQueue.size() - 1);
-                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);
+                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);//<-BHUFDSYUFDBYUFDBYUFDSBYUFDSBYUFDS
 
                                     //TO -> TRIGGER
                                     if (beforeStack.getItem() instanceof IProjectile){
@@ -94,8 +95,9 @@ public class CompactSpells {
                                                 DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, endStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW),
                                                 null, beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
                                         drawQueue.removeLast();
-                                        drawQueue.set(drawQueue.size() - 1, beforeStack);
-                                        if (ProjStatsI.loadStatsFromProj(drawQueue.getLast()).get(StatsKeyI.FREE_DRAW_TRIGGER)!=0) break;
+                                        drawQueue.set(drawQueue.size() - 1, ProjStatsI.subtractFromFree(beforeStack));
+
+                                        if (ProjStatsI.loadStatsFromProj(beforeStack).get(StatsKeyI.FREE_DRAW_TRIGGER) == 0) break;
 
                                     }
                                     //TO -> DRAW
@@ -106,12 +108,13 @@ public class CompactSpells {
 
                                         drawQueue.removeLast();
                                         drawQueue.set(drawQueue.size() - 1, beforeStack);
-                                        if (DrawStats.loadStatsFromDraw(drawQueue.getLast()).get(DrawKey.FREE_SPACE) != 0) break;
+                                        if (DrawStats.loadStatsFromDraw(beforeStack).get(DrawKey.FREE_SPACE) == 0) break;
                                     }
                                 }
                             }
 
                         } else drawQueue.set(drawQueue.size() - 1, lastDrawStack);
+                        continue;
                     }
                     //LAST -> TRIGGER
                     case IProjectile proj -> {
@@ -139,7 +142,12 @@ public class CompactSpells {
                                     }
                                 }
                             }
-                        }
+                            else {
+                                finalList.add(drawQueue.getLast());
+                                drawQueue.removeLast();
+                            }
+                        } else drawQueue.set(drawQueue.size() - 1, lastDrawStack);
+                        continue;
                         
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + lastDrawStack.getItem());
@@ -150,11 +158,7 @@ public class CompactSpells {
 
         }
         if (!drawQueue.isEmpty()){
-            do {// d -> d
-                // d -> t
-
-                // t -> d
-                // t -> t
+            do {
                 if (drawQueue.size()>1){
                     ItemStack endStack = drawQueue.get(drawQueue.size()-1);
                     ItemStack beforeStack = drawQueue.get(drawQueue.size()-2);

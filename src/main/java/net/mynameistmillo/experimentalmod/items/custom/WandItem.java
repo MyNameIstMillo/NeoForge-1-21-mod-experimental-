@@ -12,6 +12,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
@@ -111,11 +112,12 @@ public class WandItem extends Item {
                                                     0, SaveOrGetTypeW.COMPACT);
 
         ItemStack currentStack = storedSpells.get(index);
+        LOGGER.info("stack -> {}",currentStack);
 
         if(currentStack.getItem() instanceof IProjectile p){
 
             p.spawnProj(level, player.getOnPos(), player,
-                    player.getLookAngle(), wand, currentStack);
+                    player.getLookAngle(), wand, currentStack, CasterOrBlockPosType.CASTER);
 
             increaseIndex(wand);
 
@@ -129,7 +131,7 @@ public class WandItem extends Item {
             for (ItemStack stack : projList){
                 if (stack.getItem() instanceof IProjectile p){
                     p.spawnProj(level, player.getOnPos(), player,
-                            player.getLookAngle(), wand, stack);
+                            player.getLookAngle(), wand, stack, CasterOrBlockPosType.CASTER);
                 }
             }
             increaseIndex(wand);

@@ -11,6 +11,8 @@ import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
@@ -28,26 +30,31 @@ public class SaveSpells {
         ListTag spellsListTag = new ListTag();
 
         for (int i=0;i<cap;i++){
-            ItemStack spell = list.get(i);
+            ItemStack stack = list.get(i);
             CompoundTag spellTag = new CompoundTag();
-            if(!spell.is(Items.DIRT)){
-                spell.save(level.registryAccess(), spellTag);
-                spellTag.putString("id", BuiltInRegistries.ITEM.getKey(spell.getItem()).toString());
+            if(!stack.is(Items.DIRT)){
+                stack.save(level.registryAccess(), spellTag);
+                spellTag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             }
             else spellTag.putString("id", "minecraft:dirt");
 
-            if (type== SaveOrGetTypeW.COMPACT){
-                if(spell.getItem() instanceof IProjectile){
-                    spellTag.put("ProjStats", spell.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
+            if (type == SaveOrGetTypeW.COMPACT){
+                if(stack.getItem() instanceof IProjectile){
+                    spellTag.put("ProjStats", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
                                                                 new CompoundTag()));
+                    int t = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
+                    if(t==1 || t==10 || t==30){
+                        spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
+                                                                new CompoundTag()));
+                    }
                 }
-                if(spell.getItem() instanceof IDraw){
-                    spellTag.put("DrawStats", spell.getOrDefault(ModDataComponents.DRAW_STATS.get(),
+                if(stack.getItem() instanceof IDraw){
+                    spellTag.put("DrawStats", stack.getOrDefault(ModDataComponents.DRAW_STATS.get(),
                                                                 new CompoundTag()));
-                    spellTag.put("DrawSavedProj", spell.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
+                    spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                             new CompoundTag()));
 
-                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, spell, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, stack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
                     ListTag lt = new ListTag();
                     for (ItemStack s : l){
                         lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
