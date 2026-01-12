@@ -10,7 +10,7 @@ public enum StatsKeyI {
     //bollen stats
     TRIGGER_TYPE("trigger_type",0),
     PIERCING("piercing", 0),
-    TICK_EVENT("tick_event", 40),
+    TICK_EVENT("tick_event", 0),
     FRIENDLY_FIRE("friendly_fire", 0),
 
     //something 2

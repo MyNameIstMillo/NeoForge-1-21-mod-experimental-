@@ -39,26 +39,33 @@ public class SaveSpells {
             else spellTag.putString("id", "minecraft:dirt");
 
             if (type == SaveOrGetTypeW.COMPACT){
-                if(stack.getItem() instanceof IProjectile){
-                    spellTag.put("ProjStats", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
-                                                                new CompoundTag()));
-                    int t = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
-                    if(t==1 || t==10 || t==30){
-                        spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
-                                                                new CompoundTag()));
+                switch (stack.getItem()){
+                    case IProjectile p -> {
+                        spellTag.put("ProjStatsF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
+                                new CompoundTag()));
+                        spellTag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(),
+                                new CompoundTag()));
+                        int t = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
+                        if(t==1 || t==10 || t==30){
+                            spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
+                                    new CompoundTag()));
+                        }
                     }
-                }
-                if(stack.getItem() instanceof IDraw){
-                    spellTag.put("DrawStats", stack.getOrDefault(ModDataComponents.DRAW_STATS.get(),
-                                                                new CompoundTag()));
-                    spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
-                            new CompoundTag()));
+                    case IDraw d -> {
+                        spellTag.put("DrawStats", stack.getOrDefault(ModDataComponents.DRAW_STATS.get(),
+                                new CompoundTag()));
+                        spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
+                                new CompoundTag()));
 
-                    List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, stack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
-                    ListTag lt = new ListTag();
-                    for (ItemStack s : l){
-                        lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+                        List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, stack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                        ListTag lt = new ListTag();
+                        for (ItemStack s : l){
+                            lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+                            lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag()));
+                        }
                     }
+
+                    default -> throw new IllegalStateException("Unexpected value: " + stack.getItem());
                 }
             }
 

@@ -128,7 +128,6 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         }
         CompoundTag rootTag = new CompoundTag();
         rootTag.put(MOP.getId(), listTag);
-        LOGGER.info("rootTag -> {}", rootTag);
 
         //save in DRAW
         if (DOT==DrawOrTriggerType.DRAW) {

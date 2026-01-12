@@ -89,7 +89,7 @@ public class BasicProjectileEntity extends Projectile {
         if(this.projStack.isEmpty()) {
             CompoundTag spellTag = new CompoundTag();
             this.projStack.save(level().registryAccess(), spellTag);
-            nbt.put("SpellStack", spellTag);
+            nbt.put("ProjStack", spellTag);
         }
         if(this.wandStack.isEmpty()) {
             CompoundTag wandTag = new CompoundTag();
@@ -110,8 +110,8 @@ public class BasicProjectileEntity extends Projectile {
         if (nbt.contains("ProjDrag")) this.drag = nbt.getFloat("ProjDrag");
         if (nbt.contains("lifeTime")) this.lifeTime = nbt.getFloat("lifeTime");
 
-        if(nbt.contains("SpellStack", Tag.TAG_COMPOUND)){
-            this.projStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("SpellStack"));
+        if(nbt.contains("ProjStack", Tag.TAG_COMPOUND)){
+            this.projStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("ProjStack"));
         } else this.projStack = ItemStack.EMPTY;
 
         if(nbt.hasUUID("CasterUUID")){

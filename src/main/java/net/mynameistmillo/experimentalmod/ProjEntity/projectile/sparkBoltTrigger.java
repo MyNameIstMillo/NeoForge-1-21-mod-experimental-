@@ -116,11 +116,8 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
-        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
-        LOGGER.info("hit maybe?");
 
-        if (v==2 || v==20 || v==60 || true) {
-            LOGGER.info("yes, hit, but proj?");
+        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)) {
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
 

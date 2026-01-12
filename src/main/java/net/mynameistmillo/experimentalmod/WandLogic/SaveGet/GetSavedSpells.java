@@ -53,8 +53,11 @@ public class GetSavedSpells {
                     }
                     case COMPACT -> {
                         ItemStack spell = ItemStack.parseOptional(level.registryAccess(), spellTag);
-                        if(spellTag.contains("ProjStats", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("ProjStats"));
+                        if(spellTag.contains("ProjStatsF", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("ProjStatsF"));
+                        }
+                        if(spellTag.contains("ProjStatsI", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.SPELL_STATS_I.get(), spellTag.getCompound("ProjStatsI"));
                         }
                         if(spellTag.contains("SavedProjForTrigger", Tag.TAG_COMPOUND)){
                             spell.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), spellTag.getCompound("SavedProjForTrigger"));

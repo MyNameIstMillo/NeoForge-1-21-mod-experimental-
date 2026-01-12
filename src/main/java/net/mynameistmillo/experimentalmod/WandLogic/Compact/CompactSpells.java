@@ -35,21 +35,23 @@ public class CompactSpells {
         for (ItemStack stack : list){
 
 
-            //if DRAW -> dQ
-            if (stack.getItem() instanceof IDraw){
-                drawQueue.add(stack);
-                continue;
-            }
-            
-            //if PROJ is trigger -> dQ
-            if (stack.getItem() instanceof IProjectile){
-                ProjStatsI statsI = new ProjStatsI().loadStatsFromProj(stack);
-                int tt = statsI.get(StatsKeyI.TRIGGER_TYPE);
-                if (tt==1 || tt==10 || tt==30) {
+            switch (stack.getItem()){
+                //if DRAW -> dQ
+                case IDraw d -> {
                     drawQueue.add(stack);
                     continue;
                 }
+                //if PROJ is trigger -> dQ
+                case IProjectile p -> {
+                    int tt = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
+                    if (tt==1 || tt==2 || tt==3) {
+                        drawQueue.add(stack);
+                        continue;
+                    }
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + stack.getItem());
             }
+
 
             //when reached here STACK is non-DRAW and non-TRIGGER
             if (!drawQueue.isEmpty()){

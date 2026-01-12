@@ -25,5 +25,5 @@
 
 trigger type
 1 - trigger
-10 - timer
-30 - expire
+2 - timer
+3 - expire

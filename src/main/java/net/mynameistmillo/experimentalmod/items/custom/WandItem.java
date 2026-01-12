@@ -112,7 +112,6 @@ public class WandItem extends Item {
                                                     0, SaveOrGetTypeW.COMPACT);
 
         ItemStack currentStack = storedSpells.get(index);
-        LOGGER.info("stack -> {}",currentStack);
 
         if(currentStack.getItem() instanceof IProjectile p){
 

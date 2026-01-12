@@ -49,7 +49,7 @@ public class teleportBolt extends Item implements IProjectile {
         this.baseStatsF.set(StatsKeyF.DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();
-        this.baseStatsI.set(StatsKeyI.COLOUR , 0);
+        this.baseStatsI.set(StatsKeyI.COLOUR , 10);
         this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
         this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
         this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
