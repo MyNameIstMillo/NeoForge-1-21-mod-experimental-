@@ -1,5 +1,5 @@
-// 1.21	2026-01-10T20:22:56.5826719	Tags for minecraft:item mod id experimentalmodid
+// 1.21	2026-01-18T14:14:28.5456642	Tags for minecraft:item mod id experimentalmodid
 15d66f5ccfe7bedefb6da0852dac85e92090f59c data/experimentalmodid/tags/item/fancy_items.json
 e560646ee33e516ba842b2409fd80ef791d8aaf2 data/experimentalmodid/tags/item/key_item.json
-99e8fc46d482e20d1bb7c3fd60692c5d9396bfab data/experimentalmodid/tags/item/spell_item.json
+b2fe361d93074a96a035e987f9ece41f650ffe38 data/experimentalmodid/tags/item/spell_item.json
 50ae740a13486dca7fbdbc2417f6e5b3f07211d8 data/experimentalmodid/tags/item/wand_item.json

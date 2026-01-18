@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.WandLogic.SaveGet;
+package net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -9,12 +9,11 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,7 @@ public class SaveSpells {
                         spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                                 new CompoundTag()));
 
-                        List<ItemStack> l = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, stack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                        List<ItemStack> l = GetStackFromStack.stackFromDraw(level, stack, ModOrProjType.PROJ);
                         ListTag lt = new ListTag();
                         for (ItemStack s : l){
                             lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));

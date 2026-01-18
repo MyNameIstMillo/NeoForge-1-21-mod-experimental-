@@ -8,7 +8,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

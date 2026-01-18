@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.WandLogic.SaveGet;
+package net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetSavedSpells {
+public class GetSpells {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public static List<ItemStack> getSavedSpellsType(ItemStack wand, Level level,
-                                                     int cap, SaveOrGetTypeW type) {
+    public static List<ItemStack> getSpellsType(ItemStack wand, Level level,
+                                                int cap, SaveOrGetTypeW type) {
         List<ItemStack> list = new ArrayList<>();
         CompoundTag wandSpells = new CompoundTag();
         switch (type) {

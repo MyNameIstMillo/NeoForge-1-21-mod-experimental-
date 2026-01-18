@@ -1,4 +1,4 @@
-// 1.21	2026-01-10T20:22:56.5806706	Item Models: experimentalmodid
+// 1.21	2026-01-18T14:14:28.5436623	Item Models: experimentalmodid
 0fab5a0744e50a57c64d7bb9f67ff0128d379a48 assets/experimentalmodid/models/item/bubble_spark.json
 888005a76c8bdff7a47e624cc7a126ee4626e5ca assets/experimentalmodid/models/item/double.json
 63ba9fa2d3f6ccf8b58cdc09d3446e3559ba8625 assets/experimentalmodid/models/item/fancy_item.json
@@ -12,4 +12,5 @@ c74c9a51127e9d430afe38a0a272a54f4cc4c651 assets/experimentalmodid/models/item/sp
 2fd7f8bb7b27b8bb98a730bbc621314cffe0de5a assets/experimentalmodid/models/item/speed_down.json
 794e749224c9107dc2f4784066c8fddc93fde1fd assets/experimentalmodid/models/item/speed_up.json
 0de41c0ad28a7155b0ec2147a64afeaa4718c4bf assets/experimentalmodid/models/item/teleport_bolt.json
+b9656da449cf0a063ea6f2e63575baeb5e6ce8eb assets/experimentalmodid/models/item/triple.json
 c8c66315be398f807ca40fc7f641552e111a3133 assets/experimentalmodid/models/item/wand.json

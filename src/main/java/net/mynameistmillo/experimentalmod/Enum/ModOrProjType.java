@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Stats.DrawItem;
+package net.mynameistmillo.experimentalmod.Enum;
 
 public enum ModOrProjType {
     MOD("Modifiers"),

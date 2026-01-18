@@ -9,15 +9,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
+import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Enum.TriggerType;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
@@ -143,11 +142,11 @@ public class bubbleSpark extends Item implements IProjectile {
                                    BlockPos pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj,
                                    ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, thisProj, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj, ModOrProjType.PROJ);
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, normal, wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
+                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
             }
         }
 

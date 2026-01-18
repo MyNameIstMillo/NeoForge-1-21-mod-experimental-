@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.DistanceCast;
+package net.mynameistmillo.experimentalmod.Modifiers.changeOriginOfCast;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,12 +23,12 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
 
-        float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 4f;
+        float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 3f;
 
         stats.set(StatsKeyF.DISPLACEMENT_F_B, displacement);
 
-        return stats.saveStatsToSpell(stats, stack);
+        return ProjStatsF.saveStatsToSpell(stats, stack);
     }
 }

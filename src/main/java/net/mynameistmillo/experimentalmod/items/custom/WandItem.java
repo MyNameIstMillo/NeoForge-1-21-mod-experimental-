@@ -9,12 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
+import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
@@ -89,7 +89,7 @@ public class WandItem extends Item {
         if (!(wand.getItem() instanceof WandItem wandItem)) {
             return false;
         }
-        List<ItemStack> contents = GetSavedSpells.getSavedSpellsType(wand,level,
+        List<ItemStack> contents = GetSpells.getSpellsType(wand,level,
                 getCapacity(wand), SaveOrGetTypeW.NORMAL);
 
         for (ItemStack stack : contents) {
@@ -108,7 +108,7 @@ public class WandItem extends Item {
         if(level.isClientSide())    return InteractionResultHolder.pass(wand);
 
         int index = getCurrentIndex(wand);
-        List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, level,
+        List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, level,
                                                     0, SaveOrGetTypeW.COMPACT);
 
         ItemStack currentStack = storedSpells.get(index);
@@ -125,7 +125,7 @@ public class WandItem extends Item {
 
         if(currentStack.getItem() instanceof IDraw ){
 
-            List<ItemStack> projList = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, currentStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+            List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, currentStack, ModOrProjType.PROJ);
 
             for (ItemStack stack : projList){
                 if (stack.getItem() instanceof IProjectile p){
@@ -147,7 +147,7 @@ public class WandItem extends Item {
         int capacity = getCapacity(wand);
 
         if (Screen.hasShiftDown()){
-            List<ItemStack> spells = GetSavedSpells.getSavedSpellsType(wand, level,
+            List<ItemStack> spells = GetSpells.getSpellsType(wand, level,
                                                 capacity, SaveOrGetTypeW.NORMAL);
             tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
 

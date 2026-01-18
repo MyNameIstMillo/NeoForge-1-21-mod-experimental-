@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.LifeTime;
+package net.mynameistmillo.experimentalmod.Modifiers.time;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +11,10 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LifeTimeDown extends Item implements IModifier {
+public class LifeTimeUp extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public LifeTimeDown(Properties properties) {
+    public LifeTimeUp(Properties properties) {
         super(properties);
     }
 
@@ -25,9 +25,9 @@ public class LifeTimeDown extends Item implements IModifier {
 
         ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
 
-        float lifeTime = stats.get(StatsKeyF.LIFETIME) - 20f;
+        float lifeTIme = stats.get(StatsKeyF.LIFETIME) + 30f;
 
-        stats.set(StatsKeyF.LIFETIME, lifeTime);
+        stats.set(StatsKeyF.LIFETIME, lifeTIme);
 
         return stats.saveStatsToSpell(stats, stack);
     }

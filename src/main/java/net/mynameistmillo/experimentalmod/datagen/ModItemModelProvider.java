@@ -32,6 +32,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 
         basicItem(ModItems.DOUBLE.get());
+        basicItem(ModItems.TRIPLE.get());
 
 
     }

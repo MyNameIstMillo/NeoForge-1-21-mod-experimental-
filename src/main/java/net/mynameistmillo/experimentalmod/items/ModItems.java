@@ -3,10 +3,11 @@ package net.mynameistmillo.experimentalmod.items;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.mynameistmillo.experimentalmod.Draw.Triple;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Modifiers.DistanceCast.MiddleDistanceCastFB;
-import net.mynameistmillo.experimentalmod.Modifiers.LifeTime.LifeTimeDown;
-import net.mynameistmillo.experimentalmod.Modifiers.LifeTime.LifeTimeUp;
+import net.mynameistmillo.experimentalmod.Modifiers.changeOriginOfCast.MiddleDistanceCastFB;
+import net.mynameistmillo.experimentalmod.Modifiers.time.LifeTimeDown;
+import net.mynameistmillo.experimentalmod.Modifiers.time.LifeTimeUp;
 import net.mynameistmillo.experimentalmod.Modifiers.gravity.NoGravity;
 import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedDown;
 import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedUp;
@@ -75,6 +76,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> DOUBLE = ITEMS.register("double",
             () -> new Double(new Item.Properties()));
+
+    public static final DeferredItem<Item> TRIPLE = ITEMS.register("triple",
+            () -> new Triple(new Item.Properties()));
 
 
 

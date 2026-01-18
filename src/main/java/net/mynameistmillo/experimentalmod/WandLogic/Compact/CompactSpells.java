@@ -9,12 +9,14 @@ import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawKey;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
+import net.mynameistmillo.experimentalmod.Enum.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,8 +64,8 @@ public class CompactSpells {
                     case IDraw draw -> {
                         if (DrawStats.loadStatsFromDraw(lastDrawStack).get(DrawKey.FREE_SPACE)>0){
                             stack = applyModifiersFromDraw(stack, lastDrawStack, level);
-                            lastDrawStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, stack, null, null,
-                                    DrawStats.subtractFromFree(lastDrawStack),  ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                            lastDrawStack = SaveStackIntoStack.stackToDraw(level, stack, null, null,
+                                    DrawStats.subtractFromFree(lastDrawStack),  ModOrProjType.PROJ);
 
                         }
                     }
@@ -71,8 +73,8 @@ public class CompactSpells {
                     //new stack and last from dQ -> TRIGGER
                     case IProjectile proj -> {
                         if (ProjStatsI.loadStatsFromProj(lastDrawStack).get(StatsKeyI.FREE_DRAW_TRIGGER)>0){
-                            lastDrawStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, stack, null, null,
-                                    ProjStatsI.subtractFromFree(lastDrawStack), ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+                            lastDrawStack = SaveStackIntoStack.projToTrigger(level, stack, null, null,
+                                    ProjStatsI.subtractFromFree(lastDrawStack), ModOrProjType.PROJ);
 
                         }
 
@@ -89,13 +91,13 @@ public class CompactSpells {
                             if (drawQueue.size() > 1) {
                                 for (int i = drawQueue.size(); i >= 1; i--) {
                                     ItemStack endStack = drawQueue.get(drawQueue.size() - 1);
-                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);//<-BHUFDSYUFDBYUFDBYUFDSBYUFDSBYUFDS
+                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);
 
                                     //TO -> TRIGGER
                                     if (beforeStack.getItem() instanceof IProjectile){
-                                        beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, null,
-                                                DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, endStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW),
-                                                null, beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+                                        beforeStack = SaveStackIntoStack.projToTrigger(level, null,
+                                                GetStackFromStack.stackFromDraw(level, endStack, ModOrProjType.PROJ),
+                                                null, beforeStack, ModOrProjType.PROJ);
                                         drawQueue.removeLast();
                                         drawQueue.set(drawQueue.size() - 1, ProjStatsI.subtractFromFree(beforeStack));
 
@@ -106,15 +108,17 @@ public class CompactSpells {
                                     else {
                                         endStack = applyModDrawToProjDraw(beforeStack, endStack, level);
                                         beforeStack = DrawStats.transferContentsDrawDrawType(level,
-                                                endStack, beforeStack, ModOrProjType.PROJ);
+                                                endStack, DrawStats.subtractFromFree(beforeStack), ModOrProjType.PROJ);
 
                                         drawQueue.removeLast();
                                         drawQueue.set(drawQueue.size() - 1, beforeStack);
                                         if (DrawStats.loadStatsFromDraw(beforeStack).get(DrawKey.FREE_SPACE) == 0) break;
                                     }
                                 }
+                            } else {
+                                finalList.add(drawQueue.getLast());
+                                drawQueue.removeLast();
                             }
-
                         } else drawQueue.set(drawQueue.size() - 1, lastDrawStack);
                         continue;
                     }
@@ -128,16 +132,16 @@ public class CompactSpells {
 
                                     //TO -> TRIGGER
                                     if (beforeStack.getItem() instanceof IProjectile){
-                                        beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, endStack, null, null,
-                                                beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+                                        beforeStack = SaveStackIntoStack.projToTrigger(level, endStack, null, null,
+                                                beforeStack, ModOrProjType.PROJ);
                                         drawQueue.removeLast();
                                         drawQueue.set(drawQueue.size() - 1, beforeStack);
                                         if (ProjStatsI.loadStatsFromProj(beforeStack).get(StatsKeyI.FREE_DRAW_TRIGGER)!=0) break;
                                     }
                                     //TO -> DRAW
                                     else {
-                                        beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, endStack, null, null,
-                                                beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                                        beforeStack = SaveStackIntoStack.stackToDraw(level, endStack, null, null,
+                                                beforeStack, ModOrProjType.PROJ);
                                         drawQueue.removeLast();
                                         drawQueue.set(drawQueue.size() - 1, beforeStack);
                                         if (DrawStats.loadStatsFromDraw(drawQueue.getLast()).get(DrawKey.FREE_SPACE) != 0) break;
@@ -160,20 +164,20 @@ public class CompactSpells {
 
         }
         if (!drawQueue.isEmpty()){
-            do {
+            while (!drawQueue.isEmpty()) {
                 if (drawQueue.size()>1){
                     ItemStack endStack = drawQueue.get(drawQueue.size()-1);
                     ItemStack beforeStack = drawQueue.get(drawQueue.size()-2);
 
                     if (endStack.getItem() instanceof IProjectile && beforeStack.getItem() instanceof IProjectile){
-                        beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, endStack, null, null, beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.TRIGGER);
+                        beforeStack = SaveStackIntoStack.projToTrigger(level, endStack, null, null, beforeStack, ModOrProjType.PROJ);
                     } else
                         if (endStack.getItem() instanceof IProjectile && beforeStack.getItem() instanceof IDraw) {
-                            beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, endStack, null, null, beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                            beforeStack = SaveStackIntoStack.stackToDraw(level, endStack, null, null, beforeStack, ModOrProjType.PROJ);
                         } else
                             if (endStack.getItem() instanceof IDraw && beforeStack.getItem() instanceof IProjectile) {
-                                beforeStack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, null,
-                                        DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, endStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW), null, beforeStack, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+                                beforeStack = SaveStackIntoStack.stackToDraw(level, null,
+                                        GetStackFromStack.stackFromDraw(level, endStack, ModOrProjType.PROJ), null, beforeStack, ModOrProjType.PROJ);
                             } else
                                 if (endStack.getItem() instanceof IDraw && beforeStack.getItem() instanceof IDraw) {
                                     beforeStack = DrawStats.transferContentsDrawDrawType(level, endStack, beforeStack, ModOrProjType.PROJ);
@@ -186,14 +190,13 @@ public class CompactSpells {
                     finalList.add(drawQueue.getLast());
                     drawQueue.removeLast();
                 }
-
-            }while (!drawQueue.isEmpty());
+            }
         }
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
     }
 
     private static ItemStack applyModifiersFromDraw(ItemStack proj, ItemStack draw, Level level){
-        List<ItemStack> modList = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, draw, ModOrProjType.MOD, DrawOrTriggerType.DRAW);
+        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, draw, ModOrProjType.MOD);
 
         for (ItemStack mod : modList){
             if (mod.getItem() instanceof IModifier modifier){
@@ -204,8 +207,8 @@ public class CompactSpells {
     }
 
     private static ItemStack applyModDrawToProjDraw(ItemStack modDraw, ItemStack projDraw, Level level){
-        List<ItemStack> modList = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, modDraw, ModOrProjType.MOD, DrawOrTriggerType.DRAW);
-        List<ItemStack> projList = DrawStats.loadModOrProjFormDrawOrTriggerTypeType(level, projDraw, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, modDraw, ModOrProjType.MOD);
+        List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, projDraw, ModOrProjType.PROJ);
 
         for (ItemStack p : projList){
             if (p.getItem() instanceof IProjectile){
@@ -216,7 +219,7 @@ public class CompactSpells {
                 }
             }
         }
-        return DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, null, null, projList, projDraw, ModOrProjType.PROJ, DrawOrTriggerType.DRAW);
+        return SaveStackIntoStack.stackToDraw(level, null, null, projList, projDraw, ModOrProjType.PROJ);
     }
 
     private static List<ItemStack> applyModifiersFromRawList(List<ItemStack> list, Level level){
@@ -240,8 +243,8 @@ public class CompactSpells {
                 case IDraw iDraw when !modList.isEmpty() -> {
                     for (ItemStack mod : modList) {
                         if (mod.getItem() instanceof IModifier) {
-                            stack = DrawStats.saveModOrProjIntoDrawOrTriggerTypeType(level, mod,null, null, stack,
-                                    ModOrProjType.MOD, DrawOrTriggerType.DRAW);
+                            stack = SaveStackIntoStack.stackToDraw(level, mod,null, null, stack,
+                                    ModOrProjType.MOD);
                         }
                     }
                     finalList.add(stack);

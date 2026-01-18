@@ -45,6 +45,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.LIFE_TIME_DOWN);
                         output.accept(ModItems.NO_GRAVITY);
                         output.accept(ModItems.DOUBLE);
+                        output.accept(ModItems.TRIPLE);
 
 
 

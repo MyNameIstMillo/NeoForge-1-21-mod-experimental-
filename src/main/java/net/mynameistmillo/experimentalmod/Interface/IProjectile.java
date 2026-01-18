@@ -8,8 +8,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.CasterOrBlockPosType;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.TriggerType;
+import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 

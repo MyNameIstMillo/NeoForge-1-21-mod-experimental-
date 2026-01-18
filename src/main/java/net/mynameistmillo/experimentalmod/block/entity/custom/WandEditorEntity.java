@@ -24,9 +24,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.CompactSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.GetSavedSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.SaveSpells;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
+import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorMenu;
@@ -142,7 +142,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             playFeedbackSound(level, getBlockPos(), FeedbackType.FAIL);
             return;
         }
-        List<ItemStack> storedSpells = GetSavedSpells.getSavedSpellsType(wand, this.level,
+        List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, this.level,
                                             wandItem.getCapacity(wand), SaveOrGetTypeW.NORMAL);
         //List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
 

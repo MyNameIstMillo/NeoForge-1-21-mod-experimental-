@@ -1,19 +1,20 @@
 package net.mynameistmillo.experimentalmod.Stats.DrawItem;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.WandLogic.Types.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.Enum.DrawOrTriggerType;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
+import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,100 +90,9 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-
-    public static ItemStack saveModOrProjIntoDrawOrTriggerTypeType(Level level,
-                                                                   @Nullable ItemStack modOrProj,
-                                                                   @Nullable List<ItemStack> moreMOP,
-                                                                   @Nullable List<ItemStack> resetAndSave,
-                                                                   ItemStack dotStack,
-                                                                   ModOrProjType MOP, DrawOrTriggerType DOT){
-        //never SAVE: MOD -> TRIGGER
-        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return dotStack;
-
-        List<ItemStack> list;
-
-        //when PROJ -> TRIGGER
-        if (MOP== ModOrProjType.PROJ && DOT==DrawOrTriggerType.TRIGGER){
-            list = loadModOrProjFormDrawOrTriggerTypeType(level, dotStack, MOP, DrawOrTriggerType.TRIGGER);
-            if (modOrProj != null) list.add(modOrProj);
-            if (moreMOP != null) list.addAll(moreMOP);
-        }
-
-        //when MOD or PROJ -> DRAW
-        else {
-            list = loadModOrProjFormDrawOrTriggerTypeType(level, dotStack, MOP, DrawOrTriggerType.DRAW);
-            if (modOrProj != null) list.add(modOrProj);
-            if (moreMOP != null) list.addAll(moreMOP);
-            if (resetAndSave != null) list = resetAndSave;
-        }
-
-        ListTag listTag = new ListTag();
-        for (ItemStack stack : list){
-            CompoundTag tag = new CompoundTag();
-            stack.save(level.registryAccess(), tag);
-            tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
-            tag.putByte("Count", (byte) stack.getCount());
-            if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
-                tag.put("ProjStatsF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
-                tag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag()));
-                tag.put("ProjSaved", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED, new CompoundTag()));
-            }
-            listTag.add(tag);
-        }
-        CompoundTag rootTag = new CompoundTag();
-        rootTag.put(MOP.getId(), listTag);
-
-        //save in DRAW
-        if (DOT==DrawOrTriggerType.DRAW) {
-            switch (MOP) {
-                case MOD -> dotStack.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
-                case PROJ -> dotStack.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
-            }
-        }
-        //save in TRIGGER
-        else dotStack.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
-
-        return dotStack;
-    }
-
-
-    public static List<ItemStack> loadModOrProjFormDrawOrTriggerTypeType(Level level, ItemStack fromStack,
-                                                                         ModOrProjType MOP, DrawOrTriggerType DOT){
-        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return null;
-        CompoundTag cT = new CompoundTag();
-        if(DOT==DrawOrTriggerType.DRAW) {
-            switch (MOP) {
-                case MOD -> cT = fromStack.get(ModDataComponents.DRAW_MOD_SAVED.get());
-                case PROJ -> cT = fromStack.get(ModDataComponents.DRAW_PROJ_SAVED.get());
-            }
-        }
-        else cT = fromStack.get(ModDataComponents.TRIGGER_PROJ_SAVED.get());
-
-        List<ItemStack> list = new ArrayList<>();
-
-        if(cT != null && cT.contains(MOP.getId(), ListTag.TAG_LIST)){
-            ListTag listTag = cT.getList(MOP.getId(), Tag.TAG_COMPOUND);
-
-            for (int i=0; i<listTag.size(); i++){
-                CompoundTag tag = listTag.getCompound(i);
-                ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
-                if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
-                    CompoundTag projStatsF = tag.getCompound("ProjStatsF");
-                    CompoundTag projStatsI = tag.getCompound("ProjStatsI");
-                    CompoundTag projSaved = tag.getCompound("ProjSaved");
-                    stack.set(ModDataComponents.SPELL_STATS_F.get(), projStatsF);
-                    stack.set(ModDataComponents.SPELL_STATS_I.get(), projStatsI);
-                    stack.set(ModDataComponents.TRIGGER_PROJ_SAVED, projSaved);
-                }
-                list.add(stack);
-            }
-        }
-        return list;
-    }
-
     public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, ModOrProjType type){
-        List<ItemStack> list = loadModOrProjFormDrawOrTriggerTypeType(level, fromDraw, type, DrawOrTriggerType.DRAW);
-        return saveModOrProjIntoDrawOrTriggerTypeType(level, null, list,null, finalDraw, type, DrawOrTriggerType.DRAW);
+        List<ItemStack> list = GetStackFromStack.stackFromDraw(level, fromDraw, type);
+        return SaveStackIntoStack.stackToDraw(level, null, list,null, finalDraw, type);
     }
 
 
