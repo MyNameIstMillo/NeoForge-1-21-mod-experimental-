@@ -94,22 +94,23 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
                                                                    @Nullable ItemStack modOrProj,
                                                                    @Nullable List<ItemStack> moreMOP,
                                                                    @Nullable List<ItemStack> resetAndSave,
-                                                                   ItemStack DrawOrTrigger,
+                                                                   ItemStack dotStack,
                                                                    ModOrProjType MOP, DrawOrTriggerType DOT){
         //never SAVE: MOD -> TRIGGER
-        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return DrawOrTrigger;
+        if (MOP== ModOrProjType.MOD && DOT==DrawOrTriggerType.TRIGGER) return dotStack;
 
-        List<ItemStack> list = new ArrayList<>();
+        List<ItemStack> list;
 
         //when PROJ -> TRIGGER
         if (MOP== ModOrProjType.PROJ && DOT==DrawOrTriggerType.TRIGGER){
+            list = loadModOrProjFormDrawOrTriggerTypeType(level, dotStack, MOP, DrawOrTriggerType.TRIGGER);
             if (modOrProj != null) list.add(modOrProj);
             if (moreMOP != null) list.addAll(moreMOP);
         }
 
         //when MOD or PROJ -> DRAW
         else {
-            list = loadModOrProjFormDrawOrTriggerTypeType(level, DrawOrTrigger, MOP, DrawOrTriggerType.DRAW);
+            list = loadModOrProjFormDrawOrTriggerTypeType(level, dotStack, MOP, DrawOrTriggerType.DRAW);
             if (modOrProj != null) list.add(modOrProj);
             if (moreMOP != null) list.addAll(moreMOP);
             if (resetAndSave != null) list = resetAndSave;
@@ -122,7 +123,9 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
             tag.putString("id", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             tag.putByte("Count", (byte) stack.getCount());
             if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
-                tag.put("ThisProjStats", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+                tag.put("ProjStatsF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
+                tag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag()));
+                tag.put("ProjSaved", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED, new CompoundTag()));
             }
             listTag.add(tag);
         }
@@ -132,14 +135,14 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         //save in DRAW
         if (DOT==DrawOrTriggerType.DRAW) {
             switch (MOP) {
-                case MOD -> DrawOrTrigger.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
-                case PROJ -> DrawOrTrigger.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
+                case MOD -> dotStack.set(ModDataComponents.DRAW_MOD_SAVED.get(), rootTag);
+                case PROJ -> dotStack.set(ModDataComponents.DRAW_PROJ_SAVED.get(), rootTag);
             }
         }
         //save in TRIGGER
-        else DrawOrTrigger.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
+        else dotStack.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
 
-        return DrawOrTrigger;
+        return dotStack;
     }
 
 
@@ -164,8 +167,12 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
                 CompoundTag tag = listTag.getCompound(i);
                 ItemStack stack = ItemStack.parseOptional(level.registryAccess(), tag);
                 if (stack.getItem() instanceof IProjectile && MOP== ModOrProjType.PROJ) {
-                    CompoundTag statsProj = tag.getCompound("ThisProjStats");
-                    stack.set(ModDataComponents.SPELL_STATS_F.get(), statsProj);
+                    CompoundTag projStatsF = tag.getCompound("ProjStatsF");
+                    CompoundTag projStatsI = tag.getCompound("ProjStatsI");
+                    CompoundTag projSaved = tag.getCompound("ProjSaved");
+                    stack.set(ModDataComponents.SPELL_STATS_F.get(), projStatsF);
+                    stack.set(ModDataComponents.SPELL_STATS_I.get(), projStatsI);
+                    stack.set(ModDataComponents.TRIGGER_PROJ_SAVED, projSaved);
                 }
                 list.add(stack);
             }

@@ -46,7 +46,7 @@ public class SaveSpells {
                         spellTag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(),
                                 new CompoundTag()));
                         int t = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
-                        if(t==1 || t==10 || t==30){
+                        if(t==1 || t==2 || t==3){
                             spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
                                     new CompoundTag()));
                         }
