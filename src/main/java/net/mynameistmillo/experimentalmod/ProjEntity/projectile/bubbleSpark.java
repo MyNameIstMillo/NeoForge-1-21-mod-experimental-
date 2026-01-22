@@ -111,9 +111,7 @@ public class bubbleSpark extends Item implements IProjectile {
         ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
-        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
-
-        if (v==2 || v==20 || v==60) {
+        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)){
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
     }

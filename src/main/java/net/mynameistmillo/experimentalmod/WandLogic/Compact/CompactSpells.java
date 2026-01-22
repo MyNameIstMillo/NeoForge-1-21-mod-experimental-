@@ -12,7 +12,6 @@ import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
-import net.mynameistmillo.experimentalmod.Enum.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;

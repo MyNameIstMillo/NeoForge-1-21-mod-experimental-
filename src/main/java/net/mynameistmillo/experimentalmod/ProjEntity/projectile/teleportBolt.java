@@ -117,7 +117,7 @@ public class teleportBolt extends Item implements IProjectile {
 
         int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
 
-        if (v==2 || v==20 || v==60) {
+        if (v==1 || v==2 || v==3) {
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
 
