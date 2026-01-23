@@ -14,15 +14,14 @@ import java.util.List;
 
 public class GetStackFromStack {
 
-    public static List<ItemStack> projFromTrigger(Level level, ItemStack trigger,
-                                                  ModOrProjType MOP){
+    public static List<ItemStack> projFromTrigger(Level level, ItemStack trigger){
 
         CompoundTag cT = trigger.get(ModDataComponents.TRIGGER_PROJ_SAVED.get());
 
         List<ItemStack> list = new ArrayList<>();
 
-        if(cT != null && cT.contains(MOP.getId(), ListTag.TAG_LIST)){
-            ListTag listTag = cT.getList(MOP.getId(), Tag.TAG_COMPOUND);
+        if(cT != null && cT.contains(ModOrProjType.PROJ.getId(), ListTag.TAG_LIST)){
+            ListTag listTag = cT.getList(ModOrProjType.PROJ.getId(), Tag.TAG_COMPOUND);
 
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);

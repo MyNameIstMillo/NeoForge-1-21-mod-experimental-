@@ -149,7 +149,7 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                                    ItemStack wandStack,
                                    ItemStack thisProj,
                                    ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj, ModOrProjType.PROJ);
+        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){

@@ -140,7 +140,7 @@ public class bubbleSpark extends Item implements IProjectile {
                                    BlockPos pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj,
                                    ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj, ModOrProjType.PROJ);
+        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){

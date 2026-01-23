@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.Enum.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
@@ -21,10 +20,9 @@ public class SaveStackIntoStack {
                                           @Nullable ItemStack proj,
                                           @Nullable List<ItemStack> moreProj,
                                           @Nullable List<ItemStack> resetAndSave,
-                                          ItemStack trigger,
-                                          ModOrProjType MOP) {
+                                          ItemStack trigger) {
 
-        List<ItemStack> list = GetStackFromStack.projFromTrigger(level, trigger, MOP);
+        List<ItemStack> list = GetStackFromStack.projFromTrigger(level, trigger);
         if (proj != null) list.add(proj);
         if (moreProj != null) list.addAll(moreProj);
         if (resetAndSave != null) list = resetAndSave;
@@ -43,7 +41,7 @@ public class SaveStackIntoStack {
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
-        rootTag.put(MOP.getId(), listTag);
+        rootTag.put(ModOrProjType.PROJ.getId(), listTag);
 
         //save in TRIGGER
         trigger.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
@@ -96,9 +94,4 @@ public class SaveStackIntoStack {
 
         return draw;
     }
-
-
-
 }
-
-

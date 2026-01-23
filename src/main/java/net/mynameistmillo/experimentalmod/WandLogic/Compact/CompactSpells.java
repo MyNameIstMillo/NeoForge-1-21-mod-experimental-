@@ -25,13 +25,14 @@ import java.util.List;
 public class CompactSpells {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
+    //167 -> 70
     public static void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
         //applying modifiers from list, so now I have DRAW and PROJ
         list = applyModifiersFromRawList(destroyDirt(list), level);
         List<ItemStack> drawQueue = new ArrayList<>();
         List<ItemStack> finalList = new ArrayList<>();
 
-        
+        StackMergeHandler sMH = new StackMergeHandler(level);
 
         for (ItemStack stack : list){
 
@@ -53,145 +54,78 @@ public class CompactSpells {
                 default -> throw new IllegalStateException("Unexpected value: " + stack.getItem());
             }
 
-
             //when reached here STACK is non-DRAW and non-TRIGGER
             if (!drawQueue.isEmpty()){
-                ItemStack lastDrawStack = drawQueue.getLast();
-                
-                switch (lastDrawStack.getItem()){
-                    //new stack and last from dQ -> DRAW
-                    case IDraw draw -> {
-                        if (DrawStats.loadStatsFromDraw(lastDrawStack).get(DrawKey.FREE_SPACE)>0){
-                            stack = applyModifiersFromDraw(stack, lastDrawStack, level);
-                            lastDrawStack = SaveStackIntoStack.stackToDraw(level, stack, null, null,
-                                    DrawStats.subtractFromFree(lastDrawStack),  ModOrProjType.PROJ);
 
+                ItemStack lastDQ = drawQueue.getLast();
+                if (!isFull(lastDQ)) drawQueue.set(drawQueue.size()-1, prepareStackAndMerge(level, drawQueue.getLast(), stack, sMH));
+
+                if (isFull(drawQueue.getLast())){
+                    if (drawQueue.size()>1) {
+                        while (!drawQueue.isEmpty()) {
+                            ItemStack lastStack = prepareStackAndMerge(level,
+                                    drawQueue.get(drawQueue.size() - 2),
+                                    drawQueue.get(drawQueue.size() - 1), sMH);
+                            drawQueue.removeLast();
+                            drawQueue.set(drawQueue.size() - 1, lastStack);
+                            if (isFull(lastStack)) break;
                         }
+                    } else {
+                        finalList.add(drawQueue.getLast());
+                        drawQueue.removeLast();
                     }
-
-                    //new stack and last from dQ -> TRIGGER
-                    case IProjectile proj -> {
-                        if (ProjStatsI.loadStatsFromProj(lastDrawStack).get(StatsKeyI.FREE_DRAW_TRIGGER)>0){
-                            lastDrawStack = SaveStackIntoStack.projToTrigger(level, stack, null, null,
-                                    ProjStatsI.subtractFromFree(lastDrawStack), ModOrProjType.PROJ);
-
-                        }
-
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + lastDrawStack.getItem());
                 }
-
-
-
-                switch (lastDrawStack.getItem()) {
-                    //LAST -> DRAW
-                    case IDraw draw -> {
-                        if (DrawStats.loadStatsFromDraw(lastDrawStack).get(DrawKey.FREE_SPACE) == 0) {
-                            if (drawQueue.size() > 1) {
-                                for (int i = drawQueue.size(); i >= 1; i--) {
-                                    ItemStack endStack = drawQueue.get(drawQueue.size() - 1);
-                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);
-
-                                    //TO -> TRIGGER
-                                    if (beforeStack.getItem() instanceof IProjectile){
-                                        beforeStack = SaveStackIntoStack.projToTrigger(level, null,
-                                                GetStackFromStack.stackFromDraw(level, endStack, ModOrProjType.PROJ),
-                                                null, beforeStack, ModOrProjType.PROJ);
-                                        drawQueue.removeLast();
-                                        drawQueue.set(drawQueue.size() - 1, ProjStatsI.subtractFromFree(beforeStack));
-
-                                        if (ProjStatsI.loadStatsFromProj(beforeStack).get(StatsKeyI.FREE_DRAW_TRIGGER) == 0) break;
-
-                                    }
-                                    //TO -> DRAW
-                                    else {
-                                        endStack = applyModDrawToProjDraw(beforeStack, endStack, level);
-                                        beforeStack = DrawStats.transferContentsDrawDrawType(level,
-                                                endStack, DrawStats.subtractFromFree(beforeStack), ModOrProjType.PROJ);
-
-                                        drawQueue.removeLast();
-                                        drawQueue.set(drawQueue.size() - 1, beforeStack);
-                                        if (DrawStats.loadStatsFromDraw(beforeStack).get(DrawKey.FREE_SPACE) == 0) break;
-                                    }
-                                }
-                            } else {
-                                finalList.add(drawQueue.getLast());
-                                drawQueue.removeLast();
-                            }
-                        } else drawQueue.set(drawQueue.size() - 1, lastDrawStack);
-                        continue;
-                    }
-                    //LAST -> TRIGGER
-                    case IProjectile proj -> {
-                        if (ProjStatsI.loadStatsFromProj(lastDrawStack).get(StatsKeyI.FREE_DRAW_TRIGGER) == 0){
-                            if (drawQueue.size()>1){
-                                for (int i= drawQueue.size(); i>=0; i--){
-                                    ItemStack endStack = drawQueue.get(drawQueue.size() - 1);
-                                    ItemStack beforeStack = drawQueue.get(drawQueue.size() - 2);
-
-                                    //TO -> TRIGGER
-                                    if (beforeStack.getItem() instanceof IProjectile){
-                                        beforeStack = SaveStackIntoStack.projToTrigger(level, endStack, null, null,
-                                                beforeStack, ModOrProjType.PROJ);
-                                        drawQueue.removeLast();
-                                        drawQueue.set(drawQueue.size() - 1, beforeStack);
-                                        if (ProjStatsI.loadStatsFromProj(beforeStack).get(StatsKeyI.FREE_DRAW_TRIGGER)!=0) break;
-                                    }
-                                    //TO -> DRAW
-                                    else {
-                                        beforeStack = SaveStackIntoStack.stackToDraw(level, endStack, null, null,
-                                                beforeStack, ModOrProjType.PROJ);
-                                        drawQueue.removeLast();
-                                        drawQueue.set(drawQueue.size() - 1, beforeStack);
-                                        if (DrawStats.loadStatsFromDraw(drawQueue.getLast()).get(DrawKey.FREE_SPACE) != 0) break;
-                                    }
-                                }
-                            }
-                            else {
-                                finalList.add(drawQueue.getLast());
-                                drawQueue.removeLast();
-                            }
-                        } else drawQueue.set(drawQueue.size() - 1, lastDrawStack);
-                        continue;
-                        
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + lastDrawStack.getItem());
-                }
+                continue;
             }
             finalList.add(stack);
 
-
         }
-        if (!drawQueue.isEmpty()){
-            while (!drawQueue.isEmpty()) {
-                if (drawQueue.size()>1){
-                    ItemStack endStack = drawQueue.get(drawQueue.size()-1);
-                    ItemStack beforeStack = drawQueue.get(drawQueue.size()-2);
+        while (!drawQueue.isEmpty()) {
 
-                    if (endStack.getItem() instanceof IProjectile && beforeStack.getItem() instanceof IProjectile){
-                        beforeStack = SaveStackIntoStack.projToTrigger(level, endStack, null, null, beforeStack, ModOrProjType.PROJ);
-                    } else
-                        if (endStack.getItem() instanceof IProjectile && beforeStack.getItem() instanceof IDraw) {
-                            beforeStack = SaveStackIntoStack.stackToDraw(level, endStack, null, null, beforeStack, ModOrProjType.PROJ);
-                        } else
-                            if (endStack.getItem() instanceof IDraw && beforeStack.getItem() instanceof IProjectile) {
-                                beforeStack = SaveStackIntoStack.stackToDraw(level, null,
-                                        GetStackFromStack.stackFromDraw(level, endStack, ModOrProjType.PROJ), null, beforeStack, ModOrProjType.PROJ);
-                            } else
-                                if (endStack.getItem() instanceof IDraw && beforeStack.getItem() instanceof IDraw) {
-                                    beforeStack = DrawStats.transferContentsDrawDrawType(level, endStack, beforeStack, ModOrProjType.PROJ);
-                                }
+            if (drawQueue.size()>1){
 
-                    drawQueue.removeLast();
-                    drawQueue.set(drawQueue.size()-1, beforeStack);
-                }
-                if (drawQueue.size()==1){
-                    finalList.add(drawQueue.getLast());
-                    drawQueue.removeLast();
-                }
+                ItemStack beforeStack = sMH.merge(drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1));
+
+                drawQueue.removeLast();
+                drawQueue.set(drawQueue.size()-1, beforeStack);
+            }
+            if (drawQueue.size()==1){
+                finalList.add(drawQueue.getLast());
+                drawQueue.removeLast();
             }
         }
+
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
+    }
+
+
+    private static ItemStack prepareStackAndMerge(Level l, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
+
+        switch (lDQ.getItem()){
+            case IDraw a -> {
+                return sMH.merge(DrawStats.subtractFromFree(lDQ),
+                        applyModifiersFromDraw(stack, lDQ, l));
+
+            }
+            case IProjectile a -> {
+                return sMH.merge(ProjStatsI.subtractFromFree(lDQ),
+                        stack);
+
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + lDQ.getItem());
+        }
+    }
+
+    private static boolean isFull(ItemStack s){
+        switch (s.getItem()){
+            case IDraw a -> {
+                return DrawStats.loadStatsFromDraw(s).get(DrawKey.FREE_SPACE) == 0;
+            }
+            case IProjectile a -> {
+                return ProjStatsI.loadStatsFromProj(s).get(StatsKeyI.FREE_DRAW_TRIGGER) == 0;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + s.getItem());
+        }
     }
 
     private static ItemStack applyModifiersFromDraw(ItemStack proj, ItemStack draw, Level level){
