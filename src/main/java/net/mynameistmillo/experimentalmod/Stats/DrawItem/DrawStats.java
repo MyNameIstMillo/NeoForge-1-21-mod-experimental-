@@ -48,6 +48,12 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return saveStatsDraw(s, draw);
     }
 
+    public static ItemStack increaseFreeByOtherDraw(ItemStack before, ItemStack end){
+        DrawStats stats = DrawStats.loadStatsFromDraw(before);
+        stats.set(DrawKey.FREE_SPACE, DrawStats.loadStatsFromDraw(end).get(DrawKey.FREE_SPACE));
+        return DrawStats.saveStatsDraw(stats, before);
+    }
+
     public DrawStats copy(){
         DrawStats drawStats = new DrawStats();
         for (DrawKey key : DrawKey.values()) drawStats.set(key, this.get(key));

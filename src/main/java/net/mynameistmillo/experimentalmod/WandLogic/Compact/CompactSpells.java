@@ -13,6 +13,7 @@ import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler.StackMergeHandler;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
@@ -40,13 +41,16 @@ public class CompactSpells {
             switch (stack.getItem()){
                 //if DRAW -> dQ
                 case IDraw d -> {
+//                    if (drawQueue.getLast().getItem() instanceof IDraw){
+//                        drawQueue.set(drawQueue.size()-1, DrawStats.increaseFreeByOtherDraw(drawQueue.getLast(), stack));
+//                    }
                     drawQueue.add(stack);
+
                     continue;
                 }
                 //if PROJ is trigger -> dQ
                 case IProjectile p -> {
-                    int tt = ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE);
-                    if (tt==1 || tt==2 || tt==3) {
+                    if (ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE)>0) {
                         drawQueue.add(stack);
                         continue;
                     }
@@ -99,12 +103,11 @@ public class CompactSpells {
     }
 
 
-    private static ItemStack prepareStackAndMerge(Level l, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
+    private static ItemStack prepareStackAndMerge(Level level, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
 
         switch (lDQ.getItem()){
             case IDraw a -> {
-                return sMH.merge(DrawStats.subtractFromFree(lDQ),
-                        applyModifiersFromDraw(stack, lDQ, l));
+                return sMH.merge(DrawStats.subtractFromFree(lDQ), applyMod(level, lDQ, stack));
 
             }
             case IProjectile a -> {
@@ -128,7 +131,19 @@ public class CompactSpells {
         }
     }
 
-    private static ItemStack applyModifiersFromDraw(ItemStack proj, ItemStack draw, Level level){
+    private static ItemStack applyMod(Level level, ItemStack before, ItemStack end){
+        switch (end.getItem()){
+            case IDraw a ->{
+                return applyModDrawToProjDraw(before, end, level);
+            }
+            case IProjectile a ->{
+                return applyModifiersFromDraw(before, end, level);
+            }
+            case null, default -> throw new IllegalStateException("Unexpected value: " + end.getItem());
+        }
+    }
+
+    private static ItemStack applyModifiersFromDraw(ItemStack draw, ItemStack proj, Level level){
         List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, draw, ModOrProjType.MOD);
 
         for (ItemStack mod : modList){

@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.WandLogic.Compact;
+package net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler;
 
 import net.mynameistmillo.experimentalmod.Enum.ProjOrDrawType;
 
