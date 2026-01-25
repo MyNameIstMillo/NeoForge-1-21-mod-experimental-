@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.ProjEntity.projectile;
+package net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -9,10 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
@@ -20,52 +17,54 @@ import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
+import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class sparkBoltTrigger extends Item implements IProjectile {
+public class teleportBolt extends Item implements IProjectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public sparkBoltTrigger(Properties properties) {
+    public teleportBolt(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsKeyF.SPEED, 0.9f);
-        this.baseStatsF.set(StatsKeyF.DRAG, 1.0f);
-        this.baseStatsF.set(StatsKeyF.GRAVITY, 0.03f);
+        this.baseStatsF.set(StatsKeyF.SPEED, 0.4f);
+        this.baseStatsF.set(StatsKeyF.DRAG, 0.999f);
+        this.baseStatsF.set(StatsKeyF.GRAVITY, 0.025f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_U_D, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_F_B, 0.0f);
         this.baseStatsF.set(StatsKeyF.VERTICAL_SPREAD, 0.0f);
-        this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 50.0f);
+        this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 0.0f);
         this.baseStatsF.set(StatsKeyF.RECOIL, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_U_D, 0.0f);
-        this.baseStatsF.set(StatsKeyF.DISPLACEMENT_F_B, 0.0f);
-        this.baseStatsF.set(StatsKeyF.LIFETIME, 60);
-        this.baseStatsF.set(StatsKeyF.DAMAGE, 20.0f);
+        this.baseStatsF.set(StatsKeyF.DISPLACEMENT_F_B, -0.4f);
+        this.baseStatsF.set(StatsKeyF.LIFETIME, 50.0f);
+        this.baseStatsF.set(StatsKeyF.DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();
-        this.baseStatsI.set(StatsKeyI.COLOUR , 0);
+        this.baseStatsI.set(StatsKeyI.COLOUR , 10);
         this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
         this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
         this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
-        this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 1);
+        this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 0);
         this.baseStatsI.set(StatsKeyI.PIERCING , 0);
         this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
         this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 0);
-        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 1);
-
+        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 0);
     }
+
 
     public final ProjStatsF baseStatsF;
     public final ProjStatsI baseStatsI;
 
     @Override
     public ProjStatsF getBaseStatsF() {
-        return baseStatsF;
+        return this.baseStatsF;
     }
 
     @Override
@@ -84,7 +83,7 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
         //set texture for projectile
-        String name = "spark_bolt";
+        String name = "teleport_bolt";
         proj.setProjName(name);
 
 
@@ -115,8 +114,9 @@ public class sparkBoltTrigger extends Item implements IProjectile {
         ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
+        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
 
-        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)) {
+        if (v==1 || v==2 || v==3) {
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
 
@@ -129,9 +129,20 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
         if(level.isClientSide()) return;
+        //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
+        //LOGGER.info("hit!");
 
         ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
+
+        if(hitBlock != null && normal != null) {
+            double x = hitBlock.getX() ;
+            double y = hitBlock.getY() ;
+            double z = hitBlock.getZ() ;
+
+
+            caster.teleportTo(x +0.5f, y, z +0.5f);
+        }
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
             if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
@@ -143,21 +154,17 @@ public class sparkBoltTrigger extends Item implements IProjectile {
 
     @Override
     public void spawnSelfSavedProj(Level level,
-                                   BlockPos pos,
-                                   Player caster,
-                                   Vec3 normal,
-                                   ItemStack wandStack,
-                                   ItemStack thisProj,
+                                   BlockPos pos, Player caster, Vec3 normal,
+                                   ItemStack wandStack, ItemStack thisProj,
                                    ProjStatsF statsF, ProjStatsI statsI) {
         List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
+                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
             }
         }
 
     }
-
 
 }

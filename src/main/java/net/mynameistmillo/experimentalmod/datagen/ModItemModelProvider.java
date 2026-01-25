@@ -35,5 +35,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.TRIPLE.get());
 
 
+        basicItem(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN.get());
+        basicItem(ModItems.DOUBLE_SPARK_BOLT.get());
+        basicItem(ModItems.LIFE_TIME_DOWN_AND_SPEED_UP.get());
+
+
     }
 }

@@ -126,7 +126,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         if(spellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
             SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), SaveOrGetTypeW.NORMAL);
             //wandItem.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
-            CompactSpells.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
+            CompactSpells.compactSpells(wand, spellsToSend, this.level);
 
             playFeedbackSound(level, getBlockPos(), FeedbackType.SUCCESS);
         }

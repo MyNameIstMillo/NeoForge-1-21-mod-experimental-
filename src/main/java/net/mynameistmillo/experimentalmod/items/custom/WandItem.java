@@ -61,30 +61,6 @@ public class WandItem extends Item {
         wand.set(ModDataComponents.WAND_INDEX.get(), index);
     }
 
-    public List<ItemStack> resetSpellStats(List<ItemStack> list){
-        List<ItemStack> l2 = new ArrayList<>();
-
-        for (ItemStack stack : list){
-            if (stack.getItem() instanceof IProjectile) {
-                ProjStatsF stats = new ProjStatsF();
-                ProjStatsI statsI = new ProjStatsI();
-                ItemStack s2 = stats.resetStats(statsI.resetStats(stack));
-
-                l2.add(s2);
-                continue;
-            }
-            if (stack.getItem() instanceof IDraw){
-                DrawStats stats = new DrawStats();
-                ItemStack s2 = stats.resetsStats(stack);
-                l2.add(s2);
-                continue;
-            }
-            l2.add(stack);
-        }
-        return l2;
-    }
-
-
     public boolean areThereSpellsInWand(ItemStack wand, Level level) {
         if (!(wand.getItem() instanceof WandItem wandItem)) {
             return false;

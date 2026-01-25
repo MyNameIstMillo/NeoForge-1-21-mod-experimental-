@@ -18,6 +18,10 @@
   "item.experimentalmodid.double": "Double",
   "item.experimentalmodid.triple": "Triple",
 
+  "item.experimentalmodid.double_with_life_time_down": "Double with Life time down",
+  "item.experimentalmodid.double_spark_bolt": "Double spark bolt",
+  "item.experimentalmodid.life_time_down_and_speed_up": "life time down and speed up",
+
 
   "block.experimentalmodid.fancy_block": "Fancy block",
   "block.experimentalmodid.wand_editor": "Wand Editor",

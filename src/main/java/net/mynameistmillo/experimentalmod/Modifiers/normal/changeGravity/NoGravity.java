@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.gravity;
+package net.mynameistmillo.experimentalmod.Modifiers.normal.changeGravity;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,12 +23,12 @@ public class NoGravity extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
 
         if (stats.get(StatsKeyF.GRAVITY)<0.0f) return stack;
 
         stats.set(StatsKeyF.GRAVITY, 0);
 
-        return stats.saveStatsToSpell(stats, stack);
+        return ProjStatsF.saveStatsToSpell(stats, stack);
     }
 }

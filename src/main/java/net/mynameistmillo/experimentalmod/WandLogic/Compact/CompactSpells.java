@@ -6,10 +6,12 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
+import net.mynameistmillo.experimentalmod.Interface.IMultipleSpells;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawKey;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
@@ -26,10 +28,9 @@ import java.util.List;
 public class CompactSpells {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    //167 -> 70
     public static void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
-        //applying modifiers from list, so now I have DRAW and PROJ
-        list = applyModifiersFromRawList(destroyDirt(list), level);
+        list = prepareListForCompact(list, level);
+
         List<ItemStack> drawQueue = new ArrayList<>();
         List<ItemStack> finalList = new ArrayList<>();
 
@@ -37,13 +38,9 @@ public class CompactSpells {
 
         for (ItemStack stack : list){
 
-
             switch (stack.getItem()){
                 //if DRAW -> dQ
                 case IDraw d -> {
-//                    if (drawQueue.getLast().getItem() instanceof IDraw){
-//                        drawQueue.set(drawQueue.size()-1, DrawStats.increaseFreeByOtherDraw(drawQueue.getLast(), stack));
-//                    }
                     drawQueue.add(stack);
 
                     continue;
@@ -102,12 +99,11 @@ public class CompactSpells {
         SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
     }
 
-
     private static ItemStack prepareStackAndMerge(Level level, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
 
         switch (lDQ.getItem()){
             case IDraw a -> {
-                return sMH.merge(DrawStats.subtractFromFree(lDQ), applyMod(level, lDQ, stack));
+                return sMH.merge(DrawStats.subtractFromFree(lDQ), applyModifiers(level, lDQ, stack));
 
             }
             case IProjectile a -> {
@@ -131,7 +127,7 @@ public class CompactSpells {
         }
     }
 
-    private static ItemStack applyMod(Level level, ItemStack before, ItemStack end){
+    private static ItemStack applyModifiers(Level level, ItemStack before, ItemStack end){
         switch (end.getItem()){
             case IDraw a ->{
                 return applyModDrawToProjDraw(before, end, level);
@@ -168,6 +164,55 @@ public class CompactSpells {
             }
         }
         return SaveStackIntoStack.stackToDraw(level, null, null, projList, projDraw, ModOrProjType.PROJ);
+    }
+
+    private static List<ItemStack> prepareListForCompact(List<ItemStack> list, Level level){
+        // dirt is BIG no no
+        list = destroyDirt(list);
+        //multi spells in one spell or special spells that's add more spells
+        list = getSpellsFromSpecialStacks(list);
+        // reset stats of all spells
+        list = resetStats(list);
+        //applying modifiers from list, so now I have DRAW and PROJ
+        list = applyModifiersFromRawList(list, level);
+
+        return list;
+    }
+
+    private static List<ItemStack> resetStats(List<ItemStack> input){
+        List<ItemStack> output = new ArrayList<>();
+        for (ItemStack stack : input){
+            switch (stack.getItem()){
+                case IProjectile a -> {
+                    ProjStatsI statsI = new ProjStatsI();
+                    ProjStatsF statsF = new ProjStatsF();
+                    ItemStack proj = statsI.resetStats(statsF.resetStats(stack));
+                    output.add(proj);
+                }
+                case IDraw a ->{
+                    DrawStats stats = new DrawStats();
+                    ItemStack draw = stats.resetsStats(stack);
+                    output.add(draw);
+                }
+                default -> output.add(stack);
+            }
+        }
+        return output;
+    }
+
+    private static List<ItemStack> getSpellsFromSpecialStacks(List<ItemStack> input){
+        List<ItemStack> output = new ArrayList<>();
+
+        for (ItemStack stack : input){
+
+            if (stack.getItem() instanceof IMultipleSpells a){
+                output.addAll(a.addSpells());
+            } else {
+                output.add(stack);
+            }
+        }
+
+        return output;
     }
 
     private static List<ItemStack> applyModifiersFromRawList(List<ItemStack> list, Level level){

@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.time;
+package net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +11,10 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LifeTimeUp extends Item implements IModifier {
+public class SpeedDown extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public LifeTimeUp(Properties properties) {
+    public SpeedDown(Properties properties) {
         super(properties);
     }
 
@@ -23,12 +23,12 @@ public class LifeTimeUp extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = new ProjStatsF().loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
 
-        float lifeTIme = stats.get(StatsKeyF.LIFETIME) + 30f;
+        float speed = stats.get(StatsKeyF.SPEED) * 0.5f;
 
-        stats.set(StatsKeyF.LIFETIME, lifeTIme);
+        stats.set(StatsKeyF.SPEED, speed);
 
-        return stats.saveStatsToSpell(stats, stack);
+        return ProjStatsF.saveStatsToSpell(stats, stack);
     }
 }

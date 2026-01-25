@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experimentalmodid:item/double_with_life_time_down"
+  }
+}

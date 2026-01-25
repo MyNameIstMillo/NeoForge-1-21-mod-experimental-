@@ -38,14 +38,20 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SPARK_BOLT_TRIGGER);
                         output.accept(ModItems.BUBBLE_SPARK);
                         output.accept(ModItems.TELEPORT_BOLT);
+
                         output.accept(ModItems.SPEED_UP);
                         output.accept(ModItems.SPEED_DOWN);
                         output.accept(ModItems.MIDDLE_DISTANCE_CAST_FB);
                         output.accept(ModItems.LIFE_TIME_UP);
                         output.accept(ModItems.LIFE_TIME_DOWN);
                         output.accept(ModItems.NO_GRAVITY);
+
                         output.accept(ModItems.DOUBLE);
                         output.accept(ModItems.TRIPLE);
+
+                        output.accept(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN);
+                        output.accept(ModItems.DOUBLE_SPARK_BOLT);
+                        output.accept(ModItems.LIFE_TIME_DOWN_AND_SPEED_UP);
 
 
 

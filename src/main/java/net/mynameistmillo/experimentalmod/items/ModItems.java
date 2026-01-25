@@ -3,21 +3,24 @@ package net.mynameistmillo.experimentalmod.items;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.mynameistmillo.experimentalmod.Draw.Triple;
+import net.mynameistmillo.experimentalmod.Draw.normal.Triple;
+import net.mynameistmillo.experimentalmod.Draw.withSomething.DoubleWithLifeTimeDown;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Modifiers.changeOriginOfCast.MiddleDistanceCastFB;
-import net.mynameistmillo.experimentalmod.Modifiers.time.LifeTimeDown;
-import net.mynameistmillo.experimentalmod.Modifiers.time.LifeTimeUp;
-import net.mynameistmillo.experimentalmod.Modifiers.gravity.NoGravity;
-import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedDown;
-import net.mynameistmillo.experimentalmod.Modifiers.speed.SpeedUp;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.sparkBoltTrigger;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeOriginOfCast.MiddleDistanceCastFB;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeTime.LifeTimeDown;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeTime.LifeTimeUp;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeGravity.NoGravity;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed.SpeedDown;
+import net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed.SpeedUp;
+import net.mynameistmillo.experimentalmod.Modifiers.withSomething.LifeTimeDownAndSpeedUp;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.sparkBoltTrigger;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.withSomrthing.DoubleSparkBolt;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.bubbleSpark;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.sparkBolt;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.teleportBolt;
-import net.mynameistmillo.experimentalmod.Draw.Double;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.bubbleSpark;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.sparkBolt;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.teleportBolt;
+import net.mynameistmillo.experimentalmod.Draw.normal.Double;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,6 +43,8 @@ public class ModItems {
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1).fireResistant()));
 
+    // PROJECTILE
+
     public static final DeferredItem<Item> SPARK_BOLT = ITEMS.register("spark_bolt",
             ()-> new sparkBolt(new Item.Properties()));
 
@@ -53,6 +58,7 @@ public class ModItems {
             ()-> new teleportBolt(new Item.Properties()));
 
 
+    // MODIFIER
 
     public static final DeferredItem<Item> SPEED_UP = ITEMS.register("speed_up",
             () -> new SpeedUp(new Item.Properties()));
@@ -73,6 +79,7 @@ public class ModItems {
             () -> new NoGravity(new Item.Properties()));
 
 
+    // DRAW
 
     public static final DeferredItem<Item> DOUBLE = ITEMS.register("double",
             () -> new Double(new Item.Properties()));
@@ -80,6 +87,17 @@ public class ModItems {
     public static final DeferredItem<Item> TRIPLE = ITEMS.register("triple",
             () -> new Triple(new Item.Properties()));
 
+
+    // MULTIPLE
+
+    public static final DeferredItem<Item> DOUBLE_WITH_LIFE_TIME_DOWN = ITEMS.register("double_with_life_time_down",
+            () -> new DoubleWithLifeTimeDown(new Item.Properties()));
+
+    public static final DeferredItem<Item> DOUBLE_SPARK_BOLT = ITEMS.register("double_spark_bolt",
+            () -> new DoubleSparkBolt(new Item.Properties()));
+
+    public static final DeferredItem<Item> LIFE_TIME_DOWN_AND_SPEED_UP = ITEMS.register("life_time_down_and_speed_up",
+            () -> new LifeTimeDownAndSpeedUp(new Item.Properties()));
 
 
 

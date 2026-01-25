@@ -50,6 +50,11 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.TRIPLE.get())
 
 
+                .add(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN.get())
+                .add(ModItems.DOUBLE_SPARK_BOLT.get())
+                .add(ModItems.LIFE_TIME_DOWN_AND_SPEED_UP.get())
+
+
         ;
     }
 }
