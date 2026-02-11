@@ -69,7 +69,7 @@ public class CompactSpells {
                                     drawQueue.get(drawQueue.size() - 1), sMH);
                             drawQueue.removeLast();
                             drawQueue.set(drawQueue.size() - 1, lastStack);
-                            if (isFull(lastStack)) break;
+                            if (!isFull(lastStack)) break;
                         }
                     } else {
                         finalList.add(drawQueue.getLast());

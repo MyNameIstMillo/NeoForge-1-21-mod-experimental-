@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.BasicRepetitiveClassBody;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
@@ -78,26 +79,13 @@ public class bubbleSpark extends Item implements IProjectile {
                             BlockPos pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
-        if (level.isClientSide()) return null;
-        if (!(thisProj.getItem() instanceof IProjectile )) return null;
-
-        BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
         String name = "bubble_spark";
-        proj.setProjName(name);
 
-        proj.setProjStack(thisProj.copy());
-        proj.setWandStack(wandStack.copy());
-        proj.setCasterUUID(caster.getUUID());
-
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
-
-        level.addFreshEntity(proj);
-
-        return proj;
+        return BasicRepetitiveClassBody.spawnProjBody(
+                level, pos, caster, normal,
+                wandStack, thisProj, COP,
+                name, 0.25f, 0.25f);
     }
 
     @Override
@@ -105,13 +93,11 @@ public class bubbleSpark extends Item implements IProjectile {
                               @Nullable Entity hitEntity,
                               @Nullable BlockPos hitBlock,
                               Player caster, Vec3 normal,
-                              ItemStack wandStack, ItemStack thisSpell,
+                              ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
-        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)){
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
+        if (BasicRepetitiveClassBody.triggerActionBody(thisProj, type)){
+            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisProj);
         }
     }
 
@@ -121,31 +107,18 @@ public class bubbleSpark extends Item implements IProjectile {
                       @Nullable BlockPos hitBlock,
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
-        if(level.isClientSide()) return;
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
+        BasicRepetitiveClassBody.onHitBody(level, hitEntity, hitBlock, caster, normal, wandStack, thisProj);
 
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(), caster), statsF.get(StatsKeyF.DAMAGE));
-
-        }
     }
 
 
     @Override
     public void spawnSelfSavedProj(Level level,
                                    BlockPos pos, Player caster, Vec3 normal,
-                                   ItemStack wandStack, ItemStack thisProj,
-                                   ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
+                                   ItemStack wandStack, ItemStack thisProj) {
 
-        for(ItemStack stack : spellsToSpawn){
-            if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
-            }
-        }
+        BasicRepetitiveClassBody.spawnSelfSavedProjBody(level, pos, caster, normal, wandStack, thisProj);
 
     }
 

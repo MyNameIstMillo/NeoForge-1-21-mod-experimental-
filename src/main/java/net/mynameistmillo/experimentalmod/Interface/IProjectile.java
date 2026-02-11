@@ -34,7 +34,7 @@ public interface IProjectile {
                        Player caster,
                        Vec3 normal,
                        ItemStack wandStack,
-                       ItemStack thisSpell,
+                       ItemStack thisProj,
                        TriggerType type);
 
     //mainly for DAMAGE, APPLY EFFECT, CHANGE BLOCK <- non-TRIGGER
@@ -48,14 +48,12 @@ public interface IProjectile {
                ItemStack thisProj);
 
 
-
+    //just to cast Saved Proj
     void spawnSelfSavedProj(Level level,
                             BlockPos pos,
                             Player caster,
                             Vec3 normal,
                             ItemStack wandStack,
-                            ItemStack thisProj,
-                            ProjStatsF statsF,
-                            ProjStatsI statsI);
+                            ItemStack thisProj);
 
 }

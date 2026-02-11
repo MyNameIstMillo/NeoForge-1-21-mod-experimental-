@@ -7,14 +7,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.BasicRepetitiveClassBody;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
+import net.mynameistmillo.experimentalmod.UsefullFunction.TeleportInSomeWay;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
@@ -69,7 +72,7 @@ public class teleportBolt extends Item implements IProjectile {
 
     @Override
     public ProjStatsI getBaseStatsI() {
-        return baseStatsI;
+        return this.baseStatsI;
     }
 
     @Override
@@ -77,30 +80,13 @@ public class teleportBolt extends Item implements IProjectile {
                             BlockPos pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
-        if(level.isClientSide()) return null;
-        if (!(thisProj.getItem() instanceof IProjectile )) return null;
-        //create projectile
-        BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
-        //set texture for projectile
         String name = "teleport_bolt";
-        proj.setProjName(name);
 
-
-        //connect spellItem to the projectile
-        proj.setProjStack(thisProj.copy());
-        proj.setWandStack(wandStack.copy());
-        proj.setCasterUUID(caster.getUUID());
-
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        //apply stats
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
-        //add projectile to the world
-        level.addFreshEntity(proj);
-
-        return proj;
+        return BasicRepetitiveClassBody.spawnProjBody(
+                level, pos, caster, normal,
+                wandStack, thisProj, COP,
+                name, 0.25f, 0.25f);
     }
 
     @Override
@@ -108,16 +94,11 @@ public class teleportBolt extends Item implements IProjectile {
                               @Nullable Entity hitEntity,
                               @Nullable BlockPos hitBlock,
                               Player caster, Vec3 normal,
-                              ItemStack wandStack, ItemStack thisSpell,
+                              ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
-
-        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
-
-        if (v==1 || v==2 || v==3) {
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
+        if (BasicRepetitiveClassBody.triggerActionBody(thisProj, type)){
+            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisProj);
         }
 
     }
@@ -129,41 +110,19 @@ public class teleportBolt extends Item implements IProjectile {
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
         if(level.isClientSide()) return;
-        //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
-        //LOGGER.info("hit!");
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
+        TeleportInSomeWay.checkAndResetFallSpeed(level, hitBlock, normal, caster);
 
-        if(hitBlock != null && normal != null) {
-            double x = hitBlock.getX() ;
-            double y = hitBlock.getY() ;
-            double z = hitBlock.getZ() ;
-
-
-            caster.teleportTo(x +0.5f, y, z +0.5f);
-        }
-
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(), caster), statsF.get(StatsKeyF.DAMAGE));
-
-        }
+        BasicRepetitiveClassBody.onHitBody(level, hitEntity, hitBlock, caster, normal, wandStack, thisProj);
 
     }
 
     @Override
     public void spawnSelfSavedProj(Level level,
                                    BlockPos pos, Player caster, Vec3 normal,
-                                   ItemStack wandStack, ItemStack thisProj,
-                                   ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
+                                   ItemStack wandStack, ItemStack thisProj) {
 
-        for(ItemStack stack : spellsToSpawn){
-            if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
-            }
-        }
+        BasicRepetitiveClassBody.spawnSelfSavedProjBody(level, pos, caster, normal, wandStack, thisProj);
 
     }
 
