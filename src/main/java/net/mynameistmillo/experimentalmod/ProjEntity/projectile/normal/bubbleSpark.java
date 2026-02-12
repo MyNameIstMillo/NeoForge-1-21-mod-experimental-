@@ -31,8 +31,8 @@ public class bubbleSpark extends Item implements IProjectile {
     public bubbleSpark(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsKeyF.SPEED, 0.5f);
-        this.baseStatsF.set(StatsKeyF.DRAG, 0.90f);
+        this.baseStatsF.set(StatsKeyF.SPEED, 0.3f);
+        this.baseStatsF.set(StatsKeyF.DRAG, 0.70f);
         this.baseStatsF.set(StatsKeyF.GRAVITY, 0.00f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_U_D, 0.0f);
@@ -43,7 +43,7 @@ public class bubbleSpark extends Item implements IProjectile {
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_U_D, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_F_B, 0.0f);
-        this.baseStatsF.set(StatsKeyF.LIFETIME, 50.0f);
+        this.baseStatsF.set(StatsKeyF.LIFETIME, 10000.0f);
         this.baseStatsF.set(StatsKeyF.DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();

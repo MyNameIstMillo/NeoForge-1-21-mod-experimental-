@@ -84,14 +84,14 @@ public class BasicProjectileEntity extends Projectile {
         super.addAdditionalSaveData(nbt);
         nbt.putFloat("ProjGravity", this.gravity);
         nbt.putFloat("ProjDrag", this.drag);
-        nbt.putDouble("lifeTime", this.lifeTime);
+        nbt.putFloat("lifeTime", this.lifeTime);
 
-        if(this.projStack.isEmpty()) {
+        if(!this.projStack.isEmpty()) {
             CompoundTag spellTag = new CompoundTag();
             this.projStack.save(level().registryAccess(), spellTag);
             nbt.put("ProjStack", spellTag);
         }
-        if(this.wandStack.isEmpty()) {
+        if(!this.wandStack.isEmpty()) {
             CompoundTag wandTag = new CompoundTag();
             this.wandStack.save(level().registryAccess(), wandTag);
             nbt.put("WandStack", wandTag);
@@ -133,13 +133,27 @@ public class BasicProjectileEntity extends Projectile {
         }
         //acceleration
         Vec3 vector = this.getDeltaMovement();
-        if(vector.length()>=0.006) {
+
+        LOGGER.info("drag -> {} , graw -> {} , vector len -> {}", drag , gravity , vector.length());
+        if(vector.length()>0.3) {
             //gravity
-            vector = vector.add(0, -this.gravity, 0);
+            vector= vector.add(0, -this.gravity, 0);
             //drag
             vector = vector.multiply(this.drag, this.drag, this.drag);
             //apply changes
             this.setDeltaMovement(vector);
+        } else {
+            LOGGER.info("helo");
+            double theta = this.random.nextDouble() * 2 * Math.PI;
+            double phi = Math.acos(2 * this.random.nextDouble() - 1);
+
+            double x = Math.sin(phi) * Math.cos(theta);
+            double y = Math.sin(phi) * Math.sin(theta);
+            double z = Math.cos(phi);
+
+            Vec3 randomVec = new Vec3(x, y, z).scale(0.35);
+
+            this.setDeltaMovement(randomVec);
         }
 
         this.moveDesc();

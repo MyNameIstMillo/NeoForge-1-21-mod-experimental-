@@ -26,7 +26,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.CompactSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
-import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
 import net.mynameistmillo.experimentalmod.block.entity.ModBlockEntities;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.screen.custom.WandEditorMenu;
@@ -124,7 +124,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         }
 
         if(spellsToSend.stream().anyMatch(stack -> !stack.is(Items.DIRT))){
-            SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), SaveOrGetTypeW.NORMAL);
+            SaveSpells.saveSpells(wand, spellsToSend, this.level, spellsToSend.size(), NormalOrCompactType.NORMAL);
             //wandItem.compactSpells(wand, wandItem.resetSpellStats(spellsToSend), this.level);
             CompactSpells.compactSpells(wand, spellsToSend, this.level);
 
@@ -143,7 +143,7 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
             return;
         }
         List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, this.level,
-                                            wandItem.getCapacity(wand), SaveOrGetTypeW.NORMAL);
+                                            wandItem.getCapacity(wand), NormalOrCompactType.NORMAL);
         //List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
 
         for(int i=0; i<capacity; i++){

@@ -24,7 +24,7 @@ public class StackMergeHandler {
                 new StackState(ProjOrDrawType.PROJ, ProjOrDrawType.PROJ),
                 (TRIGGER, PROJ) ->
 
-                        SaveStackIntoStack.projToTrigger(level, TRIGGER, null, null, PROJ),
+                        SaveStackIntoStack.projToTrigger(level, PROJ, null, null, TRIGGER),
 
 
                 new StackState(ProjOrDrawType.DRAW, ProjOrDrawType.PROJ),

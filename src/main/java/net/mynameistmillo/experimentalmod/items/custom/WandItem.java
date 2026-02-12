@@ -10,20 +10,16 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
-import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WandItem extends Item {
@@ -66,7 +62,7 @@ public class WandItem extends Item {
             return false;
         }
         List<ItemStack> contents = GetSpells.getSpellsType(wand,level,
-                getCapacity(wand), SaveOrGetTypeW.NORMAL);
+                getCapacity(wand), NormalOrCompactType.NORMAL);
 
         for (ItemStack stack : contents) {
 
@@ -85,7 +81,7 @@ public class WandItem extends Item {
 
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, level,
-                                                    0, SaveOrGetTypeW.COMPACT);
+                                                    0, NormalOrCompactType.COMPACT);
 
         ItemStack currentStack = storedSpells.get(index);
 
@@ -124,7 +120,7 @@ public class WandItem extends Item {
 
         if (Screen.hasShiftDown()){
             List<ItemStack> spells = GetSpells.getSpellsType(wand, level,
-                                                capacity, SaveOrGetTypeW.NORMAL);
+                                                capacity, NormalOrCompactType.NORMAL);
             tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
 
 

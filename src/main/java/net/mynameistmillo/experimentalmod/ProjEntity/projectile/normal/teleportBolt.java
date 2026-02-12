@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
@@ -114,9 +115,7 @@ public class teleportBolt extends Item implements IProjectile {
         ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
-        int v = type.getId()+statsI.get(StatsKeyI.TRIGGER_TYPE);
-
-        if (v==1 || v==2 || v==3) {
+        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)){
             spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
         }
 
@@ -140,8 +139,11 @@ public class teleportBolt extends Item implements IProjectile {
             double y = hitBlock.getY() ;
             double z = hitBlock.getZ() ;
 
+            BlockState state = level.getBlockState(BlockPos.containing(x,y,z));
+            if(!state.blocksMotion()){
+                caster.teleportTo(x +0.5f, y, z +0.5f);
+            }
 
-            caster.teleportTo(x +0.5f, y, z +0.5f);
         }
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {

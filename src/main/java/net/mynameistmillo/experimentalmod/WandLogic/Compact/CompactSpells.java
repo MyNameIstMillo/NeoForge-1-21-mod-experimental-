@@ -14,7 +14,7 @@ import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
-import net.mynameistmillo.experimentalmod.Enum.SaveOrGetTypeW;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler.StackMergeHandler;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
@@ -69,7 +69,7 @@ public class CompactSpells {
                                     drawQueue.get(drawQueue.size() - 1), sMH);
                             drawQueue.removeLast();
                             drawQueue.set(drawQueue.size() - 1, lastStack);
-                            if (isFull(lastStack)) break;
+                            if (!isFull(lastStack) || drawQueue.size()<=1) break;
                         }
                     } else {
                         finalList.add(drawQueue.getLast());
@@ -96,7 +96,7 @@ public class CompactSpells {
             }
         }
 
-        SaveSpells.saveSpells(wand, finalList, level, finalList.size(), SaveOrGetTypeW.COMPACT);
+        SaveSpells.saveSpells(wand, finalList, level, finalList.size(), NormalOrCompactType.COMPACT);
     }
 
     private static ItemStack prepareStackAndMerge(Level level, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
