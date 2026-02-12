@@ -23,7 +23,7 @@ public class SpeedUp extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
         float speed = stats.get(StatsKeyF.SPEED) * 2f;
 

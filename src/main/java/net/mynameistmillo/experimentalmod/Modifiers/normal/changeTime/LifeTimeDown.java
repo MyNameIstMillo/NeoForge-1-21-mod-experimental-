@@ -23,7 +23,7 @@ public class LifeTimeDown extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
         float lifeTime = stats.get(StatsKeyF.LIFETIME) - 20f;
 

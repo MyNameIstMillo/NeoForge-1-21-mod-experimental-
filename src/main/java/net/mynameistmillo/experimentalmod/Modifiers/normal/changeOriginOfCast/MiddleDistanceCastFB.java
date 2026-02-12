@@ -23,7 +23,7 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
         float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 3f;
 

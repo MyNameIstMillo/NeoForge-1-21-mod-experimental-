@@ -23,7 +23,7 @@ public class NoGravity extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromStack(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
         if (stats.get(StatsKeyF.GRAVITY)<0.0f) return stack;
 

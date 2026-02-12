@@ -49,7 +49,7 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-    public static ProjStatsF loadStatsFromStack(ItemStack stack){
+    public static ProjStatsF loadStatsFromProj(ItemStack stack){
         CompoundTag tag = stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag());
         
         ProjStatsF stats = new ProjStatsF();

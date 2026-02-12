@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.BasicRepetitiveClassBody;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
@@ -77,30 +78,13 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                             BlockPos pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
-        if(level.isClientSide()) return null;
-        if (!(thisProj.getItem() instanceof IProjectile )) return null;
-        //create projectile
-        BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
 
-        //set texture for projectile
         String name = "spark_bolt";
-        proj.setProjName(name);
 
-
-        //connect spellItem to the projectile
-        proj.setProjStack(thisProj.copy());
-        proj.setWandStack(wandStack.copy());
-        proj.setCasterUUID(caster.getUUID());
-
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        //apply stats
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
-        //add projectile to the world
-        level.addFreshEntity(proj);
-
-        return proj;
+        return BasicRepetitiveClassBody.spawnProjBody(
+                level, pos, caster, normal,
+                wandStack, thisProj, COP,
+                name, 0.25f, 0.25f);
     }
 
     @Override
@@ -108,15 +92,11 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                               @Nullable Entity hitEntity,
                               @Nullable BlockPos hitBlock,
                               Player caster, Vec3 normal,
-                              ItemStack wandStack, ItemStack thisSpell,
+                              ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
-
-
-        if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)) {
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
+        if (BasicRepetitiveClassBody.triggerActionBody(thisProj, type)){
+            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisProj);
         }
 
     }
@@ -127,17 +107,7 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                       @Nullable BlockPos hitBlock,
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
-        if(level.isClientSide()) return;
-
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(), caster), statsF.get(StatsKeyF.DAMAGE));
-
-        }
-
+        BasicRepetitiveClassBody.onHitBody(level, hitEntity, hitBlock, caster, normal, wandStack, thisProj);
     }
 
     @Override
@@ -146,17 +116,7 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                                    Player caster,
                                    Vec3 normal,
                                    ItemStack wandStack,
-                                   ItemStack thisProj,
-                                   ProjStatsF statsF, ProjStatsI statsI) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
-
-        for(ItemStack stack : spellsToSpawn){
-            if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
-            }
-        }
-
+                                   ItemStack thisProj) {
+        BasicRepetitiveClassBody.spawnSelfSavedProjBody(level, pos, caster, normal, wandStack, thisProj);
     }
-
-
 }
