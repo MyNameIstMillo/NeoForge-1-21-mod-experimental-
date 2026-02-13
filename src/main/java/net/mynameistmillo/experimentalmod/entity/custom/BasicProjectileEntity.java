@@ -32,14 +32,13 @@ public class BasicProjectileEntity extends Projectile {
     private static final EntityDataAccessor<String> DATA_NAME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> PROJ_WIDTH = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DRAG = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> GRAVITY = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> LIFE_TIME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
 
     private float initWidth = 0.25f;
     private float initHeight = 0.25f;
 
-    private float gravity = 0f;
-    private float drag = 1f;
-
-    private float lifeTime = 60;
     private Vec3 prevDelta = Vec3.ZERO;
 
     private ItemStack projStack = ItemStack.EMPTY;
@@ -49,7 +48,8 @@ public class BasicProjectileEntity extends Projectile {
     private static final double MAX_STEP = 0.75D;
     private static final int MAX_STEPS = 5;
 
-    
+
+
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = false;
@@ -64,11 +64,29 @@ public class BasicProjectileEntity extends Projectile {
         this.refreshDimensions();
     }
 
-    public void setGravity(float gravity) { this.gravity = gravity;}
+    public void setGravity(float gravity) {
+        this.entityData.set(GRAVITY, gravity);
+    }
 
-    public void setDrag(float drag) { this.drag = drag;}
+    public float getGravityE(){
+        return this.entityData.get(GRAVITY);
+    }
 
-    public void setLifeTime(float lifeTime) { this.lifeTime = lifeTime;}
+    public void setDrag(float drag) {
+        this.entityData.set(DRAG, drag);
+    }
+
+    public float getDrag(){
+        return this.entityData.get(DRAG);
+    }
+
+    public void setLifeTime(float lifeTime) {
+        this.entityData.set(LIFE_TIME, lifeTime);
+    }
+
+    public float getLifeTime(){
+        return this.entityData.get(LIFE_TIME);
+    }
 
     public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
@@ -78,13 +96,12 @@ public class BasicProjectileEntity extends Projectile {
 
 
 
-
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putFloat("ProjGravity", this.gravity);
-        nbt.putFloat("ProjDrag", this.drag);
-        nbt.putFloat("lifeTime", this.lifeTime);
+        nbt.putFloat("ProjGravity", this.entityData.get(GRAVITY));
+        nbt.putFloat("ProjDrag", this.entityData.get(DRAG));
+        nbt.putFloat("lifeTime", this.entityData.get(LIFE_TIME));
 
         if(!this.projStack.isEmpty()) {
             CompoundTag spellTag = new CompoundTag();
@@ -106,9 +123,9 @@ public class BasicProjectileEntity extends Projectile {
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        if (nbt.contains("ProjGravity")) this.gravity = nbt.getFloat("ProjGravity");
-        if (nbt.contains("ProjDrag")) this.drag = nbt.getFloat("ProjDrag");
-        if (nbt.contains("lifeTime")) this.lifeTime = nbt.getFloat("lifeTime");
+        if (nbt.contains("ProjGravity")) this.entityData.set(GRAVITY, nbt.getFloat("ProjGravity"));
+        if (nbt.contains("ProjDrag")) this.entityData.set(DRAG, nbt.getFloat("ProjDrag"));
+        if (nbt.contains("lifeTime")) this.entityData.set(LIFE_TIME, nbt.getFloat("lifeTime"));
 
         if(nbt.contains("ProjStack", Tag.TAG_COMPOUND)){
             this.projStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("ProjStack"));
@@ -120,42 +137,46 @@ public class BasicProjectileEntity extends Projectile {
         if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
 
+    private static final double MIN_SPEED = 0.005;
+
     @Override
     public void tick() {
         super.tick();
 
         if(!this.level().isClientSide()){
-            this.lifeTime--;
-            if(this.lifeTime<=0){
+            float lifeTime = this.entityData.get(LIFE_TIME);
+            lifeTime--;
+            if(lifeTime<=0){
                 handleProjHit(null,this.blockPosition(), this.getDeltaMovement().normalize(), TriggerType.EXPIRE);
                 return;
             }
+            this.entityData.set(LIFE_TIME, lifeTime);
         }
-        //acceleration
+
         Vec3 vector = this.getDeltaMovement();
 
-        LOGGER.info("drag -> {} , graw -> {} , vector len -> {}", drag , gravity , vector.length());
-        if(vector.length()>0.3) {
-            //gravity
-            vector= vector.add(0, -this.gravity, 0);
-            //drag
-            vector = vector.multiply(this.drag, this.drag, this.drag);
+        if (vector.length() < MIN_SPEED ) {
+            if (random.nextDouble() > 0.7) {
+                Vec3 randomVec = Vec3.directionFromRotation(
+                        this.random.nextFloat() * 360f,
+                        this.random.nextFloat() * 360f
+                ).scale(0.01);
+                this.setDeltaMovement(randomVec);
+                LOGGER.info("vec -> {} ", randomVec);
+            }
+        }else {
+            //gravity and drag
+            float drag = this.entityData.get(DRAG);
+            float gravity = this.entityData.get(GRAVITY);
+            LOGGER.info("drag -> {} , gravity -> {} , len -> {}", drag, gravity, vector.length());
+            vector = vector.add(0, -gravity, 0).scale(drag);
+
             //apply changes
             this.setDeltaMovement(vector);
-        } else {
-            LOGGER.info("helo");
-            double theta = this.random.nextDouble() * 2 * Math.PI;
-            double phi = Math.acos(2 * this.random.nextDouble() - 1);
-
-            double x = Math.sin(phi) * Math.cos(theta);
-            double y = Math.sin(phi) * Math.sin(theta);
-            double z = Math.cos(phi);
-
-            Vec3 randomVec = new Vec3(x, y, z).scale(0.35);
-
-            this.setDeltaMovement(randomVec);
         }
 
+
+        //this.hasImpulse = true;
         this.moveDesc();
     }
 
@@ -174,11 +195,12 @@ public class BasicProjectileEntity extends Projectile {
         for (int s = 0; s < steps; s++) {
             Vec3 end = currentPos.add(stepDelta);
 
+
             AABB aabb = this.getBoundingBox().expandTowards(stepDelta).inflate(0.06D);
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
 
             if (entityHit != null) {
-                this.handleProjHit(entityHit.getEntity(), null, delta.normalize(), TriggerType.TRIGGER);
+                this.handleProjHit(entityHit.getEntity(), BlockPos.containing(end), delta.normalize(), TriggerType.TRIGGER);
                 return;
             }else {
                 entityHit = null;
@@ -222,7 +244,7 @@ public class BasicProjectileEntity extends Projectile {
         AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
-            this.handleProjHit(entityHit.getEntity(), null, null, TriggerType.TRIGGER);
+            this.handleProjHit(entityHit.getEntity(), BlockPos.containing(end), normal, TriggerType.TRIGGER);
             return true;
         }
 
@@ -258,16 +280,17 @@ public class BasicProjectileEntity extends Projectile {
         double y = Mth.clamp(this.getY(), pos.getY(), pos.getY() + 1.0);
         double z = Mth.clamp(this.getZ(), pos.getZ(), pos.getZ() + 1.0);
 
-        switch (face) {
-            case WEST:  return new Vec3(pos.getX(), y, z);
-            case EAST:  return new Vec3(pos.getX() + 1.0, y, z);
-            case DOWN:  return new Vec3(x, pos.getY(), z);
-            case UP:    return new Vec3(x, pos.getY() + 1.0, z);
-            case NORTH: return new Vec3(x, y, pos.getZ());
-            case SOUTH: return new Vec3(x, y, pos.getZ() + 1.0);
-            default:    return new Vec3(x, y, z);
-        }
+        return switch (face) {
+            case WEST -> new Vec3(pos.getX(), y, z);
+            case EAST -> new Vec3(pos.getX() + 1.0, y, z);
+            case DOWN -> new Vec3(x, pos.getY(), z);
+            case UP -> new Vec3(x, pos.getY() + 1.0, z);
+            case NORTH -> new Vec3(x, y, pos.getZ());
+            case SOUTH -> new Vec3(x, y, pos.getZ() + 1.0);
+            default -> new Vec3(x, y, z);
+        };
     }
+
 
     private void onBlockHit(BlockHitResult result, Vec3 normal){
         if(this.handledHit) return;
@@ -290,7 +313,6 @@ public class BasicProjectileEntity extends Projectile {
                                @Nullable BlockPos hitBlock,
                                @Nullable Vec3 normal,
                                TriggerType type){
-        this.discard();
         if(level().isClientSide()) return;
 
         if(!this.projStack.isEmpty()){
@@ -305,12 +327,14 @@ public class BasicProjectileEntity extends Projectile {
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
                 spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.projStack);
-                spellLogic.triggerAction(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.projStack, type);
-
+                spellLogic.triggerAction(this.level(), hitEntity, (hitBlock == null ? (hitEntity == null ? null : hitEntity.blockPosition()) : hitBlock),
+                                                    caster, normal, this.wandStack, this.projStack, type);
+                LOGGER.info("entyti -> {} , pos -> {} , normal -> {} , type -> {}", hitEntity, hitBlock, normal, type);
 
 
             }
         }
+        this.discard();
     }
 
 
@@ -320,6 +344,9 @@ public class BasicProjectileEntity extends Projectile {
         builder.define(PROJ_WIDTH, 0.25f);
         builder.define(PROJ_HEIGHT, 0.25f);
         builder.define(DATA_NAME, "");
+        builder.define(DRAG, 1.0f);
+        builder.define(GRAVITY, 1.0f);
+        builder.define(LIFE_TIME, 100.0f);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -339,6 +366,7 @@ public class BasicProjectileEntity extends Projectile {
     }
     public String getProjName(){return this.entityData.get(DATA_NAME);}
 
+
     @Override
     public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }
 
@@ -349,7 +377,7 @@ public class BasicProjectileEntity extends Projectile {
 
     @Override
     public boolean isPickable() {
-        return false; //for standing true?
+        return false;
     }
 
     @Override

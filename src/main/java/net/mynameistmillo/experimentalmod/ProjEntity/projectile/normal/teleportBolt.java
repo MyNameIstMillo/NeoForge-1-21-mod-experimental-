@@ -93,7 +93,7 @@ public class teleportBolt extends Item implements IProjectile {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
         //apply stats
@@ -112,11 +112,10 @@ public class teleportBolt extends Item implements IProjectile {
                               ItemStack wandStack, ItemStack thisSpell,
                               TriggerType type) {
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisSpell);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
         if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)){
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell, statsF, statsI);
+            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell);
         }
 
     }
@@ -128,10 +127,8 @@ public class teleportBolt extends Item implements IProjectile {
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
         if(level.isClientSide()) return;
-        //LOGGER.info("onHit boltTrigger -> block -> {} , entyti -> {} , normal -> {}", hitBlock, hitEntity, normal);
-        //LOGGER.info("hit!");
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromStack(thisProj);
+        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
         if(hitBlock != null && normal != null) {
@@ -148,7 +145,8 @@ public class teleportBolt extends Item implements IProjectile {
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
             if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(), caster), statsF.get(StatsKeyF.DAMAGE));
+            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(),
+                                                caster), statsF.get(StatsKeyF.DAMAGE));
 
         }
 
@@ -157,13 +155,12 @@ public class teleportBolt extends Item implements IProjectile {
     @Override
     public void spawnSelfSavedProj(Level level,
                                    BlockPos pos, Player caster, Vec3 normal,
-                                   ItemStack wandStack, ItemStack thisProj,
-                                   ProjStatsF statsF, ProjStatsI statsI) {
+                                   ItemStack wandStack, ItemStack thisProj) {
         List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
         for(ItemStack stack : spellsToSpawn){
             if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, thisProj, CasterOrBlockPosType.BLOCK_POS);
+                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
             }
         }
 
