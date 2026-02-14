@@ -75,7 +75,7 @@ public class teleportBolt extends Item implements IProjectile {
 
     @Override
     public Entity spawnProj(Level level,
-                            BlockPos pos, Player caster, Vec3 normal,
+                            Vec3 pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
         if(level.isClientSide()) return null;
@@ -93,11 +93,8 @@ public class teleportBolt extends Item implements IProjectile {
         proj.setWandStack(wandStack.copy());
         proj.setCasterUUID(caster.getUUID());
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
         //apply stats
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, statsF, statsI, COP);
+        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, thisProj, COP);
         //add projectile to the world
         level.addFreshEntity(proj);
 
@@ -107,7 +104,7 @@ public class teleportBolt extends Item implements IProjectile {
     @Override
     public void triggerAction(Level level,
                               @Nullable Entity hitEntity,
-                              @Nullable BlockPos hitBlock,
+                              @Nullable Vec3 hitPos,
                               Player caster, Vec3 normal,
                               ItemStack wandStack, ItemStack thisSpell,
                               TriggerType type) {
@@ -115,7 +112,7 @@ public class teleportBolt extends Item implements IProjectile {
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisSpell);
 
         if (type.getId() == statsI.get(StatsKeyI.TRIGGER_TYPE)){
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisSpell);
+            spawnSelfSavedProj(level, hitPos, caster, normal, wandStack, thisSpell);
         }
 
     }
@@ -123,7 +120,7 @@ public class teleportBolt extends Item implements IProjectile {
     @Override
     public void onHit(Level level,
                       @Nullable Entity hitEntity,
-                      @Nullable BlockPos hitBlock,
+                      @Nullable Vec3 hitPos,
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
         if(level.isClientSide()) return;
@@ -131,14 +128,14 @@ public class teleportBolt extends Item implements IProjectile {
         ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
-        if(hitBlock != null && normal != null) {
-            double x = hitBlock.getX() ;
-            double y = hitBlock.getY() ;
-            double z = hitBlock.getZ() ;
+        if(hitPos != null && normal != null) {
+            double x = hitPos.x() ;
+            double y = hitPos.y() ;
+            double z = hitPos.z() ;
 
             BlockState state = level.getBlockState(BlockPos.containing(x,y,z));
             if(!state.blocksMotion()){
-                caster.teleportTo(x +0.5f, y, z +0.5f);
+                caster.teleportTo(x, y, z);
             }
 
         }
@@ -154,7 +151,7 @@ public class teleportBolt extends Item implements IProjectile {
 
     @Override
     public void spawnSelfSavedProj(Level level,
-                                   BlockPos pos, Player caster, Vec3 normal,
+                                   Vec3 pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj) {
         List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 

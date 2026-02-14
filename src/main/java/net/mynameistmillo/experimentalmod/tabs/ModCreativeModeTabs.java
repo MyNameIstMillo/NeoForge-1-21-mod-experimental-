@@ -52,6 +52,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN);
                         output.accept(ModItems.DOUBLE_SPARK_BOLT);
                         output.accept(ModItems.LIFE_TIME_DOWN_AND_SPEED_UP);
+                        output.accept(ModItems.TEN_BUBBLE_SPARK);
 
 
 

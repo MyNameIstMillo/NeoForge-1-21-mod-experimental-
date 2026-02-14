@@ -15,6 +15,7 @@ import net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed.SpeedUp;
 import net.mynameistmillo.experimentalmod.Modifiers.withSomething.LifeTimeDownAndSpeedUp;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.sparkBoltTrigger;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.withSomrthing.DoubleSparkBolt;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.withSomrthing.TenBubbleSpark;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal.bubbleSpark;
@@ -98,6 +99,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> LIFE_TIME_DOWN_AND_SPEED_UP = ITEMS.register("life_time_down_and_speed_up",
             () -> new LifeTimeDownAndSpeedUp(new Item.Properties()));
+
+    public static final DeferredItem<Item> TEN_BUBBLE_SPARK = ITEMS.register("ten_bubble_spark",
+            () -> new TenBubbleSpark(new Item.Properties()));
 
 
 

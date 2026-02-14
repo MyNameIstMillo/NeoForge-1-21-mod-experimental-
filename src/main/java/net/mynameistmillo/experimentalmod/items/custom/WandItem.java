@@ -2,12 +2,14 @@ package net.mynameistmillo.experimentalmod.items.custom;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
@@ -87,7 +89,9 @@ public class WandItem extends Item {
 
         if(currentStack.getItem() instanceof IProjectile p){
 
-            p.spawnProj(level, player.getOnPos(), player,
+            BlockPos bp = player.getOnPos();
+            Vec3 v = new Vec3(bp.getX(), bp.getY(), bp.getZ());
+            p.spawnProj(level, v, player,
                     player.getLookAngle(), wand, currentStack, CasterOrBlockPosType.CASTER);
 
             increaseIndex(wand);
@@ -101,7 +105,9 @@ public class WandItem extends Item {
 
             for (ItemStack stack : projList){
                 if (stack.getItem() instanceof IProjectile p){
-                    p.spawnProj(level, player.getOnPos(), player,
+                    BlockPos bp = player.getOnPos();
+                    Vec3 v = new Vec3(bp.getX(), bp.getY(), bp.getZ());
+                    p.spawnProj(level, v, player,
                             player.getLookAngle(), wand, stack, CasterOrBlockPosType.CASTER);
                 }
             }

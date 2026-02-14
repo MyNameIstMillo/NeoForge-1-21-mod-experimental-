@@ -74,7 +74,7 @@ public class sparkBolt extends Item implements IProjectile {
 
     @Override
     public Entity spawnProj(Level level,
-                            BlockPos pos, Player caster, Vec3 normal,
+                            Vec3 pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
 
@@ -90,10 +90,7 @@ public class sparkBolt extends Item implements IProjectile {
         p.setWandStack(wandStack.copy());
         p.setCasterUUID(caster.getUUID());
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, statsF, statsI, COP);
+        ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, thisProj, COP);
 
         level.addFreshEntity(p);
 
@@ -103,13 +100,13 @@ public class sparkBolt extends Item implements IProjectile {
     @Override
     public void triggerAction(Level level,
                               @Nullable Entity hitEntity,
-                              @Nullable BlockPos hitBlock,
+                              @Nullable Vec3 hitPos,
                               Player caster, Vec3 normal,
                               ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
         ProjStatsI i = ProjStatsI.loadStatsFromProj(thisProj);
         if (type.getId() == i.get(StatsKeyI.TRIGGER_TYPE)){
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisProj);
+            spawnSelfSavedProj(level, hitPos, caster, normal, wandStack, thisProj);
         }
 
     }
@@ -117,7 +114,7 @@ public class sparkBolt extends Item implements IProjectile {
     @Override
     public void onHit(Level level,
                       @Nullable Entity hitEntity,
-                      @Nullable BlockPos hitBlock,
+                      @Nullable Vec3 hitPos,
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
 
@@ -136,7 +133,8 @@ public class sparkBolt extends Item implements IProjectile {
 
 
     @Override
-    public void spawnSelfSavedProj(Level level, BlockPos pos, Player caster, Vec3 normal,
+    public void spawnSelfSavedProj(Level level,
+                                   Vec3 pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj) {
         List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 

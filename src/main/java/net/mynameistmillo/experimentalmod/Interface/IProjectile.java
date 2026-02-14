@@ -20,7 +20,7 @@ public interface IProjectile {
 
 
     Entity spawnProj(Level level,
-                     BlockPos pos,
+                     Vec3 pos,
                      Player caster,
                      Vec3 normal,
                      ItemStack wandStack,
@@ -30,7 +30,7 @@ public interface IProjectile {
     //when HIT something
     void triggerAction(Level level,
                        @Nullable Entity hitEntity,
-                       @Nullable BlockPos hitBlock,
+                       @Nullable Vec3 hitPos,
                        Player caster,
                        Vec3 normal,
                        ItemStack wandStack,
@@ -41,7 +41,7 @@ public interface IProjectile {
     //always happen when PROJ finish EXISTING
     void onHit(Level level,
                @Nullable Entity hitEntity,
-               @Nullable BlockPos hitBlock,
+               @Nullable Vec3 hitPos,
                Player caster,
                Vec3 normal,
                ItemStack wandStack,
@@ -50,7 +50,7 @@ public interface IProjectile {
 
     //just to cast Saved Proj
     void spawnSelfSavedProj(Level level,
-                            BlockPos pos,
+                            Vec3 pos,
                             Player caster,
                             Vec3 normal,
                             ItemStack wandStack,

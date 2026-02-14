@@ -32,13 +32,13 @@ public class bubbleSpark extends Item implements IProjectile {
         super(properties);
         this.baseStatsF = new ProjStatsF();
         this.baseStatsF.set(StatsKeyF.SPEED, 0.5f);
-        this.baseStatsF.set(StatsKeyF.DRAG, 0.85f);
+        this.baseStatsF.set(StatsKeyF.DRAG, 0.9f);
         this.baseStatsF.set(StatsKeyF.GRAVITY, 0.00f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_U_D, 0.0f);
         this.baseStatsF.set(StatsKeyF.ACCELERATION_F_B, 0.0f);
         this.baseStatsF.set(StatsKeyF.VERTICAL_SPREAD, 10.0f);
-        this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 10.0f);
+        this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 100.0f);
         this.baseStatsF.set(StatsKeyF.RECOIL, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_U_D, 0.0f);
@@ -75,10 +75,9 @@ public class bubbleSpark extends Item implements IProjectile {
 
     @Override
     public Entity spawnProj(Level level,
-                            BlockPos pos, Player caster, Vec3 normal,
+                            Vec3 pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj,
                             CasterOrBlockPosType COP) {
-
 
         if (level.isClientSide()) return null;
         if (!(thisProj.getItem() instanceof IProjectile)) return null;
@@ -91,10 +90,7 @@ public class bubbleSpark extends Item implements IProjectile {
         p.setWandStack(wandStack.copy());
         p.setCasterUUID(caster.getUUID());
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, statsF, statsI, COP);
+        ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, thisProj, COP);
 
         level.addFreshEntity(p);
 
@@ -104,21 +100,21 @@ public class bubbleSpark extends Item implements IProjectile {
     @Override
     public void triggerAction(Level level,
                               @Nullable Entity hitEntity,
-                              @Nullable BlockPos hitBlock,
+                              @Nullable Vec3 hitPos,
                               Player caster, Vec3 normal,
                               ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
 
         ProjStatsI i = ProjStatsI.loadStatsFromProj(thisProj);
         if (type.getId() == i.get(StatsKeyI.TRIGGER_TYPE)){
-            spawnSelfSavedProj(level, hitBlock, caster, normal, wandStack, thisProj);
+            spawnSelfSavedProj(level, hitPos, caster, normal, wandStack, thisProj);
         }
     }
 
     @Override
     public void onHit(Level level,
                       @Nullable Entity hitEntity,
-                      @Nullable BlockPos hitBlock,
+                      @Nullable Vec3 hitPos,
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
         if (level.isClientSide()) return;
@@ -137,7 +133,7 @@ public class bubbleSpark extends Item implements IProjectile {
 
     @Override
     public void spawnSelfSavedProj(Level level,
-                                   BlockPos pos, Player caster, Vec3 normal,
+                                   Vec3 pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj) {
 
         List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);

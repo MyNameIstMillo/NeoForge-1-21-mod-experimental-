@@ -1,14 +1,12 @@
 package net.mynameistmillo.experimentalmod.Stats.ProjItem;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,21 +14,23 @@ import org.slf4j.LoggerFactory;
 public class ApplyStatsToProj {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
+
     public static void applyStatsToProjectile(
             BasicProjectileEntity e,
-            BlockPos pos,
+            Vec3 pos,
             Vec3 look,
             Player caster,
-            ProjStatsF statsF,
-            ProjStatsI statsI,
+            ItemStack thisProj,
             CasterOrBlockPosType COP){
 
-        double sLR = statsF.get(StatsKeyF.DISPLACEMENT_L_R);
-        double sUD = statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.DISPLACEMENT_U_D);
-        double sFB = statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.DISPLACEMENT_F_B);
+        ProjStatsF sf = ProjStatsF.loadStatsFromProj(thisProj);
 
-        double hSpread = statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.HORIZONTAL_SPREAD);
-        double vSpread = statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.VERTICAL_SPREAD);
+        double sLR = sf.get(StatsKeyF.DISPLACEMENT_L_R);
+        double sUD = sf.get(StatsKeyF.DISPLACEMENT_U_D);
+        double sFB = sf.get(StatsKeyF.DISPLACEMENT_F_B);
+
+        double hSpread = sf.get(StatsKeyF.HORIZONTAL_SPREAD);
+        double vSpread = sf.get(StatsKeyF.VERTICAL_SPREAD);
 
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
@@ -56,8 +56,8 @@ public class ApplyStatsToProj {
                     .add(up.scale(sUD));
 
         }else{ // not player so not player
-            Vec3 center = Vec3.atCenterOf((pos==null? new Vec3i(0,0,0):pos));
-            spawnPos = center.add(lookNorn.scale(distFB))
+            Vec3 center = (pos==null? new Vec3(0.5f,0.5f,0.5f):pos);
+            spawnPos = center.add(lookNorn.scale(sFB+0.1f))
                     .add(right.scale(sLR))
                     .add(up.scale(sUD));
         }
@@ -73,14 +73,14 @@ public class ApplyStatsToProj {
         Vec3 forwardFinal = rotateAroundAxis(forwardYaw, right1, pitchRad).normalize();
 
 
-        float speed = statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.SPEED);
+        float speed = sf.get(StatsKeyF.SPEED);
         e.setDeltaMovement( forwardFinal.x * speed,
                 forwardFinal.y * speed,
                 forwardFinal.z * speed);
 
-        e.setDrag(statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.DRAG));
-        e.setGravity(statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.GRAVITY));
-        e.setLifeTime(statsF.get(net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF.LIFETIME));
+        e.setDrag(sf.get(StatsKeyF.DRAG));
+        e.setGravity(sf.get(StatsKeyF.GRAVITY));
+        e.setLifeTime(sf.get(StatsKeyF.LIFETIME));
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
     }
 

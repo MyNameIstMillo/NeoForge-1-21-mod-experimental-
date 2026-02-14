@@ -2,9 +2,9 @@ package net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey;
 
 public enum StatsKeyF {
     //movement
-    SPEED("speed", 1.0f),
-    DRAG("drag", 1.0f),
-    GRAVITY("gravity", 0.03f),
+    SPEED("speed", 0.0f),
+    DRAG("drag", 0.0f),
+    GRAVITY("gravity", 0.0f),
     ACCELERATION_L_R("acceleration_l_r", 0.0f),
     ACCELERATION_U_D("acceleration_u_d", 0.0f),
     ACCELERATION_F_B("acceleration_f_b", 0.0f),
@@ -18,8 +18,8 @@ public enum StatsKeyF {
     DISPLACEMENT_F_B("displacement_f_b", 0),
 
     //stats
-    LIFETIME("lifetime", 60.0f),
-    DAMAGE("damage", 1.0f);
+    LIFETIME("lifetime", 0.0f),
+    DAMAGE("damage", 0.0f);
 
 
 

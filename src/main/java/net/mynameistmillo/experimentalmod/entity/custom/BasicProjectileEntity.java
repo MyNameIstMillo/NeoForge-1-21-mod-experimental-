@@ -48,8 +48,6 @@ public class BasicProjectileEntity extends Projectile {
     private static final double MAX_STEP = 0.75D;
     private static final int MAX_STEPS = 5;
 
-
-
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = false;
@@ -144,10 +142,12 @@ public class BasicProjectileEntity extends Projectile {
         super.tick();
 
         if(!this.level().isClientSide()){
-            float lifeTime = this.entityData.get(LIFE_TIME);
+            float lifeTime = getLifeTime();
             lifeTime--;
             if(lifeTime<=0){
-                handleProjHit(null,this.blockPosition(), this.getDeltaMovement().normalize(), TriggerType.EXPIRE);
+                Vec3 pos = this.position();
+                Vec3 dir = this.getDeltaMovement().normalize().reverse();
+                handleProjHit(null, pos, dir, TriggerType.EXPIRE);
                 return;
             }
             this.entityData.set(LIFE_TIME, lifeTime);
@@ -155,13 +155,16 @@ public class BasicProjectileEntity extends Projectile {
 
         Vec3 vector = this.getDeltaMovement();
 
-        if (vector.lengthSqr()<0.003){
-            handleProjHit(null, this.blockPosition(), this.getDeltaMovement().normalize().reverse(), TriggerType.BEFORE);
+        if (vector.lengthSqr()<MIN_SPEED){
+            Vec3 pos = this.position();
+            Vec3 dir = this.getDeltaMovement().normalize().reverse();
+            handleProjHit(null, pos, dir, TriggerType.BEFORE);
+            this.discard();
         }
 
         //gravity and drag
-        float drag = this.entityData.get(DRAG);
-        float gravity = this.entityData.get(GRAVITY);
+        float drag = getDrag();
+        float gravity = getGravityE();
 
         vector = vector.add(0, -gravity, 0).scale(drag);
 
@@ -191,7 +194,8 @@ public class BasicProjectileEntity extends Projectile {
             EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, currentPos, end, aabb, this::canHit);
 
             if (entityHit != null) {
-                this.handleProjHit(entityHit.getEntity(), BlockPos.containing(end), delta.normalize(), TriggerType.TRIGGER);
+                Vec3 pos = this.position();
+                this.handleProjHit(entityHit.getEntity(), pos, delta.normalize(), TriggerType.TRIGGER);
                 return;
             }else {
                 entityHit = null;
@@ -235,7 +239,8 @@ public class BasicProjectileEntity extends Projectile {
         AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
-            this.handleProjHit(entityHit.getEntity(), BlockPos.containing(end), normal, TriggerType.TRIGGER);
+            Vec3 v = this.position();
+            this.handleProjHit(entityHit.getEntity(), v, normal, TriggerType.TRIGGER);
             return true;
         }
 
@@ -296,12 +301,13 @@ public class BasicProjectileEntity extends Projectile {
         BlockPos hit = result.getBlockPos();
         BlockPos beforeHit = hit.relative(face);
 
-        this.handleProjHit(null, beforeHit, normal, TriggerType.TRIGGER);
+        Vec3 v = new Vec3(beforeHit.getX(), beforeHit.getY(), beforeHit.getZ());
+        this.handleProjHit(null, v, normal, TriggerType.TRIGGER);
     }
 
 
     private void handleProjHit(@Nullable Entity hitEntity,
-                               @Nullable BlockPos hitBlock,
+                               @Nullable Vec3 hitPos,
                                @Nullable Vec3 normal,
                                TriggerType type){
         if(level().isClientSide()) return;
@@ -317,11 +323,9 @@ public class BasicProjectileEntity extends Projectile {
                 }
                 if(caster == null && this.getOwner() instanceof Player p) caster = p;
 
-                spellLogic.onHit(this.level(), hitEntity, hitBlock, caster, normal, this.wandStack, this.projStack);
-                spellLogic.triggerAction(this.level(), hitEntity, (hitBlock == null ? (hitEntity == null ? null : hitEntity.blockPosition()) : hitBlock),
-                                                    caster, normal, this.wandStack, this.projStack, type);
-                LOGGER.info("entyti -> {} , pos -> {} , normal -> {} , type -> {}", hitEntity, hitBlock, normal, type);
+                spellLogic.onHit(this.level(), hitEntity, hitPos, caster, normal, this.wandStack, this.projStack);
 
+                spellLogic.triggerAction(this.level(), hitEntity, hitPos, caster, normal, this.wandStack, this.projStack, type);
 
             }
         }
