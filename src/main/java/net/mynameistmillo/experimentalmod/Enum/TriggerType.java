@@ -3,7 +3,8 @@ package net.mynameistmillo.experimentalmod.Enum;
 public enum TriggerType {
     TRIGGER(1),
     TIMER(2),
-    EXPIRE(3);
+    EXPIRE(3),
+    BEFORE(4);
 
     private final int id;
 

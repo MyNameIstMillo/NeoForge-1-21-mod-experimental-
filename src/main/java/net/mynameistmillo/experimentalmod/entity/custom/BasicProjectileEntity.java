@@ -155,28 +155,19 @@ public class BasicProjectileEntity extends Projectile {
 
         Vec3 vector = this.getDeltaMovement();
 
-        if (vector.length() < MIN_SPEED ) {
-            if (random.nextDouble() > 0.7) {
-                Vec3 randomVec = Vec3.directionFromRotation(
-                        this.random.nextFloat() * 360f,
-                        this.random.nextFloat() * 360f
-                ).scale(0.01);
-                this.setDeltaMovement(randomVec);
-                LOGGER.info("vec -> {} ", randomVec);
-            }
-        }else {
-            //gravity and drag
-            float drag = this.entityData.get(DRAG);
-            float gravity = this.entityData.get(GRAVITY);
-            LOGGER.info("drag -> {} , gravity -> {} , len -> {}", drag, gravity, vector.length());
-            vector = vector.add(0, -gravity, 0).scale(drag);
-
-            //apply changes
-            this.setDeltaMovement(vector);
+        if (vector.lengthSqr()<0.003){
+            handleProjHit(null, this.blockPosition(), this.getDeltaMovement().normalize().reverse(), TriggerType.BEFORE);
         }
 
+        //gravity and drag
+        float drag = this.entityData.get(DRAG);
+        float gravity = this.entityData.get(GRAVITY);
 
-        //this.hasImpulse = true;
+        vector = vector.add(0, -gravity, 0).scale(drag);
+
+        //apply changes
+        this.setDeltaMovement(vector);
+
         this.moveDesc();
     }
 

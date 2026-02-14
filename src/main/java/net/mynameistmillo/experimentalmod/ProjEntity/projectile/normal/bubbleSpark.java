@@ -51,11 +51,11 @@ public class bubbleSpark extends Item implements IProjectile {
         this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
         this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
         this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
-        this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 0);
+        this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 4);
         this.baseStatsI.set(StatsKeyI.PIERCING , 0);
         this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
         this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 0);
-        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 0);
+        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 1);
 
 
     }
