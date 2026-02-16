@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.mynameistmillo.experimentalmod.Interface.IMultipleSpells;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TenBubbleSpark extends Item implements IMultipleSpells {
@@ -14,7 +15,12 @@ public class TenBubbleSpark extends Item implements IMultipleSpells {
 
     @Override
     public List<ItemStack> addSpells() {
-        ItemStack a = new ItemStack(ModItems.BUBBLE_SPARK.get());
-        return List.of(a, a, a, a, a, a, a, a, a, a);
+        ItemStack p = new ItemStack(ModItems.BUBBLE_SPARK.get());
+        List<ItemStack> list = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            list.add(p.copy());
+        }
+        return list;
     }
 }

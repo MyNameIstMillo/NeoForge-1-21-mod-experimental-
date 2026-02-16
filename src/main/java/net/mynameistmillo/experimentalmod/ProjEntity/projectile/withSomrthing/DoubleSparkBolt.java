@@ -15,7 +15,7 @@ public class DoubleSparkBolt extends Item implements IMultipleSpells {
 
     @Override
     public List<ItemStack> addSpells() {
-        ItemStack proj = new ItemStack(ModItems.SPARK_BOLT.get());
-        return List.of(proj, proj);
+        ItemStack p = new ItemStack(ModItems.SPARK_BOLT.get());
+        return List.of(p.copy(), p.copy());
     }
 }

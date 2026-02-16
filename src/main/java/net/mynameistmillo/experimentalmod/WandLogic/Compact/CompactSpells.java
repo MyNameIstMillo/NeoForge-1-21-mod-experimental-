@@ -58,8 +58,8 @@ public class CompactSpells {
             //when reached here STACK is non-DRAW and non-TRIGGER
             if (!drawQueue.isEmpty()){
 
-                ItemStack lastDQ = drawQueue.getLast();
-                if (!isFull(lastDQ)) drawQueue.set(drawQueue.size()-1, prepareStackAndMerge(level, drawQueue.getLast(), stack, sMH));
+//                ItemStack lastDQ = drawQueue.getLast();
+//                if (!isFull(lastDQ)) drawQueue.set(drawQueue.size()-1, prepareStackAndMerge(level, lastDQ, stack, sMH));
 
                 if (isFull(drawQueue.getLast())){
                     if (drawQueue.size()>1) {
@@ -85,7 +85,8 @@ public class CompactSpells {
 
             if (drawQueue.size()>1){
 
-                ItemStack beforeStack = sMH.merge(drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1));
+                ItemStack beforeStack = prepareStackAndMerge(level, drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1), sMH);
+                        //sMH.merge(drawQueue.get(drawQueue.size()-2), drawQueue.get(drawQueue.size()-1));
 
                 drawQueue.removeLast();
                 drawQueue.set(drawQueue.size()-1, beforeStack);
@@ -107,8 +108,7 @@ public class CompactSpells {
 
             }
             case IProjectile a -> {
-                return sMH.merge(ProjStatsI.subtractFromFree(lDQ),
-                        stack);
+                return sMH.merge(ProjStatsI.subtractFromFree(lDQ), stack);
 
             }
             default -> throw new IllegalStateException("Unexpected value: " + lDQ.getItem());
