@@ -29,6 +29,6 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
 
         stats.set(StatsKeyF.DISPLACEMENT_F_B, displacement);
 
-        return ProjStatsF.saveStatsToSpell(stats, stack);
+        return ProjStatsF.saveStatsToProj(stats, stack);
     }
 }

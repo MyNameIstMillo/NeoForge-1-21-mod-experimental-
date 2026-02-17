@@ -1,0 +1,43 @@
+
+G   green   Y   up/down
+R   red     X   left/right
+B   blue    Z   forward/backwards
+
+FLOAT
+
+S       speed
+D       drag
+G       gravity
+A       acceleration
+
+SV      spread vertical
+SH      spread horizontal
+R       recoil
+
+P       placement
+
+ND      normal damage
+
+
+INTEGER
+
+L       life time
+
+C       color
+E       effect
+T       tolerance
+ST      spaghetti tolerance
+
+TT      trigger type
+P
+
+
+
+
+
+
+
+
+
+
+

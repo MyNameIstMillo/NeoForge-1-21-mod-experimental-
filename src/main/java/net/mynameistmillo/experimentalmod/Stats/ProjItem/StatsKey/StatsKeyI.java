@@ -6,6 +6,7 @@ public enum StatsKeyI {
     EFFECT_ON_HIT("effect_on_hit", 0),
     TOLERANCE("tolerance", 0),
     SPAGHETTI_TOLERANCE("spaghetti_tolerance", 0),
+    LIFETIME("lifetime", 0),
 
     //bollen stats
     TRIGGER_TYPE("trigger_type",0),

@@ -6,7 +6,9 @@ import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ public class ApplyStatsToProj {
             CasterOrBlockPosType COP){
 
         ProjStatsF sf = ProjStatsF.loadStatsFromProj(thisProj);
+        ProjStatsI si = ProjStatsI.loadStatsFromProj(thisProj);
 
         double sLR = sf.get(StatsKeyF.DISPLACEMENT_L_R);
         double sUD = sf.get(StatsKeyF.DISPLACEMENT_U_D);
@@ -80,8 +83,9 @@ public class ApplyStatsToProj {
 
         e.setDrag(sf.get(StatsKeyF.DRAG));
         e.setGravity(sf.get(StatsKeyF.GRAVITY));
-        e.setLifeTime(sf.get(StatsKeyF.LIFETIME));
+        e.setLifeTime(si.get(StatsKeyI.LIFETIME));
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
+        e.setPiercing(si.get(StatsKeyI.PIERCING));
     }
 
     private static Vec3 rotateAroundAxis(Vec3 v, Vec3 axis, double angleRad){

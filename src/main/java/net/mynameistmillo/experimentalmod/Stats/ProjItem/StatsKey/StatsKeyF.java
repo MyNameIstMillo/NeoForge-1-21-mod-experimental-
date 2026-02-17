@@ -18,7 +18,6 @@ public enum StatsKeyF {
     DISPLACEMENT_F_B("displacement_f_b", 0),
 
     //stats
-    LIFETIME("lifetime", 0.0f),
     DAMAGE("damage", 0.0f);
 
 

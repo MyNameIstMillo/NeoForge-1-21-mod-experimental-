@@ -29,7 +29,7 @@ public class SpeedUp extends Item implements IModifier {
 
         stats.set(StatsKeyF.SPEED, speed);
 
-        return ProjStatsF.saveStatsToSpell(stats, stack);
+        return ProjStatsF.saveStatsToProj(stats, stack);
 
     }
 }

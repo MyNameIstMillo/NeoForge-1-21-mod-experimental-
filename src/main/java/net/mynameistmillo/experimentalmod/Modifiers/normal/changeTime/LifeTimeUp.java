@@ -7,7 +7,8 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,12 @@ public class LifeTimeUp extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
+        ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
 
-        float lifeTIme = stats.get(StatsKeyF.LIFETIME) + 30f;
+        int lifeTIme = stats.get(StatsKeyI.LIFETIME) + 30;
 
-        stats.set(StatsKeyF.LIFETIME, lifeTIme);
+        stats.set(StatsKeyI.LIFETIME, lifeTIme);
 
-        return ProjStatsF.saveStatsToSpell(stats, stack);
+        return ProjStatsI.saveStatsToProj(stats, stack);
     }
 }

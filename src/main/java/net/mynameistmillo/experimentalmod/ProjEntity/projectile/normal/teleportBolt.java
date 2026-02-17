@@ -44,7 +44,6 @@ public class teleportBolt extends Item implements IProjectile {
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_U_D, 0.0f);
         this.baseStatsF.set(StatsKeyF.DISPLACEMENT_F_B, -0.4f);
-        this.baseStatsF.set(StatsKeyF.LIFETIME, 50.0f);
         this.baseStatsF.set(StatsKeyF.DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();
@@ -52,6 +51,7 @@ public class teleportBolt extends Item implements IProjectile {
         this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
         this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
         this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
+        this.baseStatsI.set(StatsKeyI.LIFETIME, 50);
         this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 0);
         this.baseStatsI.set(StatsKeyI.PIERCING , 0);
         this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
@@ -81,7 +81,7 @@ public class teleportBolt extends Item implements IProjectile {
         if(level.isClientSide()) return null;
         if (!(thisProj.getItem() instanceof IProjectile )) return null;
         //create projectile
-        BasicProjectileEntity proj = new BasicProjectileEntity(level, caster, 0.25f, 0.25f);
+        BasicProjectileEntity proj = new BasicProjectileEntity(level, 0.25f, 0.25f);
 
         //set texture for projectile
         String name = "teleport_bolt";

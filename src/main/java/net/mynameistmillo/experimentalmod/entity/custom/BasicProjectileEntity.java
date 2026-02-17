@@ -34,7 +34,8 @@ public class BasicProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DRAG = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> GRAVITY = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> LIFE_TIME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> LIFE_TIME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> PIERCING = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
 
     private float initWidth = 0.25f;
     private float initHeight = 0.25f;
@@ -53,7 +54,7 @@ public class BasicProjectileEntity extends Projectile {
         this.noPhysics = false;
     }
 
-    public BasicProjectileEntity(Level level, LivingEntity shooter, float width, float height){
+    public BasicProjectileEntity(Level level, float width, float height){
         this(ModEntities.BASIC_PROJECTILE.get(), level);
         this.initWidth = width;
         this.initHeight = height;
@@ -78,12 +79,20 @@ public class BasicProjectileEntity extends Projectile {
         return this.entityData.get(DRAG);
     }
 
-    public void setLifeTime(float lifeTime) {
+    public void setLifeTime(int lifeTime) {
         this.entityData.set(LIFE_TIME, lifeTime);
     }
 
-    public float getLifeTime(){
+    public int getLifeTime(){
         return this.entityData.get(LIFE_TIME);
+    }
+    
+    public void setPiercing(int value){
+        this.entityData.set(PIERCING, value);
+    }
+
+    public int getPiercing() {
+        return this.entityData.get(PIERCING);
     }
 
     public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
@@ -92,6 +101,14 @@ public class BasicProjectileEntity extends Projectile {
 
     public void setCasterUUID(UUID id){ this.casterUUID = id; }
 
+    private String name = "";
+
+    public void setProjName(String name){
+        this.entityData.set(DATA_NAME, name == null? "" : name);
+        this.name = name == null? "": name;
+    }
+
+    public String getProjName(){return this.entityData.get(DATA_NAME);}
 
 
     @Override
@@ -99,7 +116,7 @@ public class BasicProjectileEntity extends Projectile {
         super.addAdditionalSaveData(nbt);
         nbt.putFloat("ProjGravity", this.entityData.get(GRAVITY));
         nbt.putFloat("ProjDrag", this.entityData.get(DRAG));
-        nbt.putFloat("lifeTime", this.entityData.get(LIFE_TIME));
+        nbt.putInt("lifeTime", this.entityData.get(LIFE_TIME));
 
         if(!this.projStack.isEmpty()) {
             CompoundTag spellTag = new CompoundTag();
@@ -123,7 +140,7 @@ public class BasicProjectileEntity extends Projectile {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("ProjGravity")) this.entityData.set(GRAVITY, nbt.getFloat("ProjGravity"));
         if (nbt.contains("ProjDrag")) this.entityData.set(DRAG, nbt.getFloat("ProjDrag"));
-        if (nbt.contains("lifeTime")) this.entityData.set(LIFE_TIME, nbt.getFloat("lifeTime"));
+        if (nbt.contains("lifeTime")) this.entityData.set(LIFE_TIME, nbt.getInt("lifeTime"));
 
         if(nbt.contains("ProjStack", Tag.TAG_COMPOUND)){
             this.projStack = ItemStack.parseOptional(level().registryAccess(), nbt.getCompound("ProjStack"));
@@ -134,15 +151,15 @@ public class BasicProjectileEntity extends Projectile {
         }
         if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
-
     private static final double MIN_SPEED = 0.003;
+
 
     @Override
     public void tick() {
         super.tick();
 
         if(!this.level().isClientSide()){
-            float lifeTime = getLifeTime();
+            int lifeTime = getLifeTime();
             lifeTime--;
             if(lifeTime<=0){
                 Vec3 pos = this.position();
@@ -159,7 +176,6 @@ public class BasicProjectileEntity extends Projectile {
             Vec3 pos = this.position();
             Vec3 dir = this.getDeltaMovement().normalize().reverse();
             handleProjHit(null, pos, dir, TriggerType.BEFORE);
-            this.discard();
         }
 
         //gravity and drag
@@ -195,7 +211,7 @@ public class BasicProjectileEntity extends Projectile {
 
             if (entityHit != null) {
                 Vec3 pos = this.position();
-                this.handleProjHit(entityHit.getEntity(), pos, delta.normalize(), TriggerType.TRIGGER);
+                handleProjHit(entityHit.getEntity(), pos, delta.normalize(), TriggerType.TRIGGER);
                 return;
             }else {
                 entityHit = null;
@@ -212,15 +228,18 @@ public class BasicProjectileEntity extends Projectile {
             this.prevDelta = this.getDeltaMovement();
         }
     }
-
-    private boolean canHit(Entity e){
-        if(e == this) return false;
-        if(e.isSpectator() || !e.isAlive()) return false;
-        //if(this.casterUUID != null && e.getUUID().equals(this.casterUUID)) return false;
-        return !(e instanceof BasicProjectileEntity);
-    }
+//    @Override
+//    protected void onHitEntity(EntityHitResult result) {
+//        if (getPiercing()==1 && !this.level().isClientSide()) {
+//            Vec3 pos = this.position();
+//            Vec3 dir = this.getDeltaMovement().normalize().reverse();
+//
+//            handleProjHit(result.getEntity(), pos, dir, TriggerType.TRIGGER);
+//        }
+//    }
 
     private boolean handledHit = false;
+
     private static final double EPS = 1e-8;
 
     private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta, Vec3 normal) {
@@ -240,7 +259,7 @@ public class BasicProjectileEntity extends Projectile {
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
             Vec3 v = this.position();
-            this.handleProjHit(entityHit.getEntity(), v, normal, TriggerType.TRIGGER);
+            handleProjHit(entityHit.getEntity(), v, normal, TriggerType.TRIGGER);
             return true;
         }
 
@@ -271,6 +290,7 @@ public class BasicProjectileEntity extends Projectile {
 
         return true;
     }
+
     private Vec3 estimateHitVecForFace(BlockPos pos, Direction face) {
         double x = Mth.clamp(this.getX(), pos.getX(), pos.getX() + 1.0);
         double y = Mth.clamp(this.getY(), pos.getY(), pos.getY() + 1.0);
@@ -287,7 +307,6 @@ public class BasicProjectileEntity extends Projectile {
         };
     }
 
-
     private void onBlockHit(BlockHitResult result, Vec3 normal){
         if(this.handledHit) return;
         this.handledHit  = true;
@@ -302,7 +321,7 @@ public class BasicProjectileEntity extends Projectile {
         BlockPos beforeHit = hit.relative(face);
 
         Vec3 v = new Vec3(beforeHit.getX(), beforeHit.getY(), beforeHit.getZ());
-        this.handleProjHit(null, v, normal, TriggerType.TRIGGER);
+        handleProjHit(null, v, normal, TriggerType.TRIGGER);
     }
 
 
@@ -329,20 +348,28 @@ public class BasicProjectileEntity extends Projectile {
 
             }
         }
-        this.discard();
+
+        maybeDiscard(type, getPiercing());
     }
 
+    private void maybeDiscard(TriggerType t, int p) {
+          if (t==TriggerType.TRIGGER && p==1) return;
+          this.discard();
+
+    }
 
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(PROJ_WIDTH, 0.25f);
-        builder.define(PROJ_HEIGHT, 0.25f);
+        builder.define(PROJ_WIDTH, 3.0f);
+        builder.define(PROJ_HEIGHT, 3.0f);
         builder.define(DATA_NAME, "");
-        builder.define(DRAG, 1.0f);
-        builder.define(GRAVITY, 1.0f);
-        builder.define(LIFE_TIME, 100.0f);
+        builder.define(DRAG, 0.0f);
+        builder.define(GRAVITY, 0.0f);
+        builder.define(LIFE_TIME, 0);
+        builder.define(PIERCING, 0);
     }
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
@@ -354,13 +381,18 @@ public class BasicProjectileEntity extends Projectile {
             this.name = this.entityData.get(DATA_NAME);
         }
     }
-    private String name = "";
-    public void setProjName(String name){
-        this.entityData.set(DATA_NAME, name == null? "" : name);
-        this.name = name == null? "": name;
+    
+    private boolean canHit(Entity e){
+        if(e == this) return false;
+        if(e.isSpectator() || !e.isAlive()) return false;
+        if(this.casterUUID != null && e.getUUID().equals(this.casterUUID) && getPiercing() == 1) return true;
+        return !(e instanceof BasicProjectileEntity);
     }
-    public String getProjName(){return this.entityData.get(DATA_NAME);}
 
+//    @Override
+//    protected void onHitBlock(BlockHitResult result) {
+//
+//    }
 
     @Override
     public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }

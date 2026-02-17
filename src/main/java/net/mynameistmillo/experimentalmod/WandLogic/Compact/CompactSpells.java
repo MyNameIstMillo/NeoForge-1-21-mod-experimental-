@@ -58,8 +58,8 @@ public class CompactSpells {
             //when reached here STACK is non-DRAW and non-TRIGGER
             if (!drawQueue.isEmpty()){
 
-//                ItemStack lastDQ = drawQueue.getLast();
-//                if (!isFull(lastDQ)) drawQueue.set(drawQueue.size()-1, prepareStackAndMerge(level, lastDQ, stack, sMH));
+                ItemStack lastDQ = drawQueue.getLast();
+                if (!isFull(lastDQ)) drawQueue.set(drawQueue.size()-1, prepareStackAndMerge(level, lastDQ, stack, sMH));
 
                 if (isFull(drawQueue.getLast())){
                     if (drawQueue.size()>1) {

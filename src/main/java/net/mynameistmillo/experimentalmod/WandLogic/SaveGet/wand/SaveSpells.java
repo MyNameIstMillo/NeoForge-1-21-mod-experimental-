@@ -56,12 +56,6 @@ public class SaveSpells {
                         spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                                 new CompoundTag()));
 
-//                        List<ItemStack> l = GetStackFromStack.stackFromDraw(level, stack, ModOrProjType.PROJ);
-//                        ListTag lt = new ListTag();
-//                        for (ItemStack s : l){
-//                            lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_F.get(), new CompoundTag()));
-//                            lt.add(s.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag()));
-//                        }
                     }
 
                     default -> throw new IllegalStateException("Unexpected value: " + stack.getItem());
