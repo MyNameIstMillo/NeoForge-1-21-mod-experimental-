@@ -1,6 +1,5 @@
 package net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -11,8 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
@@ -31,31 +30,28 @@ public class sparkBolt extends Item implements IProjectile {
     public sparkBolt(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsKeyF.SPEED, 0.9f);
-        this.baseStatsF.set(StatsKeyF.DRAG, 1.0f);
-        this.baseStatsF.set(StatsKeyF.GRAVITY, 0.03f);
-        this.baseStatsF.set(StatsKeyF.ACCELERATION_L_R, 0.0f);
-        this.baseStatsF.set(StatsKeyF.ACCELERATION_U_D, 0.0f);
-        this.baseStatsF.set(StatsKeyF.ACCELERATION_F_B, 0.0f);
-        this.baseStatsF.set(StatsKeyF.VERTICAL_SPREAD, 10.0f);
-        this.baseStatsF.set(StatsKeyF.HORIZONTAL_SPREAD, 4.0f);
-        this.baseStatsF.set(StatsKeyF.RECOIL, 0.0f);
-        this.baseStatsF.set(StatsKeyF.DISPLACEMENT_L_R, 0.0f);
-        this.baseStatsF.set(StatsKeyF.DISPLACEMENT_U_D, 0.0f);
-        this.baseStatsF.set(StatsKeyF.DISPLACEMENT_F_B, 0.0f);
-        this.baseStatsF.set(StatsKeyF.DAMAGE, 1.0f);
+        this.baseStatsF.set(StatsF.SPEED, 0.9f);
+        this.baseStatsF.set(StatsF.DRAG, 1.0f);
+        this.baseStatsF.set(StatsF.GRAVITY, 0.03f);
+
+        this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
+        this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
+        this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
+
+        this.baseStatsF.set(StatsF.VERTICAL_SPREAD, 10.0f);
+        this.baseStatsF.set(StatsF.HORIZONTAL_SPREAD, 4.0f);
+
+        this.baseStatsF.set(StatsF.SHIFT_LR, 0.0f);
+        this.baseStatsF.set(StatsF.SHIFT_UD, 0.0f);
+        this.baseStatsF.set(StatsF.SHIFT_FB, 0.0f);
+
+        this.baseStatsF.set(StatsF.NORMAL_DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();
-        this.baseStatsI.set(StatsKeyI.COLOUR , 0);
-        this.baseStatsI.set(StatsKeyI.EFFECT_ON_HIT , 0);
-        this.baseStatsI.set(StatsKeyI.TOLERANCE , 0);
-        this.baseStatsI.set(StatsKeyI.SPAGHETTI_TOLERANCE , 0);
-        this.baseStatsI.set(StatsKeyI.LIFETIME, 60);
-        this.baseStatsI.set(StatsKeyI.TRIGGER_TYPE , 0);
-        this.baseStatsI.set(StatsKeyI.PIERCING , 0);
-        this.baseStatsI.set(StatsKeyI.TICK_EVENT , 0);
-        this.baseStatsI.set(StatsKeyI.FRIENDLY_FIRE , 1);
-        this.baseStatsI.set(StatsKeyI.FREE_DRAW_TRIGGER , 0);
+        this.baseStatsI.set(StatsI.LIFETIME, 60);
+        this.baseStatsI.set(StatsI.TRIGGER_TYPE , 0);
+        this.baseStatsI.set(StatsI.FRIENDLY_FIRE , 1);
+        this.baseStatsI.set(StatsI.DRAW_TRIGGER, 0);
 
     }
 
@@ -105,7 +101,7 @@ public class sparkBolt extends Item implements IProjectile {
                               ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
         ProjStatsI i = ProjStatsI.loadStatsFromProj(thisProj);
-        if (type.getId() == i.get(StatsKeyI.TRIGGER_TYPE)){
+        if (type.getId() == i.get(StatsI.TRIGGER_TYPE)){
             spawnSelfSavedProj(level, hitPos, caster, normal, wandStack, thisProj);
         }
 
@@ -124,10 +120,10 @@ public class sparkBolt extends Item implements IProjectile {
         ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
 
         if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsKeyI.FRIENDLY_FIRE) == 0) return;
+            if (hitEntity.is(caster) && statsI.get(StatsI.FRIENDLY_FIRE) == 0) return;
             assert thisProj.getEntityRepresentation() != null;
             living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(),
-                    caster), statsF.get(StatsKeyF.DAMAGE));
+                    caster), statsF.get(StatsF.NORMAL_DAMAGE));
         }
     }
 

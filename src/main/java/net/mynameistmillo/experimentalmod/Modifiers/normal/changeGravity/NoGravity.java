@@ -7,7 +7,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +25,9 @@ public class NoGravity extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        if (stats.get(StatsKeyF.GRAVITY)<0.0f) return stack;
+        if (stats.get(StatsF.GRAVITY)<0.0f) return stack;
 
-        stats.set(StatsKeyF.GRAVITY, 0);
+        stats.set(StatsF.GRAVITY, 0);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }

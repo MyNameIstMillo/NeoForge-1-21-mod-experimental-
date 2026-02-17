@@ -13,7 +13,7 @@ import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler.StackMergeHandler;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
@@ -47,7 +47,7 @@ public class CompactSpells {
                 }
                 //if PROJ is trigger -> dQ
                 case IProjectile p -> {
-                    if (ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE)>0) {
+                    if (ProjStatsI.loadStatsFromProj(stack).get(StatsI.TRIGGER_TYPE)>0) {
                         drawQueue.add(stack);
                         continue;
                     }
@@ -121,7 +121,7 @@ public class CompactSpells {
                 return DrawStats.loadStatsFromDraw(s).get(DrawKey.FREE_SPACE) == 0;
             }
             case IProjectile a -> {
-                return ProjStatsI.loadStatsFromProj(s).get(StatsKeyI.FREE_DRAW_TRIGGER) == 0;
+                return ProjStatsI.loadStatsFromProj(s).get(StatsI.DRAW_TRIGGER) == 0;
             }
             default -> throw new IllegalStateException("Unexpected value: " + s.getItem());
         }

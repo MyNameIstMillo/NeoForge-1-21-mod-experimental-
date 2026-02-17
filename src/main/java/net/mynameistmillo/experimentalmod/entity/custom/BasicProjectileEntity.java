@@ -86,14 +86,6 @@ public class BasicProjectileEntity extends Projectile {
     public int getLifeTime(){
         return this.entityData.get(LIFE_TIME);
     }
-    
-    public void setPiercing(int value){
-        this.entityData.set(PIERCING, value);
-    }
-
-    public int getPiercing() {
-        return this.entityData.get(PIERCING);
-    }
 
     public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
 
@@ -228,21 +220,9 @@ public class BasicProjectileEntity extends Projectile {
             this.prevDelta = this.getDeltaMovement();
         }
     }
-//    @Override
-//    protected void onHitEntity(EntityHitResult result) {
-//        if (getPiercing()==1 && !this.level().isClientSide()) {
-//            Vec3 pos = this.position();
-//            Vec3 dir = this.getDeltaMovement().normalize().reverse();
-//
-//            handleProjHit(result.getEntity(), pos, dir, TriggerType.TRIGGER);
-//        }
-//    }
-
-    private boolean handledHit = false;
-
-    private static final double EPS = 1e-8;
 
     private boolean checkBounceGuessAndHandle(Vec3 delta, Vec3 prevDelta, Vec3 normal) {
+        double EPS = 1e-8;
 
         boolean xHit = Math.abs(delta.x) < EPS && Math.abs(prevDelta.x) > EPS;
         boolean yHit = Math.abs(delta.y) < EPS && Math.abs(prevDelta.y) > EPS;
@@ -251,15 +231,14 @@ public class BasicProjectileEntity extends Projectile {
         if (!(xHit || yHit || zHit)) return false;
 
         Vec3 currentPos = this.position();
-        Vec3 prevPos = currentPos.subtract(prevDelta);
-        Vec3 start = prevPos;
+        Vec3 start = currentPos.subtract(prevDelta);
         Vec3 end = currentPos;
 
         AABB aabb = this.getBoundingBox().expandTowards(prevDelta).inflate(0.05D);
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(this.level(), this, start, end, aabb, this::canHit);
         if(entityHit != null) {
-            Vec3 v = this.position();
-            handleProjHit(entityHit.getEntity(), v, normal, TriggerType.TRIGGER);
+            Vec3 pos = this.position();
+            handleProjHit(entityHit.getEntity(), pos, normal, TriggerType.TRIGGER);
             return true;
         }
 
@@ -286,7 +265,8 @@ public class BasicProjectileEntity extends Projectile {
         BlockPos hitPos = pos.relative(faceGuess.getOpposite());
         BlockHitResult bhr = new BlockHitResult(hitVec, faceGuess, hitPos, false);
 
-        this.onBlockHit(bhr, normal);
+        //onBlockHit(bhr, normal, currentPos);
+        handleProjHit(null, currentPos, normal, TriggerType.TRIGGER);
 
         return true;
     }
@@ -307,22 +287,7 @@ public class BasicProjectileEntity extends Projectile {
         };
     }
 
-    private void onBlockHit(BlockHitResult result, Vec3 normal){
-        if(this.handledHit) return;
-        this.handledHit  = true;
-        Vec3 hitVec = result.getLocation();
-        Direction face = result.getDirection();
 
-        Vec3 safePos = hitVec.subtract(this.getDeltaMovement().normalize().scale(0.001));
-        this.setPos(safePos.x, safePos.y, safePos.z);
-        this.setDeltaMovement(Vec3.ZERO);
-
-        BlockPos hit = result.getBlockPos();
-        BlockPos beforeHit = hit.relative(face);
-
-        Vec3 v = new Vec3(beforeHit.getX(), beforeHit.getY(), beforeHit.getZ());
-        handleProjHit(null, v, normal, TriggerType.TRIGGER);
-    }
 
 
     private void handleProjHit(@Nullable Entity hitEntity,
@@ -349,13 +314,11 @@ public class BasicProjectileEntity extends Projectile {
             }
         }
 
-        maybeDiscard(type, getPiercing());
+        maybeDiscard();
     }
 
-    private void maybeDiscard(TriggerType t, int p) {
-          if (t==TriggerType.TRIGGER && p==1) return;
+    private void maybeDiscard() {
           this.discard();
-
     }
 
 
@@ -385,17 +348,14 @@ public class BasicProjectileEntity extends Projectile {
     private boolean canHit(Entity e){
         if(e == this) return false;
         if(e.isSpectator() || !e.isAlive()) return false;
-        if(this.casterUUID != null && e.getUUID().equals(this.casterUUID) && getPiercing() == 1) return true;
+        if(this.casterUUID != null && e.getUUID().equals(this.casterUUID)) return true;
         return !(e instanceof BasicProjectileEntity);
     }
 
-//    @Override
-//    protected void onHitBlock(BlockHitResult result) {
-//
-//    }
-
     @Override
-    public EntityDimensions getDimensions(Pose pose) { return EntityDimensions.scalable(this.initWidth, this.initHeight); }
+    public EntityDimensions getDimensions(Pose pose){
+        return EntityDimensions.scalable(this.initWidth, this.initHeight);
+    }
 
     @Override
     public boolean canCollideWith(Entity entity) {

@@ -6,10 +6,8 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +25,9 @@ public class LifeTimeDown extends Item implements IModifier {
 
         ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
 
-        int lifeTime = stats.get(StatsKeyI.LIFETIME) - 20;
+        int lifeTime = stats.get(StatsI.LIFETIME) - 20;
 
-        stats.set(StatsKeyI.LIFETIME, lifeTime);
+        stats.set(StatsI.LIFETIME, lifeTime);
 
         return ProjStatsI.saveStatsToProj(stats, stack);
     }

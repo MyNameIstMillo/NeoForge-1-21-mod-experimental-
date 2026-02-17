@@ -37,7 +37,7 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
         ResourceLocation side = EntityDataTextures.getTxtPathSide(entity.getProjName());
         ResourceLocation front = EntityDataTextures.getTxtPathFront(entity.getProjName());
 
-        float shift = EntityDataTextures.getFrontAxisShift(entity.getProjName());
+        float shiftFrontZ = EntityDataTextures.getFrontAxisShift(entity.getProjName());
 
         float size = 0.25f;
         poseStack.scale(size, size, size);
@@ -66,7 +66,7 @@ public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntit
 
         //front
         poseStack.pushPose();
-        poseStack.translate(0.f, 0.0f, shift);
+        poseStack.translate(0.f, 0.0f, shiftFrontZ);
         drawQuad(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(front)),
                 packedLight, -half, -half, half, half, 0f);
         poseStack.popPose();

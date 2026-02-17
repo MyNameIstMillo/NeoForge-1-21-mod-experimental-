@@ -7,7 +7,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +25,9 @@ public class SpeedDown extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float speed = stats.get(StatsKeyF.SPEED) * 0.5f;
+        float speed = stats.get(StatsF.SPEED) * 0.5f;
 
-        stats.set(StatsKeyF.SPEED, speed);
+        stats.set(StatsF.SPEED, speed);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }

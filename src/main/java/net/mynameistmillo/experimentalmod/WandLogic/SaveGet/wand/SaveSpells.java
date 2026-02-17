@@ -9,11 +9,9 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
-import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +43,7 @@ public class SaveSpells {
                         spellTag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(),
                                 new CompoundTag()));
 
-                        if(ProjStatsI.loadStatsFromProj(stack).get(StatsKeyI.TRIGGER_TYPE)>=1){
+                        if(ProjStatsI.loadStatsFromProj(stack).get(StatsI.TRIGGER_TYPE)>=1){
                             spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
                                     new CompoundTag()));
                         }

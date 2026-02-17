@@ -7,8 +7,8 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +28,12 @@ public class ApplyStatsToProj {
         ProjStatsF sf = ProjStatsF.loadStatsFromProj(thisProj);
         ProjStatsI si = ProjStatsI.loadStatsFromProj(thisProj);
 
-        double sLR = sf.get(StatsKeyF.DISPLACEMENT_L_R);
-        double sUD = sf.get(StatsKeyF.DISPLACEMENT_U_D);
-        double sFB = sf.get(StatsKeyF.DISPLACEMENT_F_B);
+        double sLR = sf.get(StatsF.SHIFT_LR);
+        double sUD = sf.get(StatsF.SHIFT_UD);
+        double sFB = sf.get(StatsF.SHIFT_FB);
 
-        double hSpread = sf.get(StatsKeyF.HORIZONTAL_SPREAD);
-        double vSpread = sf.get(StatsKeyF.VERTICAL_SPREAD);
+        double hSpread = sf.get(StatsF.HORIZONTAL_SPREAD);
+        double vSpread = sf.get(StatsF.VERTICAL_SPREAD);
 
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
@@ -76,16 +76,15 @@ public class ApplyStatsToProj {
         Vec3 forwardFinal = rotateAroundAxis(forwardYaw, right1, pitchRad).normalize();
 
 
-        float speed = sf.get(StatsKeyF.SPEED);
+        float speed = sf.get(StatsF.SPEED);
         e.setDeltaMovement( forwardFinal.x * speed,
                 forwardFinal.y * speed,
                 forwardFinal.z * speed);
 
-        e.setDrag(sf.get(StatsKeyF.DRAG));
-        e.setGravity(sf.get(StatsKeyF.GRAVITY));
-        e.setLifeTime(si.get(StatsKeyI.LIFETIME));
+        e.setDrag(sf.get(StatsF.DRAG));
+        e.setGravity(sf.get(StatsF.GRAVITY));
+        e.setLifeTime(si.get(StatsI.LIFETIME));
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
-        e.setPiercing(si.get(StatsKeyI.PIERCING));
     }
 
     private static Vec3 rotateAroundAxis(Vec3 v, Vec3 axis, double angleRad){

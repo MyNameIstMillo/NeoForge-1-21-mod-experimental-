@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -18,37 +18,37 @@ import java.util.Map;
 
 public class ProjStatsI implements INBTSerializable<CompoundTag> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
-    private final EnumMap<StatsKeyI, Integer> map = new EnumMap<StatsKeyI, Integer>(StatsKeyI.class);
+    private final EnumMap<StatsI, Integer> map = new EnumMap<StatsI, Integer>(StatsI.class);
 
     public ProjStatsI(){
-        for (StatsKeyI k : StatsKeyI.values()){
+        for (StatsI k : StatsI.values()){
             map.put(k, k.getDefaultValue());
         }
     }
 
-    public int get(StatsKeyI key){
+    public int get(StatsI key){
         return map.getOrDefault(key, key.getDefaultValue());
     }
 
-    public void set(StatsKeyI key, int value){
+    public void set(StatsI key, int value){
         map.put(key, value);
     }
 
     public ProjStatsI copy(){
         ProjStatsI stats = new ProjStatsI();
-        for (StatsKeyI key : StatsKeyI.values()) stats.set(key, this.get(key));
+        for (StatsI key : StatsI.values()) stats.set(key, this.get(key));
         return stats;
     }
 
     public static ItemStack subtractFromFree(ItemStack proj){
         ProjStatsI s = loadStatsFromProj(proj);
-        s.set(StatsKeyI.FREE_DRAW_TRIGGER, s.get(StatsKeyI.FREE_DRAW_TRIGGER)-1);
+        s.set(StatsI.DRAW_TRIGGER, s.get(StatsI.DRAW_TRIGGER)-1);
         return saveStatsToProj(s, proj);
     }
 
     public static ItemStack saveStatsToProj(ProjStatsI stats, ItemStack stack){
         CompoundTag tag = new CompoundTag();
-        for (StatsKeyI key : StatsKeyI.values()){
+        for (StatsI key : StatsI.values()){
             tag.putInt(key.name(), stats.get(key));
         }
         stack.set(ModDataComponents.SPELL_STATS_I.get(), tag);
@@ -59,7 +59,7 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
         CompoundTag tag = stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(), new CompoundTag());
 
         ProjStatsI stats = new ProjStatsI();
-        for (StatsKeyI key : StatsKeyI.values()){
+        for (StatsI key : StatsI.values()){
             if (tag.contains(key.name())) {
                 stats.set(key, tag.getInt(key.name()));
             }
@@ -75,7 +75,7 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
         ProjStatsI stats = iProjectile.getBaseStatsI().copy();
 
         CompoundTag tag = new CompoundTag();
-        for (StatsKeyI key : StatsKeyI.values()) {
+        for (StatsI key : StatsI.values()) {
             tag.putInt(key.name(), stats.get(key));
         }
         stack.set(ModDataComponents.SPELL_STATS_I.get(), tag);
@@ -85,7 +85,7 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
-        for (Map.Entry<StatsKeyI, Integer> e : map.entrySet()){
+        for (Map.Entry<StatsI, Integer> e : map.entrySet()){
             tag.putInt(e.getKey().getId(), e.getValue());
         }
         return tag;
@@ -93,7 +93,7 @@ public class ProjStatsI implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        for (StatsKeyI k : StatsKeyI.values()){
+        for (StatsI k : StatsI.values()){
             if (nbt.contains(k.getId())){
                 map.put(k, nbt.getInt(k.getId()));
             }else {

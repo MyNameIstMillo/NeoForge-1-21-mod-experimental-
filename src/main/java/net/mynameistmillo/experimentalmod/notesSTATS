@@ -1,0 +1,56 @@
+
+G   green   Y   up/down             UD
+R   red     X   left/right          LR
+B   blue    Z   forward/backwards   FB
+
+FLOAT
+
+S       speed
+D       drag
+G       gravity
+
+F       force
+
+SV      spread vertical
+SH      spread horizontal
+
+H       shift
+
+ND      normal damage
+
+
+INTEGER
+
+L       life time
+
+TT     trigger type
+
+F       friendly fire
+
+DT      draw trigger
+
+
+
+
+
+
+FOR LATER
+
+P       piercing
+
+E       effect
+
+T       tolerance
+ST      spaghetti tolerance
+
+C       color
+
+R       recoil
+
+
+
+
+
+
+
+

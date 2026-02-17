@@ -6,9 +6,8 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +25,9 @@ public class LifeTimeUp extends Item implements IModifier {
 
         ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
 
-        int lifeTIme = stats.get(StatsKeyI.LIFETIME) + 30;
+        int lifeTIme = stats.get(StatsI.LIFETIME) + 30;
 
-        stats.set(StatsKeyI.LIFETIME, lifeTIme);
+        stats.set(StatsI.LIFETIME, lifeTIme);
 
         return ProjStatsI.saveStatsToProj(stats, stack);
     }

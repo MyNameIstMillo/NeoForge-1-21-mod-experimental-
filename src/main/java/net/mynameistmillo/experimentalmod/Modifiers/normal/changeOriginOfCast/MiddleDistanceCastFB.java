@@ -7,7 +7,7 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsKeyF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +25,9 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float displacement = stats.get(StatsKeyF.DISPLACEMENT_F_B) + 3f;
+        float displacement = stats.get(StatsF.SHIFT_FB) + 3f;
 
-        stats.set(StatsKeyF.DISPLACEMENT_F_B, displacement);
+        stats.set(StatsF.SHIFT_FB, displacement);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }
