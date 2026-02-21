@@ -27,6 +27,8 @@ public class SaveStackIntoStack {
         if (moreProj != null) list.addAll(moreProj);
         if (resetAndSave != null) list = resetAndSave;
 
+        list = Helper.ChangeCastPosToPos(list);
+
         ListTag listTag = new ListTag();
         for (ItemStack stack : list) {
             CompoundTag tag = new CompoundTag();

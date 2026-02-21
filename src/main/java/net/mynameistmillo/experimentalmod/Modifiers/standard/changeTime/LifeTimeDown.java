@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed;
+package net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -6,15 +6,15 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SpeedDown extends Item implements IModifier {
+public class LifeTimeDown extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public SpeedDown(Properties properties) {
+    public LifeTimeDown(Properties properties) {
         super(properties);
     }
 
@@ -23,12 +23,12 @@ public class SpeedDown extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
+        ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
 
-        float speed = stats.get(StatsF.SPEED) * 0.5f;
+        int lifeTime = stats.get(StatsI.LIFETIME) - 20;
 
-        stats.set(StatsF.SPEED, speed);
+        stats.set(StatsI.LIFETIME, lifeTime);
 
-        return ProjStatsF.saveStatsToProj(stats, stack);
+        return ProjStatsI.saveStatsToProj(stats, stack);
     }
 }

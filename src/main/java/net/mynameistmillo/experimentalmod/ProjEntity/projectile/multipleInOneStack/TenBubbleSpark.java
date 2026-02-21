@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.ProjEntity.projectile.withSomrthing;
+package net.mynameistmillo.experimentalmod.ProjEntity.projectile.multipleInOneStack;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

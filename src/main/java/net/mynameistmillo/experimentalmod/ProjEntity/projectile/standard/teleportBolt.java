@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal;
+package net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -7,14 +7,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
-import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import net.mynameistmillo.experimentalmod.UsefullFunction.TeleportInSomeWay;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
@@ -55,6 +54,7 @@ public class teleportBolt extends Item implements IProjectile {
         this.baseStatsI.set(StatsI.TRIGGER_TYPE , 0);
         this.baseStatsI.set(StatsI.FRIENDLY_FIRE , 0);
         this.baseStatsI.set(StatsI.DRAW_TRIGGER, 0);
+        this.baseStatsI.set(StatsI.CAST_POS, 0);
     }
 
 
@@ -63,7 +63,7 @@ public class teleportBolt extends Item implements IProjectile {
 
     @Override
     public ProjStatsF getBaseStatsF() {
-        return this.baseStatsF;
+        return baseStatsF;
     }
 
     @Override
@@ -74,29 +74,10 @@ public class teleportBolt extends Item implements IProjectile {
     @Override
     public Entity spawnProj(Level level,
                             Vec3 pos, Player caster, Vec3 normal,
-                            ItemStack wandStack, ItemStack thisProj,
-                            CasterOrBlockPosType COP) {
-        if(level.isClientSide()) return null;
-        if (!(thisProj.getItem() instanceof IProjectile )) return null;
-        //create projectile
-        BasicProjectileEntity proj = new BasicProjectileEntity(level, 0.25f, 0.25f);
+                            ItemStack wandStack, ItemStack thisProj) {
 
-        //set texture for projectile
-        String name = "teleport_bolt";
-        proj.setProjName(name);
-
-
-        //connect spellItem to the projectile
-        proj.setProjStack(thisProj.copy());
-        proj.setWandStack(wandStack.copy());
-        proj.setCasterUUID(caster.getUUID());
-
-        //apply stats
-        ApplyStatsToProj.applyStatsToProjectile(proj, pos, normal, caster, thisProj, COP);
-        //add projectile to the world
-        level.addFreshEntity(proj);
-
-        return proj;
+        return Helper.spawnProjBasic(level, pos, caster, normal, wandStack, thisProj,
+                "teleport_bolt", 0.25f, 0.25f);
     }
 
     @Override
@@ -123,19 +104,11 @@ public class teleportBolt extends Item implements IProjectile {
                       ItemStack wandStack, ItemStack thisProj) {
         if(level.isClientSide()) return;
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
+        Helper.onHit(level, hitEntity, hitPos, caster, normal, wandStack, thisProj);
 
+        assert hitPos != null;
         TeleportInSomeWay.checkAndResetFallSpeed(level, BlockPos.containing(hitPos), normal, caster);
 
-
-
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsI.FRIENDLY_FIRE) == 0) return;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(),
-                                                caster), statsF.get(StatsF.NORMAL_DAMAGE));
-
-        }
 
     }
 
@@ -143,13 +116,8 @@ public class teleportBolt extends Item implements IProjectile {
     public void spawnSelfSavedProj(Level level,
                                    Vec3 pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
-        for(ItemStack stack : spellsToSpawn){
-            if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
-            }
-        }
+        Helper.spawnSelfSavedProj(level, pos, caster, normal, wandStack, thisProj);
 
     }
 

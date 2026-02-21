@@ -29,7 +29,9 @@ F       friendly fire
 
 DT      draw trigger
 
-
+CP      cast position
+        0 - caster
+        1 - pos
 
 
 

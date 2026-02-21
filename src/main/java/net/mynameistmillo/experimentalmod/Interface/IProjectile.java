@@ -24,8 +24,7 @@ public interface IProjectile {
                      Player caster,
                      Vec3 normal,
                      ItemStack wandStack,
-                     ItemStack thisProj,
-                     CasterOrBlockPosType COP);
+                     ItemStack thisProj);
 
     //when HIT something
     void triggerAction(Level level,

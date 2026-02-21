@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.ProjEntity.projectile.normal;
+package net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ApplyStatsToProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
-import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
@@ -24,22 +24,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class sparkBolt extends Item implements IProjectile {
+public class bubbleSpark extends Item implements IProjectile {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public sparkBolt(Properties properties) {
+    public bubbleSpark(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsF.SPEED, 0.9f);
-        this.baseStatsF.set(StatsF.DRAG, 1.0f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.03f);
+        this.baseStatsF.set(StatsF.SPEED, 0.5f);
+        this.baseStatsF.set(StatsF.DRAG, 0.9f);
+        this.baseStatsF.set(StatsF.GRAVITY, 0.00f);
 
         this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
 
         this.baseStatsF.set(StatsF.VERTICAL_SPREAD, 10.0f);
-        this.baseStatsF.set(StatsF.HORIZONTAL_SPREAD, 4.0f);
+        this.baseStatsF.set(StatsF.HORIZONTAL_SPREAD, 10.0f);
 
         this.baseStatsF.set(StatsF.SHIFT_LR, 0.0f);
         this.baseStatsF.set(StatsF.SHIFT_UD, 0.0f);
@@ -48,10 +48,12 @@ public class sparkBolt extends Item implements IProjectile {
         this.baseStatsF.set(StatsF.NORMAL_DAMAGE, 1.0f);
 
         this.baseStatsI = new ProjStatsI();
-        this.baseStatsI.set(StatsI.LIFETIME, 60);
+        this.baseStatsI.set(StatsI.LIFETIME, 200);
         this.baseStatsI.set(StatsI.TRIGGER_TYPE , 0);
-        this.baseStatsI.set(StatsI.FRIENDLY_FIRE , 1);
+        this.baseStatsI.set(StatsI.FRIENDLY_FIRE , 0);
         this.baseStatsI.set(StatsI.DRAW_TRIGGER, 0);
+        this.baseStatsI.set(StatsI.CAST_POS, 0);
+
 
     }
 
@@ -71,26 +73,10 @@ public class sparkBolt extends Item implements IProjectile {
     @Override
     public Entity spawnProj(Level level,
                             Vec3 pos, Player caster, Vec3 normal,
-                            ItemStack wandStack, ItemStack thisProj,
-                            CasterOrBlockPosType COP) {
+                            ItemStack wandStack, ItemStack thisProj) {
 
-
-        if (level.isClientSide()) return null;
-        if (!(thisProj.getItem() instanceof IProjectile)) return null;
-
-        BasicProjectileEntity p = new BasicProjectileEntity(level, 0.25f, 0.25f);
-        String name = "spark_bolt";
-        p.setProjName(name);
-
-        p.setProjStack(thisProj.copy());
-        p.setWandStack(wandStack.copy());
-        p.setCasterUUID(caster.getUUID());
-
-        ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, thisProj, COP);
-
-        level.addFreshEntity(p);
-
-        return p;
+        return Helper.spawnProjBasic(level, pos, caster, normal, wandStack, thisProj,
+                "bubble_spark", 0.25f, 0.25f);
     }
 
     @Override
@@ -100,11 +86,11 @@ public class sparkBolt extends Item implements IProjectile {
                               Player caster, Vec3 normal,
                               ItemStack wandStack, ItemStack thisProj,
                               TriggerType type) {
+
         ProjStatsI i = ProjStatsI.loadStatsFromProj(thisProj);
         if (type.getId() == i.get(StatsI.TRIGGER_TYPE)){
             spawnSelfSavedProj(level, hitPos, caster, normal, wandStack, thisProj);
         }
-
     }
 
     @Override
@@ -114,17 +100,8 @@ public class sparkBolt extends Item implements IProjectile {
                       Player caster, Vec3 normal,
                       ItemStack wandStack, ItemStack thisProj) {
 
-        if (level.isClientSide()) return;
+        Helper.onHit(level, hitEntity, hitPos, caster, normal, wandStack, thisProj);
 
-        ProjStatsF statsF = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI statsI = ProjStatsI.loadStatsFromProj(thisProj);
-
-        if(hitEntity instanceof LivingEntity living && !hitEntity.level().isClientSide()) {
-            if (hitEntity.is(caster) && statsI.get(StatsI.FRIENDLY_FIRE) == 0) return;
-            assert thisProj.getEntityRepresentation() != null;
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(),
-                    caster), statsF.get(StatsF.NORMAL_DAMAGE));
-        }
     }
 
 
@@ -132,12 +109,9 @@ public class sparkBolt extends Item implements IProjectile {
     public void spawnSelfSavedProj(Level level,
                                    Vec3 pos, Player caster, Vec3 normal,
                                    ItemStack wandStack, ItemStack thisProj) {
-        List<ItemStack> spellsToSpawn = GetStackFromStack.projFromTrigger(level, thisProj);
 
-        for(ItemStack stack : spellsToSpawn){
-            if (stack.getItem() instanceof IProjectile proj){
-                proj.spawnProj(level, pos, caster, (normal==null? new Vec3(0.0,1.0,0.0) : normal.reverse()), wandStack, stack, CasterOrBlockPosType.BLOCK_POS);
-            }
-        }
+        Helper.spawnSelfSavedProj(level, pos, caster, normal, wandStack, thisProj);
     }
+
+
 }

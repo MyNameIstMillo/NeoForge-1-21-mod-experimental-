@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.normal.changeTime;
+package net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -6,15 +6,15 @@ import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
-import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
+import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LifeTimeDown extends Item implements IModifier {
+public class MiddleDistanceCastFB extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public LifeTimeDown(Properties properties) {
+    public MiddleDistanceCastFB(Properties properties) {
         super(properties);
     }
 
@@ -23,12 +23,12 @@ public class LifeTimeDown extends Item implements IModifier {
         if (level.isClientSide()) return null;
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
-        ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
+        ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        int lifeTime = stats.get(StatsI.LIFETIME) - 20;
+        float displacement = stats.get(StatsF.SHIFT_FB) + 3f;
 
-        stats.set(StatsI.LIFETIME, lifeTime);
+        stats.set(StatsF.SHIFT_FB, displacement);
 
-        return ProjStatsI.saveStatsToProj(stats, stack);
+        return ProjStatsF.saveStatsToProj(stats, stack);
     }
 }

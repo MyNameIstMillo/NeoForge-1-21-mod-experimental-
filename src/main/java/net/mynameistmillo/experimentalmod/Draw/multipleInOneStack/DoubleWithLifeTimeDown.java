@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Draw.withSomething;
+package net.mynameistmillo.experimentalmod.Draw.multipleInOneStack;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

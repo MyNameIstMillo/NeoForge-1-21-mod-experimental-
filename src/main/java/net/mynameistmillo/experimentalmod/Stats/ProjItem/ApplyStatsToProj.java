@@ -22,18 +22,17 @@ public class ApplyStatsToProj {
             Vec3 pos,
             Vec3 look,
             Player caster,
-            ItemStack thisProj,
-            CasterOrBlockPosType COP){
+            ItemStack thisProj){
 
-        ProjStatsF sf = ProjStatsF.loadStatsFromProj(thisProj);
-        ProjStatsI si = ProjStatsI.loadStatsFromProj(thisProj);
+        ProjStatsF SF = ProjStatsF.loadStatsFromProj(thisProj);
+        ProjStatsI SI = ProjStatsI.loadStatsFromProj(thisProj);
 
-        double sLR = sf.get(StatsF.SHIFT_LR);
-        double sUD = sf.get(StatsF.SHIFT_UD);
-        double sFB = sf.get(StatsF.SHIFT_FB);
+        double sLR = SF.get(StatsF.SHIFT_LR);
+        double sUD = SF.get(StatsF.SHIFT_UD);
+        double sFB = SF.get(StatsF.SHIFT_FB);
 
-        double hSpread = sf.get(StatsF.HORIZONTAL_SPREAD);
-        double vSpread = sf.get(StatsF.VERTICAL_SPREAD);
+        double hSpread = SF.get(StatsF.HORIZONTAL_SPREAD);
+        double vSpread = SF.get(StatsF.VERTICAL_SPREAD);
 
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
@@ -51,7 +50,7 @@ public class ApplyStatsToProj {
         double distFB = baseOffset + sFB;
         Vec3 spawnPos;
 
-        if(COP == CasterOrBlockPosType.CASTER && caster != null){// if player so plater, yes
+        if(SI.get(StatsI.CAST_POS)==0 && caster != null){// if player so plater, yes
             Vec3 eye = caster.getEyePosition(1.0f);
             spawnPos = eye.add(0.0, -0.125, 0.0)
                     .add(lookNorn.scale(distFB))
@@ -76,14 +75,14 @@ public class ApplyStatsToProj {
         Vec3 forwardFinal = rotateAroundAxis(forwardYaw, right1, pitchRad).normalize();
 
 
-        float speed = sf.get(StatsF.SPEED);
+        float speed = SF.get(StatsF.SPEED);
         e.setDeltaMovement( forwardFinal.x * speed,
                 forwardFinal.y * speed,
                 forwardFinal.z * speed);
 
-        e.setDrag(sf.get(StatsF.DRAG));
-        e.setGravity(sf.get(StatsF.GRAVITY));
-        e.setLifeTime(si.get(StatsI.LIFETIME));
+        e.setDrag(SF.get(StatsF.DRAG));
+        e.setGravity(SF.get(StatsF.GRAVITY));
+        e.setLifeTime(SI.get(StatsI.LIFETIME));
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
     }
 

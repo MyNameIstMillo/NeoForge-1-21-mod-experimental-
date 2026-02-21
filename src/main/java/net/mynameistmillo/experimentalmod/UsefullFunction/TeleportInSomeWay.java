@@ -12,7 +12,7 @@ public class TeleportInSomeWay {
 
         if(pos != null && normal != null) {
             double x = pos.getX() ;
-            double y = pos.getY() ;
+            double y = pos.getY() - 1;
             double z = pos.getZ() ;
 
 

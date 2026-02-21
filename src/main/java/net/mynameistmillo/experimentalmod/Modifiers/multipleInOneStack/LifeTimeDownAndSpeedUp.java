@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.withSomething;
+package net.mynameistmillo.experimentalmod.Modifiers.multipleInOneStack;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

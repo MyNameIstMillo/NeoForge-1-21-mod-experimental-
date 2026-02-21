@@ -101,7 +101,6 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return SaveStackIntoStack.stackToDraw(level, null, list,null, finalDraw, type);
     }
 
-
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();

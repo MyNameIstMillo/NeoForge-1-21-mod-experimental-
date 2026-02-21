@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.normal.changeTime;
+package net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

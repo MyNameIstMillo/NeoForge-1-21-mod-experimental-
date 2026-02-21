@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.normal.changeSpeed;
+package net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +11,10 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SpeedUp extends Item implements IModifier {
+public class NoGravity extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public SpeedUp(Properties properties) {
+    public NoGravity(Properties properties) {
         super(properties);
     }
 
@@ -25,11 +25,10 @@ public class SpeedUp extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float speed = stats.get(StatsF.SPEED) * 2f;
+        if (stats.get(StatsF.GRAVITY)<0.0f) return stack;
 
-        stats.set(StatsF.SPEED, speed);
+        stats.set(StatsF.GRAVITY, 0);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
-
     }
 }

@@ -92,7 +92,7 @@ public class WandItem extends Item {
             BlockPos bp = player.getOnPos();
             Vec3 v = new Vec3(bp.getX(), bp.getY(), bp.getZ());
             p.spawnProj(level, v, player,
-                    player.getLookAngle(), wand, currentStack, CasterOrBlockPosType.CASTER);
+                    player.getLookAngle(), wand, currentStack);
 
             increaseIndex(wand);
 
@@ -108,7 +108,7 @@ public class WandItem extends Item {
                     BlockPos bp = player.getOnPos();
                     Vec3 v = new Vec3(bp.getX(), bp.getY(), bp.getZ());
                     p.spawnProj(level, v, player,
-                            player.getLookAngle(), wand, stack, CasterOrBlockPosType.CASTER);
+                            player.getLookAngle(), wand, stack);
                 }
             }
             increaseIndex(wand);

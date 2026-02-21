@@ -1,4 +1,4 @@
-package net.mynameistmillo.experimentalmod.Modifiers.normal.changeOriginOfCast;
+package net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpeed;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +11,10 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MiddleDistanceCastFB extends Item implements IModifier {
+public class SpeedDown extends Item implements IModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
-    public MiddleDistanceCastFB(Properties properties) {
+    public SpeedDown(Properties properties) {
         super(properties);
     }
 
@@ -25,9 +25,9 @@ public class MiddleDistanceCastFB extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float displacement = stats.get(StatsF.SHIFT_FB) + 3f;
+        float speed = stats.get(StatsF.SPEED) * 0.5f;
 
-        stats.set(StatsF.SHIFT_FB, displacement);
+        stats.set(StatsF.SPEED, speed);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }
