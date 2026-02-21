@@ -3,8 +3,8 @@ package net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
-import net.mynameistmillo.experimentalmod.Enum.ProjOrDrawType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
+import net.mynameistmillo.experimentalmod.Enum.ProjOrDraw;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
@@ -21,28 +21,28 @@ public class StackMergeHandler {
     public StackMergeHandler(Level level){
         handler = Map.of(
 
-                new StackState(ProjOrDrawType.PROJ, ProjOrDrawType.PROJ),
+                new StackState(ProjOrDraw.PROJ, ProjOrDraw.PROJ),
                 (TRIGGER, PROJ) ->
 
                         SaveStackIntoStack.projToTrigger(level, PROJ, null, null, TRIGGER),
 
 
-                new StackState(ProjOrDrawType.DRAW, ProjOrDrawType.PROJ),
+                new StackState(ProjOrDraw.DRAW, ProjOrDraw.PROJ),
                 (DRAW, PROJ) ->
 
-                        SaveStackIntoStack.stackToDraw(level, PROJ, null, null, DRAW, ModOrProjType.PROJ),
+                        SaveStackIntoStack.stackToDraw(level, PROJ, null, null, DRAW, ModOrProj.PROJ),
 
 
-                new StackState(ProjOrDrawType.PROJ, ProjOrDrawType.DRAW),
+                new StackState(ProjOrDraw.PROJ, ProjOrDraw.DRAW),
                 (PROJ, DRAW) ->
 
-                        SaveStackIntoStack.projToTrigger(level, null, GetStackFromStack.stackFromDraw(level, DRAW, ModOrProjType.PROJ), null, PROJ),
+                        SaveStackIntoStack.projToTrigger(level, null, GetStackFromStack.stackFromDraw(level, DRAW, ModOrProj.PROJ), null, PROJ),
 
 
-                new StackState(ProjOrDrawType.DRAW, ProjOrDrawType.DRAW),
+                new StackState(ProjOrDraw.DRAW, ProjOrDraw.DRAW),
                 (DRAW1, DRAW2) ->
 
-                        DrawStats.transferContentsDrawDrawType(level, DRAW2, DRAW1, ModOrProjType.PROJ)
+                        DrawStats.transferContentsDrawDrawType(level, DRAW2, DRAW1, ModOrProj.PROJ)
         );
     }
 
@@ -51,14 +51,14 @@ public class StackMergeHandler {
         return handler.get(state).apply(before, end);
     }
 
-    private ProjOrDrawType type(ItemStack stack){
+    private ProjOrDraw type(ItemStack stack){
         Item item = stack.getItem();
         switch (item){
             case IProjectile p -> {
-                return ProjOrDrawType.PROJ;
+                return ProjOrDraw.PROJ;
             }
             case IDraw d -> {
-                return ProjOrDrawType.DRAW;
+                return ProjOrDraw.DRAW;
             }
             default -> throw new IllegalStateException("Unsupported item: "+item);
         }

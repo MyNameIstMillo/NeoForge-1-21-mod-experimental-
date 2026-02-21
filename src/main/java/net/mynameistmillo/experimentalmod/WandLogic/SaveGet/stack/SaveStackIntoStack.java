@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +43,7 @@ public class SaveStackIntoStack {
             listTag.add(tag);
         }
         CompoundTag rootTag = new CompoundTag();
-        rootTag.put(ModOrProjType.PROJ.getId(), listTag);
+        rootTag.put(ModOrProj.PROJ.getId(), listTag);
 
         //save in TRIGGER
         trigger.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), rootTag);
@@ -64,7 +64,7 @@ public class SaveStackIntoStack {
                                         @Nullable List<ItemStack> moreProj,
                                         @Nullable List<ItemStack> resetAndSave,
                                         ItemStack draw,
-                                        ModOrProjType MOP) {
+                                        ModOrProj MOP) {
 
         List<ItemStack> list = GetStackFromStack.stackFromDraw(level, draw, MOP);
         if (proj != null) list.add(proj);

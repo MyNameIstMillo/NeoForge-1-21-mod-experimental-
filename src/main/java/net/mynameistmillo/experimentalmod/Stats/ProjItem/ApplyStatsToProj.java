@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
-import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
@@ -50,7 +49,9 @@ public class ApplyStatsToProj {
         double distFB = baseOffset + sFB;
         Vec3 spawnPos;
 
-        if(SI.get(StatsI.CAST_POS)==0 && caster != null){// if player so plater, yes
+        boolean casterPos = SI.get(StatsI.CAST_POS) == 1;
+
+        if(true && caster != null){// if player so plater, yes
             Vec3 eye = caster.getEyePosition(1.0f);
             spawnPos = eye.add(0.0, -0.125, 0.0)
                     .add(lookNorn.scale(distFB))
@@ -83,6 +84,11 @@ public class ApplyStatsToProj {
         e.setDrag(SF.get(StatsF.DRAG));
         e.setGravity(SF.get(StatsF.GRAVITY));
         e.setLifeTime(SI.get(StatsI.LIFETIME));
+
+        e.setForceY(SF.get(StatsF.FORCE_Y));
+        e.setForceX(SF.get(StatsF.FORCE_X));
+        e.setForceZ(SF.get(StatsF.FORCE_Z));
+
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
     }
 

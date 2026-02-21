@@ -2,14 +2,10 @@ package net.mynameistmillo.experimentalmod.Stats.DrawItem;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import net.mynameistmillo.experimentalmod.Enum.DrawOrTriggerType;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
@@ -19,7 +15,6 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +91,7 @@ public class DrawStats implements INBTSerializable<CompoundTag> {
         return stack;
     }
 
-    public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, ModOrProjType type){
+    public static ItemStack transferContentsDrawDrawType(Level level, ItemStack fromDraw, ItemStack finalDraw, ModOrProj type){
         List<ItemStack> list = GetStackFromStack.stackFromDraw(level, fromDraw, type);
         return SaveStackIntoStack.stackToDraw(level, null, list,null, finalDraw, type);
     }

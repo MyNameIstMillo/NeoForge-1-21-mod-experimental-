@@ -5,7 +5,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 
@@ -20,8 +20,8 @@ public class GetStackFromStack {
 
         List<ItemStack> list = new ArrayList<>();
 
-        if(cT != null && cT.contains(ModOrProjType.PROJ.getId(), ListTag.TAG_LIST)){
-            ListTag listTag = cT.getList(ModOrProjType.PROJ.getId(), Tag.TAG_COMPOUND);
+        if(cT != null && cT.contains(ModOrProj.PROJ.getId(), ListTag.TAG_LIST)){
+            ListTag listTag = cT.getList(ModOrProj.PROJ.getId(), Tag.TAG_COMPOUND);
 
             for (int i=0; i<listTag.size(); i++){
                 CompoundTag tag = listTag.getCompound(i);
@@ -48,7 +48,7 @@ public class GetStackFromStack {
 
 
     public static List<ItemStack> stackFromDraw(Level level, ItemStack fromStack,
-                                                  ModOrProjType MOP){
+                                                  ModOrProj MOP){
 
         CompoundTag cT = new CompoundTag();
 

@@ -1,6 +1,6 @@
 package net.mynameistmillo.experimentalmod.Enum;
 
-public enum NormalOrCompactType {
+public enum NormalOrCompact {
     NORMAL,
     COMPACT
 }

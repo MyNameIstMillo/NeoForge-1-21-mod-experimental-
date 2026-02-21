@@ -11,11 +11,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
-import net.mynameistmillo.experimentalmod.Enum.CasterOrBlockPosType;
-import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompact;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
@@ -64,7 +63,7 @@ public class WandItem extends Item {
             return false;
         }
         List<ItemStack> contents = GetSpells.getSpellsType(wand,level,
-                getCapacity(wand), NormalOrCompactType.NORMAL);
+                getCapacity(wand), NormalOrCompact.NORMAL);
 
         for (ItemStack stack : contents) {
 
@@ -83,7 +82,7 @@ public class WandItem extends Item {
 
         int index = getCurrentIndex(wand);
         List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, level,
-                                                    0, NormalOrCompactType.COMPACT);
+                                                    0, NormalOrCompact.COMPACT);
 
         ItemStack currentStack = storedSpells.get(index);
 
@@ -101,7 +100,7 @@ public class WandItem extends Item {
 
         if(currentStack.getItem() instanceof IDraw ){
 
-            List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, currentStack, ModOrProjType.PROJ);
+            List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, currentStack, ModOrProj.PROJ);
 
             for (ItemStack stack : projList){
                 if (stack.getItem() instanceof IProjectile p){
@@ -126,7 +125,7 @@ public class WandItem extends Item {
 
         if (Screen.hasShiftDown()){
             List<ItemStack> spells = GetSpells.getSpellsType(wand, level,
-                                                capacity, NormalOrCompactType.NORMAL);
+                                                capacity, NormalOrCompact.NORMAL);
             tooltip.add(Component.literal(" Spells:").withStyle(ChatFormatting.GRAY));
 
 

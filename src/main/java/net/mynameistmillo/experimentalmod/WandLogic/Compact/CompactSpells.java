@@ -10,11 +10,11 @@ import net.mynameistmillo.experimentalmod.Interface.IMultipleSpells;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawKey;
 import net.mynameistmillo.experimentalmod.Stats.DrawItem.DrawStats;
-import net.mynameistmillo.experimentalmod.Enum.ModOrProjType;
+import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
-import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompact;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler.StackMergeHandler;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
@@ -97,7 +97,7 @@ public class CompactSpells {
             }
         }
 
-        SaveSpells.saveSpells(wand, finalList, level, finalList.size(), NormalOrCompactType.COMPACT);
+        SaveSpells.saveSpells(wand, finalList, level, finalList.size(), NormalOrCompact.COMPACT);
     }
 
     private static ItemStack prepareStackAndMerge(Level level, ItemStack lDQ, ItemStack stack, StackMergeHandler sMH){
@@ -140,7 +140,7 @@ public class CompactSpells {
     }
 
     private static ItemStack applyModifiersFromDraw(ItemStack draw, ItemStack proj, Level level){
-        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, draw, ModOrProjType.MOD);
+        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, draw, ModOrProj.MOD);
 
         for (ItemStack mod : modList){
             if (mod.getItem() instanceof IModifier modifier){
@@ -151,8 +151,8 @@ public class CompactSpells {
     }
 
     private static ItemStack applyModDrawToProjDraw(ItemStack modDraw, ItemStack projDraw, Level level){
-        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, modDraw, ModOrProjType.MOD);
-        List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, projDraw, ModOrProjType.PROJ);
+        List<ItemStack> modList = GetStackFromStack.stackFromDraw(level, modDraw, ModOrProj.MOD);
+        List<ItemStack> projList = GetStackFromStack.stackFromDraw(level, projDraw, ModOrProj.PROJ);
 
         for (ItemStack p : projList){
             if (p.getItem() instanceof IProjectile){
@@ -163,7 +163,7 @@ public class CompactSpells {
                 }
             }
         }
-        return SaveStackIntoStack.stackToDraw(level, null, null, projList, projDraw, ModOrProjType.PROJ);
+        return SaveStackIntoStack.stackToDraw(level, null, null, projList, projDraw, ModOrProj.PROJ);
     }
 
     private static List<ItemStack> prepareListForCompact(List<ItemStack> list, Level level){
@@ -237,7 +237,7 @@ public class CompactSpells {
                     for (ItemStack mod : modList) {
                         if (mod.getItem() instanceof IModifier) {
                             stack = SaveStackIntoStack.stackToDraw(level, mod,null, null, stack,
-                                    ModOrProjType.MOD);
+                                    ModOrProj.MOD);
                         }
                     }
                     finalList.add(stack);

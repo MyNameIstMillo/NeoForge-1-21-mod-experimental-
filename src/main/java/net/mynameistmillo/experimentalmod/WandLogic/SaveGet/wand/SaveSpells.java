@@ -11,7 +11,7 @@ import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
-import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompact;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class SaveSpells {
 
     public static void saveSpells(ItemStack wand, List<ItemStack> list,
                                   Level level, int cap,
-                                  NormalOrCompactType type){
+                                  NormalOrCompact type){
         ListTag spellsListTag = new ListTag();
 
         for (int i=0;i<cap;i++){
@@ -35,7 +35,7 @@ public class SaveSpells {
             }
             else spellTag.putString("id", "minecraft:dirt");
 
-            if (type == NormalOrCompactType.COMPACT){
+            if (type == NormalOrCompact.COMPACT){
                 switch (stack.getItem()){
                     case IProjectile p -> {
                         spellTag.put("ProjStatsF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),

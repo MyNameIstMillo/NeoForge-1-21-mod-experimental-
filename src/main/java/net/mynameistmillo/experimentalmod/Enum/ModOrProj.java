@@ -1,12 +1,12 @@
 package net.mynameistmillo.experimentalmod.Enum;
 
-public enum ModOrProjType {
+public enum ModOrProj {
     MOD("Modifiers"),
     PROJ("Projectile");
 
     private final String id;
 
-    ModOrProjType(String id){
+    ModOrProj(String id){
         this.id = id;
     }
 

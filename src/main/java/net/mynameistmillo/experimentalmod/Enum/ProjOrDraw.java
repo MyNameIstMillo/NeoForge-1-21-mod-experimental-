@@ -1,6 +1,6 @@
 package net.mynameistmillo.experimentalmod.Enum;
 
-public enum ProjOrDrawType {
+public enum ProjOrDraw {
     PROJ,
     DRAW
 }

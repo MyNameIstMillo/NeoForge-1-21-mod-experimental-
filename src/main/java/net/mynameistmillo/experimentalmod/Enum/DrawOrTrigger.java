@@ -1,12 +1,12 @@
 package net.mynameistmillo.experimentalmod.Enum;
 
-public enum DrawOrTriggerType {
+public enum DrawOrTrigger {
     DRAW("Draw"),
     TRIGGER("Trigger");
 
     private final String id;
 
-    DrawOrTriggerType(String id){
+    DrawOrTrigger(String id){
         this.id = id;
     }
 

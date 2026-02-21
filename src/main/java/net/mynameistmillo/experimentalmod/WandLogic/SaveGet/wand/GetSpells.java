@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
-import net.mynameistmillo.experimentalmod.Enum.NormalOrCompactType;
+import net.mynameistmillo.experimentalmod.Enum.NormalOrCompact;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class GetSpells {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static List<ItemStack> getSpellsType(ItemStack wand, Level level,
-                                                int cap, NormalOrCompactType type) {
+                                                int cap, NormalOrCompact type) {
         List<ItemStack> list = new ArrayList<>();
         CompoundTag wandSpells = new CompoundTag();
         switch (type) {

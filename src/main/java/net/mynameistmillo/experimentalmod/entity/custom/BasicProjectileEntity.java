@@ -32,10 +32,14 @@ public class BasicProjectileEntity extends Projectile {
     private static final EntityDataAccessor<String> DATA_NAME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> PROJ_WIDTH = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+
     private static final EntityDataAccessor<Float> DRAG = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> GRAVITY = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFE_TIME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> PIERCING = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
+
+    private static final EntityDataAccessor<Float> FORCE_Y = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> FORCE_X = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> FORCE_Z = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
 
     private float initWidth = 0.25f;
     private float initHeight = 0.25f;
@@ -85,6 +89,30 @@ public class BasicProjectileEntity extends Projectile {
 
     public int getLifeTime(){
         return this.entityData.get(LIFE_TIME);
+    }
+
+    public void setForceY(float value){
+        this.entityData.set(FORCE_Y, value);
+    }
+
+    public float getForceY(){
+        return this.entityData.get(FORCE_Y);
+    }
+
+    public void setForceX(float value){
+        this.entityData.set(FORCE_X, value);
+    }
+
+    public float getForceX(){
+        return this.entityData.get(FORCE_X);
+    }
+
+    public void setForceZ(float value){
+        this.entityData.set(FORCE_Z, value);
+    }
+
+    public float getForceZ(){
+        return this.entityData.get(FORCE_Z);
     }
 
     public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
@@ -164,6 +192,8 @@ public class BasicProjectileEntity extends Projectile {
 
         Vec3 vector = this.getDeltaMovement();
 
+        //miescje na funkcje tutaj <-----
+
         if (vector.lengthSqr()<MIN_SPEED){
             Vec3 pos = this.position();
             Vec3 dir = this.getDeltaMovement().normalize().reverse();
@@ -173,8 +203,14 @@ public class BasicProjectileEntity extends Projectile {
         //gravity and drag
         float drag = getDrag();
         float gravity = getGravityE();
+        // all forces
+        float FY = getForceY();
+        float FX = getForceX();
+        float FZ = getForceZ();
 
-        vector = vector.add(0, -gravity, 0).scale(drag);
+        vector = vector.add(FX,
+                            -gravity + FY,
+                            FZ).scale(drag);
 
         //apply changes
         this.setDeltaMovement(vector);
@@ -283,7 +319,6 @@ public class BasicProjectileEntity extends Projectile {
             case UP -> new Vec3(x, pos.getY() + 1.0, z);
             case NORTH -> new Vec3(x, y, pos.getZ());
             case SOUTH -> new Vec3(x, y, pos.getZ() + 1.0);
-            default -> new Vec3(x, y, z);
         };
     }
 
@@ -324,13 +359,17 @@ public class BasicProjectileEntity extends Projectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_NAME, "");
         builder.define(PROJ_WIDTH, 3.0f);
         builder.define(PROJ_HEIGHT, 3.0f);
-        builder.define(DATA_NAME, "");
+
         builder.define(DRAG, 0.0f);
         builder.define(GRAVITY, 0.0f);
         builder.define(LIFE_TIME, 0);
-        builder.define(PIERCING, 0);
+
+        builder.define(FORCE_Y, 0.0f);
+        builder.define(FORCE_X, 0.0f);
+        builder.define(FORCE_Z, 0.0f);
     }
 
     @Override

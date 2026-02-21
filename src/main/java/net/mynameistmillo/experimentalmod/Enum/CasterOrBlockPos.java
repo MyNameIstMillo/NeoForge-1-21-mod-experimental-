@@ -1,12 +1,12 @@
 package net.mynameistmillo.experimentalmod.Enum;
 
-public enum CasterOrBlockPosType {
+public enum CasterOrBlockPos {
     CASTER("Caster"),
     BLOCK_POS("Block_Pos");
 
     private final String name;
 
-    CasterOrBlockPosType(String name){
+    CasterOrBlockPos(String name){
         this.name = name;
     }
 
