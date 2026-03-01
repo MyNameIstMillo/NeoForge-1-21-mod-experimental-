@@ -17,8 +17,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
+import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,6 +43,8 @@ public class BasicProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Float> FORCE_Y = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> FORCE_X = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> FORCE_Z = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
+
+    private static final EntityDataAccessor<Integer> RES_PLANE = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
 
     private float initWidth = 0.25f;
     private float initHeight = 0.25f;
@@ -115,11 +120,25 @@ public class BasicProjectileEntity extends Projectile {
         return this.entityData.get(FORCE_Z);
     }
 
-    public void setProjStack(ItemStack stack){ this.projStack = stack == null? ItemStack.EMPTY :stack.copy();}
+    public void setResPlane(int value){
+        this.entityData.set(RES_PLANE, value);
+    }
 
-    public void setWandStack(ItemStack stack){ this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();}
+    public int getResPlane(){
+        return this.entityData.get(RES_PLANE);
+    }
 
-    public void setCasterUUID(UUID id){ this.casterUUID = id; }
+    public void setProjStack(ItemStack stack){
+        this.projStack = stack == null? ItemStack.EMPTY :stack.copy();
+    }
+
+    public void setWandStack(ItemStack stack){
+        this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();
+    }
+
+    public void setCasterUUID(UUID id){
+        this.casterUUID = id;
+    }
 
     private String name = "";
 
@@ -177,7 +196,6 @@ public class BasicProjectileEntity extends Projectile {
     @Override
     public void tick() {
         super.tick();
-
         if(!this.level().isClientSide()){
             int lifeTime = getLifeTime();
             lifeTime--;
@@ -192,7 +210,11 @@ public class BasicProjectileEntity extends Projectile {
 
         Vec3 vector = this.getDeltaMovement();
 
-        //miescje na funkcje tutaj <-----
+        if (getResPlane()>0) {
+            vector = HelperPhysic.projectToPlane(vector, ResPlane.fromValue(getResPlane()), ProjectionMode.PROJECT);
+        }
+
+
 
         if (vector.lengthSqr()<MIN_SPEED){
             Vec3 pos = this.position();
@@ -216,6 +238,8 @@ public class BasicProjectileEntity extends Projectile {
         this.setDeltaMovement(vector);
 
         this.moveDesc();
+
+
     }
 
     private void moveDesc() {
@@ -370,6 +394,10 @@ public class BasicProjectileEntity extends Projectile {
         builder.define(FORCE_Y, 0.0f);
         builder.define(FORCE_X, 0.0f);
         builder.define(FORCE_Z, 0.0f);
+
+        builder.define(RES_PLANE, 0);
+
+
     }
 
     @Override

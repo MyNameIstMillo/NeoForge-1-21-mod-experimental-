@@ -1,6 +1,7 @@
 package net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack;
 
 import net.minecraft.world.item.ItemStack;
+import net.mynameistmillo.experimentalmod.Enum.CastPosDef;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
@@ -15,6 +16,7 @@ public class Helper {
         for(ItemStack stack : in){
             if(!(stack.getItem() instanceof IProjectile)) continue;
             ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
+            if (stats.get(StatsI.CAST_POS) == CastPosDef.FORCE_AT_PLAYER.getValue()) continue;
             stats.set(StatsI.CAST_POS, 2);
             out.add(ProjStatsI.saveStatsToProj(stats, stack));
         }

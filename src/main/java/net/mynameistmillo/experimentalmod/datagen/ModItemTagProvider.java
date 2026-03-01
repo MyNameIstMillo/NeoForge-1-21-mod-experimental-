@@ -45,6 +45,11 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.LIFE_TIME_DOWN.get())
                 .add(ModItems.NO_GRAVITY.get())
 
+                .add(ModItems.PLANE_XY.get())
+                .add(ModItems.PLANE_XZ.get())
+                .add(ModItems.PLANE_ZY.get())
+                .add(ModItems.PLANE_RESET.get())
+
 
                 .add(ModItems.DOUBLE.get())
                 .add(ModItems.TRIPLE.get())

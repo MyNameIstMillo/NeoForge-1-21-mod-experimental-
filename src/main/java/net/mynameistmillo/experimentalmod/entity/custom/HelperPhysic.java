@@ -2,21 +2,23 @@ package net.mynameistmillo.experimentalmod.entity.custom;
 
 
 import net.minecraft.world.phys.Vec3;
-import net.mynameistmillo.experimentalmod.Enum.physicRelated.Plane;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
+import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
 
 public class HelperPhysic {
 
 
 
 
-    public static Vec3 projectToPlane(Vec3 vec, Plane plane, ProjectionMode mode){
+    public static Vec3 projectToPlane(Vec3 vec, ResPlane plane, ProjectionMode mode){
         Vec3 base;
+
+
 
         switch (plane){
             case XY -> base = new Vec3(vec.x, vec.y, 0);
             case XZ -> base = new Vec3(vec.x, 0, vec.z);
-            case YX -> base = new Vec3(0, vec.y, vec.z);
+            case ZY -> base = new Vec3(0, vec.y, vec.z);
             default -> throw new  IllegalStateException();
         }
 
@@ -42,7 +44,7 @@ public class HelperPhysic {
 
     }
 
-    public static Vec3 perpendicularDirection(Vec3 vec, double angleDeg){
+    private static Vec3 perpendicularDirection(Vec3 vec, double angleDeg){
         Vec3 forward = vec.normalize();
         Vec3 worldUp = new Vec3(0,1,0);
 

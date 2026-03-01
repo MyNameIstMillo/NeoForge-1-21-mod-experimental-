@@ -6,6 +6,10 @@ import net.minecraft.world.item.Rarity;
 import net.mynameistmillo.experimentalmod.Draw.standard.Triple;
 import net.mynameistmillo.experimentalmod.Draw.multipleInOneStack.DoubleWithLifeTimeDown;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneReset;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXY;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXZ;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneZY;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.MiddleDistanceCastFB;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeDown;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeUp;
@@ -78,6 +82,18 @@ public class ModItems {
 
     public static final DeferredItem<Item> NO_GRAVITY = ITEMS.register("no_gravity",
             () -> new NoGravity(new Item.Properties()));
+
+    public static final DeferredItem<Item> PLANE_XY = ITEMS.register("plane_xy",
+            () -> new PlaneXY(new Item.Properties()));
+
+    public static final DeferredItem<Item> PLANE_XZ = ITEMS.register("plane_xz",
+            () -> new PlaneXZ(new Item.Properties()));
+
+    public static final DeferredItem<Item> PLANE_ZY = ITEMS.register("plane_zy",
+            () -> new PlaneZY(new Item.Properties()));
+
+    public static final DeferredItem<Item> PLANE_RESET = ITEMS.register("plane_reset",
+            () -> new PlaneReset(new Item.Properties()));
 
 
     // DRAW

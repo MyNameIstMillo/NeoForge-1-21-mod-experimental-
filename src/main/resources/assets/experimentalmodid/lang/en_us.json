@@ -15,6 +15,11 @@
   "item.experimentalmodid.life_time_down": "Life time down",
   "item.experimentalmodid.no_gravity": "No gravity",
 
+  "item.experimentalmodid.plane_xy": "Plane XY",
+  "item.experimentalmodid.plane_xz": "Plane XZ",
+  "item.experimentalmodid.plane_zy": "Plane ZY",
+  "item.experimentalmodid.plane_reset": "Plane reset",
+
   "item.experimentalmodid.double": "Double",
   "item.experimentalmodid.triple": "Triple",
 

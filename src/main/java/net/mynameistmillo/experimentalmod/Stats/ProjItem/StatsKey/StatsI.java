@@ -8,7 +8,9 @@ public enum StatsI {
     //something
     DRAW_TRIGGER("DT",0),
     LIFETIME("L", 0),
-    CAST_POS("CP", 0);
+    CAST_POS("CP", 0),
+
+    RES_PLANE("RP", 0);
 
     private final String id;
     private final Integer defaultValue;

@@ -30,6 +30,11 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.LIFE_TIME_DOWN.get());
         basicItem(ModItems.NO_GRAVITY.get());
 
+        basicItem(ModItems.PLANE_XY.get());
+        basicItem(ModItems.PLANE_XZ.get());
+        basicItem(ModItems.PLANE_ZY.get());
+        basicItem(ModItems.PLANE_RESET.get());
+
 
         basicItem(ModItems.DOUBLE.get());
         basicItem(ModItems.TRIPLE.get());

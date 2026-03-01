@@ -3,6 +3,7 @@ package net.mynameistmillo.experimentalmod.Stats.ProjItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.mynameistmillo.experimentalmod.Enum.CastPosDef;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
@@ -49,21 +50,24 @@ public class ApplyStatsToProj {
         double distFB = baseOffset + sFB;
         Vec3 spawnPos;
 
-        boolean casterPos = SI.get(StatsI.CAST_POS) == 1;
-
-        if(true && caster != null){// if player so plater, yes
-            Vec3 eye = caster.getEyePosition(1.0f);
+        // if player so plater, yes
+        if((SI.get(StatsI.CAST_POS) == CastPosDef.FORCE_AT_PLAYER.getValue()
+                ||  SI.get(StatsI.CAST_POS) == CastPosDef.DEFAULT.getValue())
+                    && caster != null){
+                Vec3 eye = caster.getEyePosition(1.0f);
             spawnPos = eye.add(0.0, -0.125, 0.0)
                     .add(lookNorn.scale(distFB))
                     .add(right.scale(sLR))
                     .add(up.scale(sUD));
 
-        }else{ // not player so not player
+        }else // not player so not player
+            if (SI.get(StatsI.CAST_POS) == CastPosDef.BLOCK_POS.getValue()){
             Vec3 center = (pos==null? new Vec3(0.5f,0.5f,0.5f):pos);
             spawnPos = center.add(lookNorn.scale(sFB+0.1f))
                     .add(right.scale(sLR))
                     .add(up.scale(sUD));
-        }
+
+        }else spawnPos = new Vec3(0,0,0);
 
         double yawRad = Math.toRadians((Math.random()*2-1.0)*hSpread);
         double pitchRad = Math.toRadians((Math.random()*2-1.0)*vSpread);
@@ -88,6 +92,8 @@ public class ApplyStatsToProj {
         e.setForceY(SF.get(StatsF.FORCE_Y));
         e.setForceX(SF.get(StatsF.FORCE_X));
         e.setForceZ(SF.get(StatsF.FORCE_Z));
+
+        e.setResPlane(SI.get(StatsI.RES_PLANE));
 
         e.setPos(spawnPos.x , spawnPos.y, spawnPos.z);
     }
