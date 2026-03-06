@@ -3,6 +3,7 @@ package net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -16,6 +17,9 @@ import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class SaveSpells {
@@ -38,20 +42,20 @@ public class SaveSpells {
             if (type == NormalOrCompact.COMPACT){
                 switch (stack.getItem()){
                     case IProjectile p -> {
-                        spellTag.put("ProjStatsF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
+                        spellTag.put("PSF", stack.getOrDefault(ModDataComponents.SPELL_STATS_F.get(),
                                 new CompoundTag()));
-                        spellTag.put("ProjStatsI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(),
+                        spellTag.put("PSI", stack.getOrDefault(ModDataComponents.SPELL_STATS_I.get(),
                                 new CompoundTag()));
 
                         if(ProjStatsI.loadStatsFromProj(stack).get(StatsI.TRIGGER_TYPE)>=1){
-                            spellTag.put("SavedProjForTrigger", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
+                            spellTag.put("SPT", stack.getOrDefault(ModDataComponents.TRIGGER_PROJ_SAVED.get(),
                                     new CompoundTag()));
                         }
                     }
                     case IDraw d -> {
-                        spellTag.put("DrawStats", stack.getOrDefault(ModDataComponents.DRAW_STATS.get(),
+                        spellTag.put("DS", stack.getOrDefault(ModDataComponents.DRAW_STATS.get(),
                                 new CompoundTag()));
-                        spellTag.put("DrawSavedProj", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
+                        spellTag.put("DSP", stack.getOrDefault(ModDataComponents.DRAW_PROJ_SAVED.get(),
                                 new CompoundTag()));
 
                     }
@@ -61,20 +65,27 @@ public class SaveSpells {
             }
 
             spellTag.putByte("Count", (byte) 1);
-            spellTag.putString("proj_name","");
-            spellTag.putInt("Slot",i);
+            spellTag.putString("PN","");
+            spellTag.putInt("SL",i);
             spellsListTag.add(spellTag);
         }
         CompoundTag rootTag = new CompoundTag();
-        rootTag.put("Spells", spellsListTag);
-        LOGGER.info("root tag -> {}", rootTag);
+        rootTag.put("SP", spellsListTag);
+
+        int size = getNbtSizeBytes(rootTag);
+
+
+
         switch (type){
             case NORMAL -> wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
             case COMPACT -> {
-                wand.set(ModDataComponents.WAND_SPELLS_COMPACT.get(), rootTag);
-                wand.set(ModDataComponents.WAND_CAPACITY_COMPACT.get(), cap);
+                if (size<2_097_152){
+                    wand.set(ModDataComponents.WAND_SPELLS_COMPACT.get(), rootTag);
+                    wand.set(ModDataComponents.WAND_CAPACITY_COMPACT.get(), cap);
+                }
             }
         }
+
     }
 
     public static void saveWithDirt(ItemStack wand, int cap){
@@ -92,5 +103,20 @@ public class SaveSpells {
         rootTag.put("Spells", listTag);
         wand.set(ModDataComponents.WAND_SPELLS.get(), rootTag);
 
+    }
+
+    public static int getNbtSizeBytes(CompoundTag tag) {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+            NbtIo.write(tag, dataStream);
+
+            dataStream.close();
+            return byteStream.size();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

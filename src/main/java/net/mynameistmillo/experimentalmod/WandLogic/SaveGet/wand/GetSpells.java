@@ -35,15 +35,15 @@ public class GetSpells {
             }
         }
 
-        if (wandSpells !=null && wandSpells.contains("Spells", ListTag.TAG_LIST)){
-            ListTag listTag = wandSpells.getList("Spells", Tag.TAG_COMPOUND);
+        if (wandSpells !=null && wandSpells.contains("SP", ListTag.TAG_LIST)){
+            ListTag listTag = wandSpells.getList("SP", Tag.TAG_COMPOUND);
 
             for (int i=0;i<cap;i++){
                 CompoundTag spellTag = listTag.getCompound(i);
 
                 switch (type){
                     case NORMAL -> {
-                        int index = spellTag.getInt("Slot");
+                        int index = spellTag.getInt("SL");
                         ItemStack spell = ItemStack.parse(level.registryAccess(),
                                 spellTag).orElse(new ItemStack(Items.DIRT));
 
@@ -53,20 +53,20 @@ public class GetSpells {
                     }
                     case COMPACT -> {
                         ItemStack spell = ItemStack.parseOptional(level.registryAccess(), spellTag);
-                        if(spellTag.contains("ProjStatsF", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("ProjStatsF"));
+                        if(spellTag.contains("PSF", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.SPELL_STATS_F.get(), spellTag.getCompound("PSF"));
                         }
-                        if(spellTag.contains("ProjStatsI", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.SPELL_STATS_I.get(), spellTag.getCompound("ProjStatsI"));
+                        if(spellTag.contains("PSI", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.SPELL_STATS_I.get(), spellTag.getCompound("PSI"));
                         }
-                        if(spellTag.contains("SavedProjForTrigger", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), spellTag.getCompound("SavedProjForTrigger"));
+                        if(spellTag.contains("SPT", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.TRIGGER_PROJ_SAVED.get(), spellTag.getCompound("SPT"));
                         }
-                        if(spellTag.contains("DrawStats", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.DRAW_STATS, spellTag.getCompound("DrawStats"));
+                        if(spellTag.contains("DS", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.DRAW_STATS, spellTag.getCompound("DS"));
                         }
-                        if(spellTag.contains("DrawSavedProj", Tag.TAG_COMPOUND)){
-                            spell.set(ModDataComponents.DRAW_PROJ_SAVED, spellTag.getCompound("DrawSavedProj"));
+                        if(spellTag.contains("DSP", Tag.TAG_COMPOUND)){
+                            spell.set(ModDataComponents.DRAW_PROJ_SAVED, spellTag.getCompound("DSP"));
                         }
                         list.add(spell);
                     }
