@@ -43,7 +43,7 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
     public static ItemStack saveStatsToProj(ProjStatsF stats, ItemStack stack){
         CompoundTag tag = new CompoundTag();
         for (StatsF key : StatsF.values()){
-            tag.putFloat(key.name(), stats.get(key));
+            tag.putFloat(key.getId(), stats.get(key));
         }
         stack.set(ModDataComponents.SPELL_STATS_F.get(), tag);
         return stack;
@@ -54,12 +54,8 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
         
         ProjStatsF stats = new ProjStatsF();
         for (StatsF key : StatsF.values()){
-            if (tag.contains(key.name())) {
-                stats.set(key, tag.getFloat(key.name()));
-            }
-            else {
-                stats.set(key, key.getDefaultValue());
-            }
+            String id = key.getId();
+            stats.set(key, tag.contains(id) ? tag.getFloat(id) : key.getDefaultValue());
         }
         return stats;
     }
@@ -70,7 +66,7 @@ public class ProjStatsF implements INBTSerializable<CompoundTag> {
 
         CompoundTag tag = new CompoundTag();
         for (StatsF key : StatsF.values()) {
-            tag.putFloat(key.name(), stats.get(key));
+            tag.putFloat(key.getId(), stats.get(key));
         }
         stack.set(ModDataComponents.SPELL_STATS_F.get(), tag);
         return stack;

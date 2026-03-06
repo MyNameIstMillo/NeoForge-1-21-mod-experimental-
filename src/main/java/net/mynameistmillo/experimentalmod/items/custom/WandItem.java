@@ -86,6 +86,7 @@ public class WandItem extends Item {
 
         ItemStack currentStack = storedSpells.get(index);
 
+
         if(currentStack.getItem() instanceof IProjectile p){
 
             BlockPos bp = player.getOnPos();
