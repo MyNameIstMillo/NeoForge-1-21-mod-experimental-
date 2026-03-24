@@ -74,11 +74,8 @@ public class sparkBoltTrigger extends Item implements IProjectile {
                             Vec3 pos, Player caster, Vec3 normal,
                             ItemStack wandStack, ItemStack thisProj) {
 
-        Entity e = Helper.spawnProjBasic(level, pos, caster, normal, wandStack, thisProj,
+        return Helper.spawnProjBasic(level, pos, caster, normal, wandStack, thisProj,
                 "spark_bolt", 0.25f, 0.25f);
-        assert e != null;
-        level.addFreshEntity(e);
-        return e;
     }
 
     @Override

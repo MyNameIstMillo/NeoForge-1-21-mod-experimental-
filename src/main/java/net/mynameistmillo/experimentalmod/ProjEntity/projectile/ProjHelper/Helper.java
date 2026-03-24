@@ -36,6 +36,8 @@ public class Helper {
 
         ApplyStatsToProj.applyStatsToProjectile(p, pos, normal, caster, thisProj);
 
+        level.addFreshEntity(p);
+
         return p;
     }
 

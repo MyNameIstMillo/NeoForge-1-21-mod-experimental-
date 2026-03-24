@@ -10,12 +10,13 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.List;
+
 
 public interface IProjectile {
 
     ProjStatsF getBaseStatsF();
     ProjStatsI getBaseStatsI();
-
 
     Entity spawnProj(Level level,
                      Vec3 pos,
@@ -23,6 +24,8 @@ public interface IProjectile {
                      Vec3 normal,
                      ItemStack wandStack,
                      ItemStack thisProj);
+
+
 
     //when HIT something
     void triggerAction(Level level,
