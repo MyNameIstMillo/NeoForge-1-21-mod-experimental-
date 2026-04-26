@@ -25,7 +25,7 @@ public class SpeedUp extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float speed = stats.get(StatsF.SPEED) * 2f;
+        float speed = stats.get(StatsF.SPEED) * 1.3f;
 
         stats.set(StatsF.SPEED, speed);
 

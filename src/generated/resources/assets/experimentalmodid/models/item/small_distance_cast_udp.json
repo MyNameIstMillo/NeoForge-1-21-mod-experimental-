@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experimentalmodid:item/small_distance_cast_udp"
+  }
+}

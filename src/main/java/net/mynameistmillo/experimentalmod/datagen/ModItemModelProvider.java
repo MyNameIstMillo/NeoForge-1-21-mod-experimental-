@@ -34,15 +34,41 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(ModItems.SPEED_UP.get());
         basicItem(ModItems.SPEED_DOWN.get());
-        basicItem(ModItems.MIDDLE_DISTANCE_CAST_FB.get());
+        basicItem(ModItems.LESS_DRAG.get());
+        basicItem(ModItems.MORE_DRAG.get());
         basicItem(ModItems.LIFE_TIME_UP.get());
         basicItem(ModItems.LIFE_TIME_DOWN.get());
         basicItem(ModItems.NO_GRAVITY.get());
+        basicItem(ModItems.ADD_GRAVITY.get());
+        basicItem(ModItems.REMOVE_GRAVITY.get());
+        basicItem(ModItems.REVERSE_GRAVITY.get());
 
         basicItem(ModItems.PLANE_XY.get());
         basicItem(ModItems.PLANE_XZ.get());
         basicItem(ModItems.PLANE_ZY.get());
         basicItem(ModItems.PLANE_RESET.get());
+
+
+        basicItem(ModItems.SMALL_DISTANCE_CAST_FBN.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_FBN.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_FBN.get());
+        basicItem(ModItems.SMALL_DISTANCE_CAST_FBP.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_FBP.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_FBP.get());
+
+        basicItem(ModItems.SMALL_DISTANCE_CAST_LRN.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_LRN.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_LRN.get());
+        basicItem(ModItems.SMALL_DISTANCE_CAST_LRP.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_LRP.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_LRP.get());
+
+        basicItem(ModItems.SMALL_DISTANCE_CAST_UDN.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_UDN.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_UDN.get());
+        basicItem(ModItems.SMALL_DISTANCE_CAST_UDP.get());
+        basicItem(ModItems.MIDDLE_DISTANCE_CAST_UDP.get());
+        basicItem(ModItems.BIG_DISTANCE_CAST_UDP.get());
 
 
         basicItem(ModItems.DOUBLE.get());

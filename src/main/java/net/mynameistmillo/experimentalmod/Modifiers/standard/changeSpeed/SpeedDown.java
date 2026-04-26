@@ -25,7 +25,7 @@ public class SpeedDown extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        float speed = stats.get(StatsF.SPEED) * 0.5f;
+        float speed = stats.get(StatsF.SPEED) * 0.7f;
 
         stats.set(StatsF.SPEED, speed);
 

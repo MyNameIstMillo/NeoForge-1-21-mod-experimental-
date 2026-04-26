@@ -190,7 +190,7 @@ public class BasicProjectileEntity extends Projectile {
         }
         if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
-    private static final double MIN_SPEED = 0.003;
+    private static final double MIN_SPEED = 0.005;
 
 
     @Override

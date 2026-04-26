@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NoGravity extends Item implements IModifier {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public NoGravity(Properties properties) {
         super(properties);
@@ -24,8 +23,6 @@ public class NoGravity extends Item implements IModifier {
         if (!(stack.getItem() instanceof IProjectile)) return null;
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
-
-        if (stats.get(StatsF.GRAVITY)<0.0f) return stack;
 
         stats.set(StatsF.GRAVITY, 0);
 

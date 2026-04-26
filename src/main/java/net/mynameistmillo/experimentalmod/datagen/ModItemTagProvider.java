@@ -48,15 +48,41 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
                 .add(ModItems.SPEED_UP.get())
                 .add(ModItems.SPEED_DOWN.get())
-                .add(ModItems.MIDDLE_DISTANCE_CAST_FB.get())
+                .add(ModItems.LESS_DRAG.get())
+                .add(ModItems.MORE_DRAG.get())
                 .add(ModItems.LIFE_TIME_UP.get())
                 .add(ModItems.LIFE_TIME_DOWN.get())
+
                 .add(ModItems.NO_GRAVITY.get())
+                .add(ModItems.ADD_GRAVITY.get())
+                .add(ModItems.REMOVE_GRAVITY.get())
+                .add(ModItems.REVERSE_GRAVITY.get())
 
                 .add(ModItems.PLANE_XY.get())
                 .add(ModItems.PLANE_XZ.get())
                 .add(ModItems.PLANE_ZY.get())
                 .add(ModItems.PLANE_RESET.get())
+
+                .add(ModItems.SMALL_DISTANCE_CAST_FBN.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_FBN.get())
+                .add(ModItems.BIG_DISTANCE_CAST_FBN.get())
+                .add(ModItems.SMALL_DISTANCE_CAST_FBP.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_FBP.get())
+                .add(ModItems.BIG_DISTANCE_CAST_FBP.get())
+
+                .add(ModItems.SMALL_DISTANCE_CAST_LRN.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_LRN.get())
+                .add(ModItems.BIG_DISTANCE_CAST_LRN.get())
+                .add(ModItems.SMALL_DISTANCE_CAST_LRP.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_LRP.get())
+                .add(ModItems.BIG_DISTANCE_CAST_LRP.get())
+
+                .add(ModItems.SMALL_DISTANCE_CAST_UDN.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_UDN.get())
+                .add(ModItems.BIG_DISTANCE_CAST_UDN.get())
+                .add(ModItems.SMALL_DISTANCE_CAST_UDP.get())
+                .add(ModItems.MIDDLE_DISTANCE_CAST_UDP.get())
+                .add(ModItems.BIG_DISTANCE_CAST_UDP.get())
 
 
                 .add(ModItems.DOUBLE.get())

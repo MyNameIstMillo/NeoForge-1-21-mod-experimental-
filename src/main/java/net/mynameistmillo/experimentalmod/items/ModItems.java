@@ -11,7 +11,27 @@ import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.Pla
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXY;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXZ;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneZY;
-import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.MiddleDistanceCastFB;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDrag.LessDrag;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDrag.MoreDrag;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.AddGravity;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.RemoveGravity;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.ReverseGravity;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.DU.negative.MiddleDistanceCastUDN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.DU.negative.SmallDistanceCastUDN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.DU.positive.BigDistanceCastUDP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.DU.positive.MiddleDistanceCastUDP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.DU.positive.SmallDistanceCastUDP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.negative.BigDistanceCastFBN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.negative.MiddleDistanceCastFBN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.negative.SmallDistanceCastFBN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.positive.BigDistanceCastFBP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.positive.MiddleDistanceCastFBP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.FB.positive.SmallDistanceCastFBP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.negative.MiddleDistanceCastLRN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.negative.SmallDistanceCastLRN;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.BigDistanceCastLRP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.MiddleDistanceCastLRP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.SmallDistanceCastLRP;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeDown;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeUp;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.NoGravity;
@@ -42,7 +62,7 @@ public class ModItems {
                     .rarity(Rarity.UNCOMMON)
                     .setNoRepair()
                     .fireResistant()
-                    , 9));
+                    , 27));
 
     public static final DeferredItem<Item> KEY = ITEMS.register("key",
             ()-> new Item(new Item.Properties().stacksTo(1).fireResistant()));
@@ -88,8 +108,11 @@ public class ModItems {
     public static final DeferredItem<Item> SPEED_DOWN = ITEMS.register("speed_down",
             () -> new SpeedDown(new Item.Properties()));
 
-    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_FB = ITEMS.register("middle_distance_cast_fb",
-            () -> new MiddleDistanceCastFB(new Item.Properties()));
+    public static final DeferredItem<Item> LESS_DRAG = ITEMS.register("less_drag",
+            () -> new LessDrag(new Item.Properties()));
+
+    public static final DeferredItem<Item> MORE_DRAG = ITEMS.register("more_drag",
+            () -> new MoreDrag(new Item.Properties()));
 
     public static final DeferredItem<Item> LIFE_TIME_UP = ITEMS.register("life_time_up",
             () -> new LifeTimeUp(new Item.Properties()));
@@ -97,8 +120,19 @@ public class ModItems {
     public static final DeferredItem<Item> LIFE_TIME_DOWN = ITEMS.register("life_time_down",
             () -> new LifeTimeDown(new Item.Properties()));
 
+
     public static final DeferredItem<Item> NO_GRAVITY = ITEMS.register("no_gravity",
             () -> new NoGravity(new Item.Properties()));
+
+    public static final DeferredItem<Item> ADD_GRAVITY = ITEMS.register("add_gravity",
+            () -> new AddGravity(new Item.Properties()));
+
+    public static final DeferredItem<Item> REMOVE_GRAVITY = ITEMS.register("remove_gravity",
+            () -> new RemoveGravity(new Item.Properties()));
+
+    public static final DeferredItem<Item> REVERSE_GRAVITY = ITEMS.register("reverse_gravity",
+            () -> new ReverseGravity(new Item.Properties()));
+
 
     public static final DeferredItem<Item> PLANE_XY = ITEMS.register("plane_xy",
             () -> new PlaneXY(new Item.Properties()));
@@ -112,6 +146,62 @@ public class ModItems {
     public static final DeferredItem<Item> PLANE_RESET = ITEMS.register("plane_reset",
             () -> new PlaneReset(new Item.Properties()));
 
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_FBN = ITEMS.register("small_distance_cast_fbn",
+            () -> new SmallDistanceCastFBN(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_FBN = ITEMS.register("middle_distance_cast_fbn",
+            () -> new MiddleDistanceCastFBN(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_FBN = ITEMS.register("big_distance_cast_fbn",
+            () -> new BigDistanceCastFBN(new Item.Properties()));
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_FBP = ITEMS.register("small_distance_cast_fbp",
+            () -> new SmallDistanceCastFBP(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_FBP = ITEMS.register("middle_distance_cast_fbp",
+            () -> new MiddleDistanceCastFBP(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_FBP = ITEMS.register("big_distance_cast_fbp",
+            () -> new BigDistanceCastFBP(new Item.Properties()));
+
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_UDN = ITEMS.register("small_distance_cast_udn",
+            () -> new SmallDistanceCastUDN(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_UDN = ITEMS.register("middle_distance_cast_udn",
+            () -> new MiddleDistanceCastUDN(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_UDN = ITEMS.register("big_distance_cast_udn",
+            () -> new BigDistanceCastUDP(new Item.Properties()));
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_UDP = ITEMS.register("small_distance_cast_udp",
+            () -> new SmallDistanceCastUDP(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_UDP = ITEMS.register("middle_distance_cast_udp",
+            () -> new MiddleDistanceCastUDP(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_UDP = ITEMS.register("big_distance_cast_udp",
+            () -> new BigDistanceCastUDP(new Item.Properties()));
+
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_LRN = ITEMS.register("small_distance_cast_lrn",
+            () -> new SmallDistanceCastLRN(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_LRN = ITEMS.register("middle_distance_cast_lrn",
+            () -> new MiddleDistanceCastLRN(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_LRN = ITEMS.register("big_distance_cast_lrn",
+            () -> new BigDistanceCastLRP(new Item.Properties()));
+
+    public static final DeferredItem<Item> SMALL_DISTANCE_CAST_LRP = ITEMS.register("small_distance_cast_lrp",
+            () -> new SmallDistanceCastLRP(new Item.Properties()));
+
+    public static final DeferredItem<Item> MIDDLE_DISTANCE_CAST_LRP = ITEMS.register("middle_distance_cast_lrp",
+            () -> new MiddleDistanceCastLRP(new Item.Properties()));
+
+    public static final DeferredItem<Item> BIG_DISTANCE_CAST_LRP = ITEMS.register("big_distance_cast_lrp",
+            () -> new BigDistanceCastLRP(new Item.Properties()));
 
     // DRAW
 

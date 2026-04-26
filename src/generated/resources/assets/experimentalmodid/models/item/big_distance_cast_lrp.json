@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experimentalmodid:item/big_distance_cast_lrp"
+  }
+}
