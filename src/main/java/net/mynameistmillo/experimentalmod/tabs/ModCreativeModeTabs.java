@@ -39,6 +39,15 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.BUBBLE_SPARK);
                         output.accept(ModItems.TELEPORT_BOLT);
 
+                        output.accept(ModItems.PIN_POINT);
+                        output.accept(ModItems.PIN_POINT_TRIGGER);
+                        output.accept(ModItems.PIN_POINT_EXPIRE);
+                        output.accept(ModItems.SPIN_SPARK);
+                        output.accept(ModItems.SLIME_BALL);
+                        output.accept(ModItems.INFESTATION_SINGLE);
+
+                        output.accept(ModItems.INFESTATION);
+
                         output.accept(ModItems.SPEED_UP);
                         output.accept(ModItems.SPEED_DOWN);
                         output.accept(ModItems.MIDDLE_DISTANCE_CAST_FB);
@@ -53,6 +62,7 @@ public class ModCreativeModeTabs {
 
                         output.accept(ModItems.DOUBLE);
                         output.accept(ModItems.TRIPLE);
+                        output.accept(ModItems.TEN_CAST);
 
                         output.accept(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN);
                         output.accept(ModItems.DOUBLE_SPARK_BOLT);

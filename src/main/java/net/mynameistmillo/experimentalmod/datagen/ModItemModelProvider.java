@@ -22,6 +22,15 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.BUBBLE_SPARK.get());
         basicItem(ModItems.TELEPORT_BOLT.get());
 
+        basicItem(ModItems.PIN_POINT.get());
+        basicItem(ModItems.PIN_POINT_TRIGGER.get());
+        basicItem(ModItems.PIN_POINT_EXPIRE.get());
+        basicItem(ModItems.SPIN_SPARK.get());
+        basicItem(ModItems.SLIME_BALL.get());
+        basicItem(ModItems.INFESTATION_SINGLE.get());
+
+        basicItem(ModItems.INFESTATION.get());
+
 
         basicItem(ModItems.SPEED_UP.get());
         basicItem(ModItems.SPEED_DOWN.get());
@@ -38,6 +47,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(ModItems.DOUBLE.get());
         basicItem(ModItems.TRIPLE.get());
+        basicItem(ModItems.TEN_CAST.get());
 
 
         basicItem(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN.get());

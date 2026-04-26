@@ -37,6 +37,14 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.BUBBLE_SPARK.get())
                 .add(ModItems.TELEPORT_BOLT.get())
 
+                .add(ModItems.PIN_POINT.get())
+                .add(ModItems.PIN_POINT_TRIGGER.get())
+                .add(ModItems.PIN_POINT_EXPIRE.get())
+                .add(ModItems.SPIN_SPARK.get())
+                .add(ModItems.SLIME_BALL.get())
+                .add(ModItems.INFESTATION_SINGLE.get())
+                .add(ModItems.INFESTATION.get())
+
 
                 .add(ModItems.SPEED_UP.get())
                 .add(ModItems.SPEED_DOWN.get())
@@ -53,6 +61,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
                 .add(ModItems.DOUBLE.get())
                 .add(ModItems.TRIPLE.get())
+                .add(ModItems.TEN_CAST.get())
 
 
                 .add(ModItems.DOUBLE_WITH_LIFE_TIME_DOWN.get())

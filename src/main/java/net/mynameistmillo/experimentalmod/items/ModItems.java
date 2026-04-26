@@ -3,7 +3,8 @@ package net.mynameistmillo.experimentalmod.items;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.mynameistmillo.experimentalmod.Draw.standard.Triple;
+import net.mynameistmillo.experimentalmod.Draw.standard.tenCastDraw;
+import net.mynameistmillo.experimentalmod.Draw.standard.tripleDraw;
 import net.mynameistmillo.experimentalmod.Draw.multipleInOneStack.DoubleWithLifeTimeDown;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneReset;
@@ -17,15 +18,13 @@ import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.NoGra
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpeed.SpeedDown;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpeed.SpeedUp;
 import net.mynameistmillo.experimentalmod.Modifiers.multipleInOneStack.LifeTimeDownAndSpeedUp;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard.sparkBoltTrigger;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.multipleInOneStack.Infestation;
+import net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard.*;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.multipleInOneStack.DoubleSparkBolt;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.multipleInOneStack.TenBubbleSpark;
 import net.mynameistmillo.experimentalmod.block.ModBlocks;
 import net.mynameistmillo.experimentalmod.items.custom.WandItem;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard.bubbleSpark;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard.sparkBolt;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.standard.teleportBolt;
-import net.mynameistmillo.experimentalmod.Draw.standard.Double;
+import net.mynameistmillo.experimentalmod.Draw.standard.doubleDraw;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -61,6 +60,24 @@ public class ModItems {
 
     public static final DeferredItem<Item> TELEPORT_BOLT = ITEMS.register("teleport_bolt",
             ()-> new teleportBolt(new Item.Properties()));
+
+    public static final DeferredItem<Item> PIN_POINT = ITEMS.register("pin_point",
+            ()-> new pinPoint(new Item.Properties()));
+
+    public static final DeferredItem<Item> PIN_POINT_TRIGGER = ITEMS.register("pin_point_trigger",
+            ()-> new pinPointTrigger(new Item.Properties()));
+
+    public static final DeferredItem<Item> PIN_POINT_EXPIRE = ITEMS.register("pin_point_expire",
+            ()-> new pinPointExpire(new Item.Properties()));
+
+    public static final DeferredItem<Item> SLIME_BALL = ITEMS.register("slime_ball",
+            ()-> new slimeBall(new Item.Properties()));
+
+    public static final DeferredItem<Item> SPIN_SPARK = ITEMS.register("spin_spark",
+            ()-> new spinSpark(new Item.Properties()));
+
+    public static final DeferredItem<Item> INFESTATION_SINGLE = ITEMS.register("infestation_single",
+            ()-> new infestationSingle(new Item.Properties()));
 
 
     // MODIFIER
@@ -99,10 +116,13 @@ public class ModItems {
     // DRAW
 
     public static final DeferredItem<Item> DOUBLE = ITEMS.register("double",
-            () -> new Double(new Item.Properties()));
+            () -> new doubleDraw(new Item.Properties()));
 
     public static final DeferredItem<Item> TRIPLE = ITEMS.register("triple",
-            () -> new Triple(new Item.Properties()));
+            () -> new tripleDraw(new Item.Properties()));
+
+    public static final DeferredItem<Item> TEN_CAST = ITEMS.register("ten_cast",
+            () -> new tenCastDraw(new Item.Properties()));
 
 
     // MULTIPLE
@@ -118,6 +138,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> TEN_BUBBLE_SPARK = ITEMS.register("ten_bubble_spark",
             () -> new TenBubbleSpark(new Item.Properties()));
+
+    public static final DeferredItem<Item> INFESTATION = ITEMS.register("infestation",
+            () -> new Infestation(new Item.Properties()));
 
 
 
