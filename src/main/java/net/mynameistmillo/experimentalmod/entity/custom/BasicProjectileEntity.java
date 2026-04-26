@@ -21,17 +21,13 @@ import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
-import net.mynameistmillo.experimentalmod.Interface.VelocityModifier;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.lwjgl.system.macosx.LibSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
@@ -61,8 +57,6 @@ public class BasicProjectileEntity extends Projectile {
 
     private static final double MAX_STEP = 0.75D;
     private static final int MAX_STEPS = 5;
-
-    private final List<VelocityModifier> velocityModifiers = new ArrayList<>();
 
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
         super(entityType, level);
@@ -155,9 +149,6 @@ public class BasicProjectileEntity extends Projectile {
 
     public String getProjName(){return this.entityData.get(DATA_NAME);}
 
-    public void addVelocityModifier(VelocityModifier vm){
-        velocityModifiers.add(vm);
-    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
