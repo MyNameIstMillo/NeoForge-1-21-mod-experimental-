@@ -32,7 +32,6 @@ public class bubbleSpark extends Item implements IProjectile {
         this.baseStatsF = new ProjStatsF();
         this.baseStatsF.set(StatsF.SPEED, 0.5f);
         this.baseStatsF.set(StatsF.DRAG, 0.9f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.00f);
 
         this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);

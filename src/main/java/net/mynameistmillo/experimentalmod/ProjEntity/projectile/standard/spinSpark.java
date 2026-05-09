@@ -20,8 +20,7 @@ public class spinSpark extends Item implements IProjectile {
         super(properties);
         this.baseStatsF = new ProjStatsF();
         this.baseStatsF.set(StatsF.SPEED, 1.0f);
-        this.baseStatsF.set(StatsF.DRAG, 0.92f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.005f);
+        this.baseStatsF.set(StatsF.DRAG, 0.93f);
 
         this.baseStatsF.set(StatsF.FORCE_Y, 0.001f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.001f);

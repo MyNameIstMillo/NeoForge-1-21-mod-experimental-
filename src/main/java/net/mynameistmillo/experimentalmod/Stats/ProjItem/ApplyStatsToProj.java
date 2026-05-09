@@ -31,8 +31,8 @@ public class ApplyStatsToProj {
         double sUD = SF.get(StatsF.SHIFT_UD);
         double sFB = SF.get(StatsF.SHIFT_FB);
 
-        double hSpread = SF.get(StatsF.HORIZONTAL_SPREAD);
-        double vSpread = SF.get(StatsF.VERTICAL_SPREAD);
+        double hSpread = SF.get(StatsF.HORIZONTAL_SPREAD) <= 0 ? 0 : SF.get(StatsF.HORIZONTAL_SPREAD);
+        double vSpread = SF.get(StatsF.VERTICAL_SPREAD) <= 0 ? 0 : SF.get(StatsF.VERTICAL_SPREAD);
 
         Vec3 lookNorn = (look == null || look.lengthSqr() == 0.0) ?
                 new Vec3(0,0,1) : look.normalize();
@@ -86,7 +86,6 @@ public class ApplyStatsToProj {
                 forwardFinal.z * speed);
 
         e.setDrag(SF.get(StatsF.DRAG));
-        e.setGravity(SF.get(StatsF.GRAVITY));
         e.setLifeTime(SI.get(StatsI.LIFETIME));
 
         e.setForceY(SF.get(StatsF.FORCE_Y));

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experimentalmodid:item/cast_by_player"
+  }
+}

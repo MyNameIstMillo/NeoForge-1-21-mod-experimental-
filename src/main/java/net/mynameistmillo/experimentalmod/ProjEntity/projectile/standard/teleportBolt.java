@@ -34,9 +34,8 @@ public class teleportBolt extends Item implements IProjectile {
         this.baseStatsF = new ProjStatsF();
         this.baseStatsF.set(StatsF.SPEED, 0.4f);
         this.baseStatsF.set(StatsF.DRAG, 0.999f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.025f);
 
-        this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
+        this.baseStatsF.set(StatsF.FORCE_Y, -0.01f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
 

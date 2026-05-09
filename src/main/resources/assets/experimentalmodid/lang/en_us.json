@@ -6,11 +6,13 @@
   "item.experimentalmodid.spark_bolt": "Spark bolt",
   "item.experimentalmodid.spark_bolt_trigger": "Spark bolt with trigger",
   "item.experimentalmodid.bubble_spark": "Bubble spark",
-  "item.experimentalmodid.teleport_bolt": "Teleport bolt",
+  "item.experimentalmodid.teleport_bolt": "Safe Teleport bolt",
+  "item.experimentalmodid.not_safe_teleport_bolt": "Not Safe Teleport bolt",
 
   "item.experimentalmodid.pin_point": "Pin Point",
   "item.experimentalmodid.pin_point_trigger": "Pin Point Trigger",
   "item.experimentalmodid.pin_point_expire": "Pin Point Expire",
+
   "item.experimentalmodid.slime_ball": "Slime ball",
   "item.experimentalmodid.spin_spark": "Spin spark",
   "item.experimentalmodid.infestation_single": "One infestation",
@@ -19,10 +21,49 @@
 
   "item.experimentalmodid.speed_up": "Speed up",
   "item.experimentalmodid.speed_down": "Speed down",
-  "item.experimentalmodid.middle_distance_cast_fb": "Middle-distance cast (fb)",
   "item.experimentalmodid.life_time_up": "Life time up",
   "item.experimentalmodid.life_time_down": "Life time down",
+
   "item.experimentalmodid.no_gravity": "No gravity",
+  "item.experimentalmodid.add_gravity": "Add gravity",
+  "item.experimentalmodid.remove_gravity": "Remove gravity",
+  "item.experimentalmodid.reverse_gravity": "Reverse gravity",
+
+  "item.experimentalmodid.cast_by_player": "Cast next to player",
+  "item.experimentalmodid.add_damage": "Add damage",
+  "item.experimentalmodid.blood_lust": "Blood Lust",
+
+  "item.experimentalmodid.reduce_vertical_spread": "Reduce vertical spread",
+  "item.experimentalmodid.reduce_horizontal_spread": "Reduce horizontal spread",
+  "item.experimentalmodid.increase_vertical_spread": "Increase vertical spread",
+  "item.experimentalmodid.increase_horizontal_spread": "Increase horizontal spread",
+
+  "item.experimentalmodid.less_drag": "Less drag",
+  "item.experimentalmodid.more_drag": "More drag",
+
+
+  "item.experimentalmodid.small_distance_cast_fbn": "Small distance cast (fbn)",
+  "item.experimentalmodid.middle_distance_cast_fbn": "Middle distance cast (fbn)",
+  "item.experimentalmodid.big_distance_cast_fbn": "Big distance cast (fbn)",
+  "item.experimentalmodid.small_distance_cast_fbp": "Small distance cast (fbp)",
+  "item.experimentalmodid.middle_distance_cast_fbp": "Middle distance cast (fbp)",
+  "item.experimentalmodid.big_distance_cast_fbp": "Big distance cast (fbp)",
+
+  "item.experimentalmodid.small_distance_cast_udn": "Small distance cast (fbn)",
+  "item.experimentalmodid.middle_distance_cast_udn": "Middle distance cast (fbn)",
+  "item.experimentalmodid.big_distance_cast_udn": "Big distance cast (fbn)",
+  "item.experimentalmodid.small_distance_cast_udp": "Small distance cast (fbp)",
+  "item.experimentalmodid.middle_distance_cast_udp": "Middle distance cast (fbp)",
+  "item.experimentalmodid.big_distance_cast_udp": "Big distance cast (fbp)",
+
+  "item.experimentalmodid.small_distance_cast_lrn": "Small distance cast (fbn)",
+  "item.experimentalmodid.middle_distance_cast_lrn": "Middle distance cast (fbn)",
+  "item.experimentalmodid.big_distance_cast_lrn": "Big distance cast (fbn)",
+  "item.experimentalmodid.small_distance_cast_lrp": "Small distance cast (fbp)",
+  "item.experimentalmodid.middle_distance_cast_lrp": "Middle distance cast (fbp)",
+  "item.experimentalmodid.big_distance_cast_lrp": "Big distance cast (fbp)",
+
+
 
   "item.experimentalmodid.plane_xy": "Plane XY",
   "item.experimentalmodid.plane_xz": "Plane XZ",

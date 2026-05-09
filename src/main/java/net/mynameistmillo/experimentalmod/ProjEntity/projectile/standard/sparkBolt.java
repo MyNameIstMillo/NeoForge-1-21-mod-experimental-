@@ -30,11 +30,10 @@ public class sparkBolt extends Item implements IProjectile {
     public sparkBolt(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsF.SPEED, 0.9f);
-        this.baseStatsF.set(StatsF.DRAG, 1.0f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.03f);
+        this.baseStatsF.set(StatsF.SPEED, 1.1f);
+        this.baseStatsF.set(StatsF.DRAG, 0.98f);
 
-        this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
+        this.baseStatsF.set(StatsF.FORCE_Y, -0.01f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
 

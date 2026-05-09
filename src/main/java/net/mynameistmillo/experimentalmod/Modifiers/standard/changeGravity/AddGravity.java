@@ -24,7 +24,7 @@ public class AddGravity extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        stats.set(StatsF.GRAVITY, stats.get(StatsF.GRAVITY)*1.3f);
+        stats.set(StatsF.FORCE_Y, stats.get(StatsF.FORCE_Y)*1.3f);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }

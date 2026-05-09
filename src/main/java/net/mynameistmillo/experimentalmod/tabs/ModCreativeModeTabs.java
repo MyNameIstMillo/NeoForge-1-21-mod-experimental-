@@ -38,6 +38,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SPARK_BOLT_TRIGGER);
                         output.accept(ModItems.BUBBLE_SPARK);
                         output.accept(ModItems.TELEPORT_BOLT);
+                        output.accept(ModItems.NOT_SAFE_TELEPORT_BOLT);
+//                        output.accept(ModItems.CAST_BY_PLAYER); If you are reading this, congrats !
+//                        I don't know why this item refuses to work properly, you can do it yourself if you want . . .
 
                         output.accept(ModItems.PIN_POINT);
                         output.accept(ModItems.PIN_POINT_TRIGGER);
@@ -58,6 +61,14 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.ADD_GRAVITY);
                         output.accept(ModItems.REMOVE_GRAVITY);
                         output.accept(ModItems.REVERSE_GRAVITY);
+
+                        output.accept(ModItems.ADD_DAMAGE);
+                        output.accept(ModItems.BLOOD_LUST);
+
+                        output.accept(ModItems.REDUCE_H_SPREAD);
+                        output.accept(ModItems.REDUCE_V_SPREAD);
+                        output.accept(ModItems.INCREASE_H_SPREAD);
+                        output.accept(ModItems.INCREASE_V_SPREAD);
 
                         output.accept(ModItems.PLANE_XY);
                         output.accept(ModItems.PLANE_XZ);

@@ -20,16 +20,15 @@ public class infestationSingle extends Item implements IProjectile {
     public infestationSingle(Properties properties) {
         super(properties);
         this.baseStatsF = new ProjStatsF();
-        this.baseStatsF.set(StatsF.SPEED, 0.1f);
-        this.baseStatsF.set(StatsF.DRAG, 0.96f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.0f);
+        this.baseStatsF.set(StatsF.SPEED, 0.2f);
+        this.baseStatsF.set(StatsF.DRAG, 0.975f);
 
-        this.baseStatsF.set(StatsF.FORCE_Y, 0.00005f);
+        this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
 
-        this.baseStatsF.set(StatsF.VERTICAL_SPREAD, 360.0f);
-        this.baseStatsF.set(StatsF.HORIZONTAL_SPREAD, 360.0f);
+        this.baseStatsF.set(StatsF.VERTICAL_SPREAD, 720.0f);
+        this.baseStatsF.set(StatsF.HORIZONTAL_SPREAD, 720.0f);
 
         this.baseStatsF.set(StatsF.SHIFT_LR, 0.0f);
         this.baseStatsF.set(StatsF.SHIFT_UD, 0.0f);

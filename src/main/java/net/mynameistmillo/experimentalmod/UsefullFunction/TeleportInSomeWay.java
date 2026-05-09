@@ -24,5 +24,17 @@ public class TeleportInSomeWay {
         }
     }
 
+    public static void JustTeleport(Level level, BlockPos pos, Vec3 normal, Player caster){
+
+        if(pos != null && normal != null) {
+            double x = pos.getX() ;
+            double y = pos.getY() - 1;
+            double z = pos.getZ() ;
+
+            caster.teleportTo(x +0.5f, y, z +0.5f);
+
+        }
+    }
+
 
 }

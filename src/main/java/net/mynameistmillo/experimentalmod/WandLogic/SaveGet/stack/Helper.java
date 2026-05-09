@@ -16,7 +16,10 @@ public class Helper {
         for(ItemStack stack : in){
             if(!(stack.getItem() instanceof IProjectile)) continue;
             ProjStatsI stats = ProjStatsI.loadStatsFromProj(stack);
-            if (stats.get(StatsI.CAST_POS) == CastPosDef.FORCE_AT_PLAYER.getValue()) continue;
+            if (stats.get(StatsI.CAST_POS) == CastPosDef.FORCE_AT_PLAYER.getValue()) {
+                out.add(stack);
+                continue;
+            }
             stats.set(StatsI.CAST_POS, 2);
             out.add(ProjStatsI.saveStatsToProj(stats, stack));
         }

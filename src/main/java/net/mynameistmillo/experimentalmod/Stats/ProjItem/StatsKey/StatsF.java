@@ -4,7 +4,6 @@ public enum StatsF {
     //movement
     SPEED("S", 0.0f),
     DRAG("D", 0.0f),
-    GRAVITY("G", 0.0f),
 
     FORCE_Y("FY", 0.0f),
     FORCE_X("FX", 0.0f),

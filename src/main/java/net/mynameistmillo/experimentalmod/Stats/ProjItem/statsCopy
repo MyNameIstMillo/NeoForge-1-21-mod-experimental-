@@ -1,6 +1,5 @@
         this.baseStats.set(StatsKey.SPEED, 0.7f);
         this.baseStats.set(StatsKey.DRAG, 0.80f);
-        this.baseStats.set(StatsKey.GRAVITY, 0.00f);
         this.baseStats.set(StatsKey.ACCELERATION_L_R, 0.0f);
         this.baseStats.set(StatsKey.ACCELERATION_U_D, 0.0f);
         this.baseStats.set(StatsKey.ACCELERATION_F_B, 0.0f);

@@ -1,5 +1,7 @@
 package net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey;
 
+import net.mynameistmillo.experimentalmod.Enum.CastPosDef;
+
 public enum StatsI {
     //bollen stats,
     TRIGGER_TYPE("TT",0),
@@ -8,7 +10,7 @@ public enum StatsI {
     //something
     DRAW_TRIGGER("DT",0),
     LIFETIME("L", 0),
-    CAST_POS("CP", 0),
+    CAST_POS("CP", CastPosDef.DEFAULT.getValue()),
 
     RES_PLANE("RP", 0);
 

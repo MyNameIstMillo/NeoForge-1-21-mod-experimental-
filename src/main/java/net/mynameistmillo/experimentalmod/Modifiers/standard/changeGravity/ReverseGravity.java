@@ -24,7 +24,7 @@ public class ReverseGravity extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        stats.set(StatsF.GRAVITY, stats.get(StatsF.GRAVITY)*(-1));
+        stats.set(StatsF.FORCE_Y, stats.get(StatsF.FORCE_Y)*(-1));
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }

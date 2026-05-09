@@ -54,8 +54,26 @@ public class Helper {
             if (hitEntity.is(caster) && statsI.get(StatsI.FRIENDLY_FIRE) == 0) return;
             assert thisProj.getEntityRepresentation() != null;
 
-            living.hurt(living.damageSources().indirectMagic(thisProj.getEntityRepresentation(),
-                    caster), statsF.get(StatsF.NORMAL_DAMAGE));
+            boolean wasHurt = living.hurt(
+                    living.damageSources().indirectMagic(
+                            thisProj.getEntityRepresentation(), caster),
+                    statsF.get(StatsF.NORMAL_DAMAGE)
+            );
+
+            if (wasHurt) {
+                Vec3 knockbackDir = living.position()
+                        .subtract(hitPos == null ? new Vec3(0,0,0):hitPos)  // or thisProj.position() for projectile-relative
+                        .normalize();
+
+                double power = 0.1;
+
+                living.setDeltaMovement(
+                        knockbackDir.x * power,
+                        0.1,
+                        knockbackDir.z * power
+                );
+                living.hurtMarked = true;
+            }
         }
     }
 

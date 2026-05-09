@@ -21,7 +21,6 @@ import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
 import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
-import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -37,7 +36,6 @@ public class BasicProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
 
     private static final EntityDataAccessor<Float> DRAG = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> GRAVITY = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFE_TIME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Float> FORCE_Y = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -70,14 +68,6 @@ public class BasicProjectileEntity extends Projectile {
         this.entityData.set(PROJ_WIDTH, width);
         this.entityData.set(PROJ_HEIGHT, height);
         this.refreshDimensions();
-    }
-
-    public void setGravity(float gravity) {
-        this.entityData.set(GRAVITY, gravity);
-    }
-
-    public float getGravityE(){
-        return this.entityData.get(GRAVITY);
     }
 
     public void setDrag(float drag) {
@@ -153,7 +143,6 @@ public class BasicProjectileEntity extends Projectile {
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putFloat("ProjGravity", this.entityData.get(GRAVITY));
         nbt.putFloat("ProjDrag", this.entityData.get(DRAG));
         nbt.putInt("lifeTime", this.entityData.get(LIFE_TIME));
 
@@ -177,7 +166,6 @@ public class BasicProjectileEntity extends Projectile {
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        if (nbt.contains("ProjGravity")) this.entityData.set(GRAVITY, nbt.getFloat("ProjGravity"));
         if (nbt.contains("ProjDrag")) this.entityData.set(DRAG, nbt.getFloat("ProjDrag"));
         if (nbt.contains("lifeTime")) this.entityData.set(LIFE_TIME, nbt.getInt("lifeTime"));
 
@@ -190,7 +178,7 @@ public class BasicProjectileEntity extends Projectile {
         }
         if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
-    private static final double MIN_SPEED = 0.005;
+    private static final double MIN_SPEED = 0.006;
 
 
     @Override
@@ -224,14 +212,13 @@ public class BasicProjectileEntity extends Projectile {
 
         //gravity and drag
         float drag = getDrag();
-        float gravity = getGravityE();
         // all forces
-        float FY = getForceY();
         float FX = getForceX();
+        float FY = getForceY();
         float FZ = getForceZ();
 
         vector = vector.add(FX,
-                            -gravity + FY,
+                            FY,
                             FZ).scale(drag);
 
         //apply changes
@@ -388,7 +375,6 @@ public class BasicProjectileEntity extends Projectile {
         builder.define(PROJ_HEIGHT, 3.0f);
 
         builder.define(DRAG, 0.0f);
-        builder.define(GRAVITY, 0.0f);
         builder.define(LIFE_TIME, 0);
 
         builder.define(FORCE_Y, 0.0f);

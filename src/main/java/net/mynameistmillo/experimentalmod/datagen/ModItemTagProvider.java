@@ -36,6 +36,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.SPARK_BOLT_TRIGGER.get())
                 .add(ModItems.BUBBLE_SPARK.get())
                 .add(ModItems.TELEPORT_BOLT.get())
+                .add(ModItems.NOT_SAFE_TELEPORT_BOLT.get())
 
                 .add(ModItems.PIN_POINT.get())
                 .add(ModItems.PIN_POINT_TRIGGER.get())
@@ -52,6 +53,14 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.MORE_DRAG.get())
                 .add(ModItems.LIFE_TIME_UP.get())
                 .add(ModItems.LIFE_TIME_DOWN.get())
+                .add(ModItems.CAST_BY_PLAYER.get())
+                .add(ModItems.ADD_DAMAGE.get())
+                .add(ModItems.BLOOD_LUST.get())
+
+                .add(ModItems.REDUCE_H_SPREAD.get())
+                .add(ModItems.REDUCE_V_SPREAD.get())
+                .add(ModItems.INCREASE_H_SPREAD.get())
+                .add(ModItems.INCREASE_V_SPREAD.get())
 
                 .add(ModItems.NO_GRAVITY.get())
                 .add(ModItems.ADD_GRAVITY.get())

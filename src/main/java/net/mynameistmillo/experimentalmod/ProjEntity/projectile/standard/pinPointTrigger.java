@@ -22,10 +22,9 @@ public class pinPointTrigger extends Item implements IProjectile {
         super(properties);
         this.baseStatsF = new ProjStatsF();
         this.baseStatsF.set(StatsF.SPEED, 1.0f);
-        this.baseStatsF.set(StatsF.DRAG, 1.005f);
-        this.baseStatsF.set(StatsF.GRAVITY, 0.0f);
+        this.baseStatsF.set(StatsF.DRAG, 1.001f);
 
-        this.baseStatsF.set(StatsF.FORCE_Y, 0.0f);
+        this.baseStatsF.set(StatsF.FORCE_Y, -0.001f);
         this.baseStatsF.set(StatsF.FORCE_X, 0.0f);
         this.baseStatsF.set(StatsF.FORCE_Z, 0.0f);
 

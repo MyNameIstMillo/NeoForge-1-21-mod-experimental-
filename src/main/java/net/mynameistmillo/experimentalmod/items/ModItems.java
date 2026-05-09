@@ -11,6 +11,8 @@ import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.Pla
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXY;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneXZ;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.RestrictToPlane.PlaneZY;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDamage.AddDamage;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDamage.BloodLust;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDrag.LessDrag;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeDrag.MoreDrag;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.AddGravity;
@@ -32,6 +34,11 @@ import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.BigDistanceCastLRP;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.MiddleDistanceCastLRP;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeOriginOfCast.LR.positive.SmallDistanceCastLRP;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changePointOfCast.CastByPlayer;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpread.IncreaseHorizontalSpread;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpread.IncreaseVerticalSpread;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpread.ReduceHorizontalSpread;
+import net.mynameistmillo.experimentalmod.Modifiers.standard.changeSpread.ReduceVerticalSpread;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeDown;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeTime.LifeTimeUp;
 import net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity.NoGravity;
@@ -81,6 +88,9 @@ public class ModItems {
     public static final DeferredItem<Item> TELEPORT_BOLT = ITEMS.register("teleport_bolt",
             ()-> new teleportBolt(new Item.Properties()));
 
+    public static final DeferredItem<Item> NOT_SAFE_TELEPORT_BOLT = ITEMS.register("not_safe_teleport_bolt",
+            ()-> new notSafeTeleportBolt(new Item.Properties()));
+
     public static final DeferredItem<Item> PIN_POINT = ITEMS.register("pin_point",
             ()-> new pinPoint(new Item.Properties()));
 
@@ -120,6 +130,15 @@ public class ModItems {
     public static final DeferredItem<Item> LIFE_TIME_DOWN = ITEMS.register("life_time_down",
             () -> new LifeTimeDown(new Item.Properties()));
 
+    public static final DeferredItem<Item> CAST_BY_PLAYER = ITEMS.register("cast_by_player",
+            () -> new CastByPlayer(new Item.Properties()));
+
+    public static final DeferredItem<Item> ADD_DAMAGE = ITEMS.register("add_damage",
+            () -> new AddDamage(new Item.Properties()));
+
+    public static final DeferredItem<Item> BLOOD_LUST = ITEMS.register("blood_lust",
+            () -> new BloodLust(new Item.Properties()));
+
 
     public static final DeferredItem<Item> NO_GRAVITY = ITEMS.register("no_gravity",
             () -> new NoGravity(new Item.Properties()));
@@ -145,6 +164,19 @@ public class ModItems {
 
     public static final DeferredItem<Item> PLANE_RESET = ITEMS.register("plane_reset",
             () -> new PlaneReset(new Item.Properties()));
+
+
+    public static final DeferredItem<Item> REDUCE_V_SPREAD = ITEMS.register("reduce_vertical_spread",
+            () -> new ReduceVerticalSpread(new Item.Properties()));
+
+    public static final DeferredItem<Item> REDUCE_H_SPREAD = ITEMS.register("reduce_horizontal_spread",
+            () -> new ReduceHorizontalSpread(new Item.Properties()));
+
+    public static final DeferredItem<Item> INCREASE_V_SPREAD = ITEMS.register("increase_vertical_spread",
+            () -> new IncreaseVerticalSpread(new Item.Properties()));
+
+    public static final DeferredItem<Item> INCREASE_H_SPREAD = ITEMS.register("increase_horizontal_spread",
+            () -> new IncreaseHorizontalSpread(new Item.Properties()));
 
 
     public static final DeferredItem<Item> SMALL_DISTANCE_CAST_FBN = ITEMS.register("small_distance_cast_fbn",

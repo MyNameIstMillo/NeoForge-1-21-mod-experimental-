@@ -24,7 +24,7 @@ public class NoGravity extends Item implements IModifier {
 
         ProjStatsF stats = ProjStatsF.loadStatsFromProj(stack);
 
-        stats.set(StatsF.GRAVITY, 0);
+        stats.set(StatsF.FORCE_Y, 0);
 
         return ProjStatsF.saveStatsToProj(stats, stack);
     }
