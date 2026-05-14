@@ -49,19 +49,19 @@
   "item.experimentalmodid.middle_distance_cast_fbp": "Middle distance cast (fbp)",
   "item.experimentalmodid.big_distance_cast_fbp": "Big distance cast (fbp)",
 
-  "item.experimentalmodid.small_distance_cast_udn": "Small distance cast (fbn)",
-  "item.experimentalmodid.middle_distance_cast_udn": "Middle distance cast (fbn)",
-  "item.experimentalmodid.big_distance_cast_udn": "Big distance cast (fbn)",
-  "item.experimentalmodid.small_distance_cast_udp": "Small distance cast (fbp)",
-  "item.experimentalmodid.middle_distance_cast_udp": "Middle distance cast (fbp)",
-  "item.experimentalmodid.big_distance_cast_udp": "Big distance cast (fbp)",
+  "item.experimentalmodid.small_distance_cast_udn": "Small distance cast (udn)",
+  "item.experimentalmodid.middle_distance_cast_udn": "Middle distance cast (udn)",
+  "item.experimentalmodid.big_distance_cast_udn": "Big distance cast (udn)",
+  "item.experimentalmodid.small_distance_cast_udp": "Small distance cast (udp)",
+  "item.experimentalmodid.middle_distance_cast_udp": "Middle distance cast (udp)",
+  "item.experimentalmodid.big_distance_cast_udp": "Big distance cast (udp)",
 
-  "item.experimentalmodid.small_distance_cast_lrn": "Small distance cast (fbn)",
-  "item.experimentalmodid.middle_distance_cast_lrn": "Middle distance cast (fbn)",
-  "item.experimentalmodid.big_distance_cast_lrn": "Big distance cast (fbn)",
-  "item.experimentalmodid.small_distance_cast_lrp": "Small distance cast (fbp)",
-  "item.experimentalmodid.middle_distance_cast_lrp": "Middle distance cast (fbp)",
-  "item.experimentalmodid.big_distance_cast_lrp": "Big distance cast (fbp)",
+  "item.experimentalmodid.small_distance_cast_lrn": "Small distance cast (lrn)",
+  "item.experimentalmodid.middle_distance_cast_lrn": "Middle distance cast (lrn)",
+  "item.experimentalmodid.big_distance_cast_lrn": "Big distance cast (lrn)",
+  "item.experimentalmodid.small_distance_cast_lrp": "Small distance cast (lrp)",
+  "item.experimentalmodid.middle_distance_cast_lrp": "Middle distance cast (lrp)",
+  "item.experimentalmodid.big_distance_cast_lrp": "Big distance cast (lrp)",
 
 
 
