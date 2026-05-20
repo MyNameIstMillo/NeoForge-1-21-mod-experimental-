@@ -9,16 +9,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.entity.custom.BasicProjectileEntity;
 import org.joml.Matrix4f;
 import com.mojang.math.Axis;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class BasicProjectileRenderer extends EntityRenderer<BasicProjectileEntity> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public BasicProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);

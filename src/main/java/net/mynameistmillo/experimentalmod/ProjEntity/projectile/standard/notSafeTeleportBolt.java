@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.ProjEntity.projectile.ProjHelper.Helper;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
@@ -17,11 +16,8 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
 import net.mynameistmillo.experimentalmod.UsefullFunction.TeleportInSomeWay;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class notSafeTeleportBolt extends Item implements IProjectile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public notSafeTeleportBolt(Properties properties) {
         super(properties);

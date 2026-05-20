@@ -3,13 +3,10 @@ package net.mynameistmillo.experimentalmod.Modifiers.standard.changeGravity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Interface.IModifier;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NoGravity extends Item implements IModifier {
 

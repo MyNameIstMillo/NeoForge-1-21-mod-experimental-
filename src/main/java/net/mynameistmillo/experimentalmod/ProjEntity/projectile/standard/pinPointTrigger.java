@@ -13,7 +13,6 @@ import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats.ProjStatsI;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsI;
-import net.mynameistmillo.experimentalmod.items.ModItems;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class pinPointTrigger extends Item implements IProjectile {

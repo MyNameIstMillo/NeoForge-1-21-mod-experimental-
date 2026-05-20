@@ -3,20 +3,16 @@ package net.mynameistmillo.experimentalmod.Stats.ProjItem.ProjStats;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Stats.ProjItem.StatsKey.StatsF;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 public class ProjStatsF implements INBTSerializable<CompoundTag> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     private final EnumMap<StatsF, Float> map = new EnumMap<StatsF, Float>(StatsF.class);
 
     public ProjStatsF(){

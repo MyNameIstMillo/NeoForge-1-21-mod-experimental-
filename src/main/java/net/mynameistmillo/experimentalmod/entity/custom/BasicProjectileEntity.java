@@ -19,18 +19,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.TriggerType;
 import net.mynameistmillo.experimentalmod.entity.ModEntities;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
 public class BasicProjectileEntity extends Projectile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     private static final EntityDataAccessor<String> DATA_NAME = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> PROJ_WIDTH = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PROJ_HEIGHT = SynchedEntityData.defineId(BasicProjectileEntity.class, EntityDataSerializers.FLOAT);

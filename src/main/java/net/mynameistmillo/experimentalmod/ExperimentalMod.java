@@ -14,7 +14,6 @@ import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.tabs.ModCreativeModeTabs;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
@@ -35,7 +34,6 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 @Mod(ExperimentalMod.MOD_ID)
 public class ExperimentalMod {
     public static final String MOD_ID = "experimentalmodid";
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.

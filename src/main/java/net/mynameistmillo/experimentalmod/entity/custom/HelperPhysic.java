@@ -1,19 +1,13 @@
 package net.mynameistmillo.experimentalmod.entity.custom;
 
-
 import net.minecraft.world.phys.Vec3;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ProjectionMode;
 import net.mynameistmillo.experimentalmod.Enum.physicRelated.ResPlane;
 
 public class HelperPhysic {
 
-
-
-
     public static Vec3 projectToPlane(Vec3 vec, ResPlane plane, ProjectionMode mode){
         Vec3 base;
-
-
 
         switch (plane){
             case XY -> base = new Vec3(vec.x, vec.y, 0);

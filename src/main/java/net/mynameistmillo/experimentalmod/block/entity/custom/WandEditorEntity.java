@@ -22,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.WandLogic.Compact.CompactSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
@@ -34,14 +33,9 @@ import net.mynameistmillo.experimentalmod.data.ModTags;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 public class WandEditorEntity extends BlockEntity implements MenuProvider {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     public final ItemStackHandler inventory = new ItemStackHandler(30){
         @Override
         protected int getStackLimit(int slot, ItemStack stack) {
@@ -55,7 +49,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
 
-            //LOGGER.info("onContentsChanged -> ");
             if(slot == 28 || slot == 29){
                 ItemStack wand = inventory.getStackInSlot(27);
                 ItemStack key = inventory.getStackInSlot(slot);
@@ -144,7 +137,6 @@ public class WandEditorEntity extends BlockEntity implements MenuProvider {
         }
         List<ItemStack> storedSpells = GetSpells.getSpellsType(wand, this.level,
                                             wandItem.getCapacity(wand), NormalOrCompact.NORMAL);
-        //List<ItemStack> storedSpells = wandItem.getSavedSpells(wand, this.level);
 
         for(int i=0; i<capacity; i++){
             if(storedSpells.get(i).is(Items.DIRT)) continue;

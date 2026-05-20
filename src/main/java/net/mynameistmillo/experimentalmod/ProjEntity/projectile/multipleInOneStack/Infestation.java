@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.mynameistmillo.experimentalmod.Interface.IMultipleSpells;
 import net.mynameistmillo.experimentalmod.items.ModItems;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Infestation extends Item implements IMultipleSpells {
@@ -17,6 +18,12 @@ public class Infestation extends Item implements IMultipleSpells {
     public List<ItemStack> addSpells() {
         ItemStack p = new ItemStack(ModItems.INFESTATION_SINGLE.get());
         ItemStack d = new ItemStack(ModItems.TEN_CAST.get());
-        return List.of(d.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy(),p.copy());
+        List<ItemStack> list = new ArrayList<>();
+
+        list.add(d);
+        for (int i = 0; i < 10; i++) {
+            list.add(p.copy());
+        }
+        return list;
     }
 }

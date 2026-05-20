@@ -19,14 +19,11 @@ import net.mynameistmillo.experimentalmod.WandLogic.Compact.mergeHandler.StackMe
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.SaveStackIntoStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.SaveSpells;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompactSpells {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
 
     public static void compactSpells(ItemStack wand, List<ItemStack> list, Level level){
         list = prepareListForCompact(list, level);

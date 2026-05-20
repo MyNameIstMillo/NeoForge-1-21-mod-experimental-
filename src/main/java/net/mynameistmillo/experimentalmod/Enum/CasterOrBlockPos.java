@@ -6,7 +6,7 @@ public enum CasterOrBlockPos {
 
     private final String name;
 
-    CasterOrBlockPos(String name){
+    CasterOrBlockPos(String name) {
         this.name = name;
     }
 
@@ -14,4 +14,3 @@ public enum CasterOrBlockPos {
         return name;
     }
 }
-//zamiast tego to w stats proj to powinno się znajdować

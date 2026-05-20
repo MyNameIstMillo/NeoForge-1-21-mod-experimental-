@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.mynameistmillo.experimentalmod.ExperimentalMod;
 import net.mynameistmillo.experimentalmod.Enum.ModOrProj;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.stack.GetStackFromStack;
 import net.mynameistmillo.experimentalmod.WandLogic.SaveGet.wand.GetSpells;
@@ -18,13 +17,10 @@ import net.mynameistmillo.experimentalmod.Enum.NormalOrCompact;
 import net.mynameistmillo.experimentalmod.data.ModDataComponents;
 import net.mynameistmillo.experimentalmod.Interface.IDraw;
 import net.mynameistmillo.experimentalmod.Interface.IProjectile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class WandItem extends Item {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExperimentalMod.MOD_ID);
     public WandItem(Properties properties, int capacity) {
         super(properties);
         this.defaultCapacity = capacity;
