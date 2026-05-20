@@ -96,6 +96,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.MIDDLE_DISTANCE_CAST_UDP);
                         output.accept(ModItems.BIG_DISTANCE_CAST_UDP);
 
+                        output.accept(ModItems.DOUBLE);
                         output.accept(ModItems.TRIPLE);
                         output.accept(ModItems.TEN_CAST);
 
