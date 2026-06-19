@@ -30,6 +30,33 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.LAPIS_LAZULI)
                 .unlockedBy("has_lapis_lazuli", has(Items.LAPIS_LAZULI)).save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.WAND_EDITOR.get())
+                .pattern("BYB")
+                .pattern("BLB")
+                .pattern("BBB")
+                .define('Y',Items.YELLOW_DYE)
+                .define('B',ModBlocks.FANCY_BLOCK)
+                .define('L',Items.LAPIS_BLOCK)
+                .unlockedBy("has_bricks", has(Items.BRICKS)).save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.WAND.get())
+                .pattern(" SG")
+                .pattern("LSS")
+                .pattern("SL ")
+                .define('S',Items.STICK)
+                .define('G',Items.GLOWSTONE_DUST)
+                .define('L',Items.LAPIS_LAZULI)
+                .unlockedBy("has_bricks", has(Items.BRICKS)).save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.KEY.get())
+                .pattern(" D ")
+                .pattern("DGD")
+                .pattern(" A ")
+                .define('A',Items.ANVIL)
+                .define('D',Items.GLOWSTONE_DUST)
+                .define('G',Items.GOLD_BLOCK)
+                .unlockedBy("has_bricks", has(Items.BRICKS)).save(recipeOutput);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SPARK_BOLT.get())
                 .requires(Items.LAPIS_LAZULI)
                 .requires(Items.LEATHER)

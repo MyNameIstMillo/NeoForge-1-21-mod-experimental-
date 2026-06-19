@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "experimentalmodid:fancy_block"
+    },
+    "L": {
+      "item": "minecraft:lapis_block"
+    },
+    "Y": {
+      "item": "minecraft:yellow_dye"
+    }
+  },
+  "pattern": [
+    "BYB",
+    "BLB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:wand_editor"
+  }
+}
