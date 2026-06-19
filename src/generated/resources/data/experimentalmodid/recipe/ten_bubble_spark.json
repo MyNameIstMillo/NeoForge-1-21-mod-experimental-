@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "experimentalmodid:ten_cast"
+    },
+    {
+      "item": "experimentalmodid:bubble_spark"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:ten_bubble_spark"
+  }
+}

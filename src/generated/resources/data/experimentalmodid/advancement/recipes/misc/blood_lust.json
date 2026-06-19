@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_add_damage": {
+      "conditions": {
+        "items": [
+          {
+            "items": "experimentalmodid:add_damage"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "experimentalmodid:blood_lust"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_add_damage"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "experimentalmodid:blood_lust"
+    ]
+  }
+}

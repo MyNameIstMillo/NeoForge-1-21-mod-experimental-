@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_teleport_bolt": {
+      "conditions": {
+        "items": [
+          {
+            "items": "experimentalmodid:teleport_bolt"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "experimentalmodid:not_safe_teleport_bolt"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_teleport_bolt"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "experimentalmodid:not_safe_teleport_bolt"
+    ]
+  }
+}

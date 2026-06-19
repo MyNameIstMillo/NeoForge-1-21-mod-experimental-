@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_infestation_single": {
+      "conditions": {
+        "items": [
+          {
+            "items": "experimentalmodid:infestation_single"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "experimentalmodid:infestation"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_infestation_single"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "experimentalmodid:infestation"
+    ]
+  }
+}

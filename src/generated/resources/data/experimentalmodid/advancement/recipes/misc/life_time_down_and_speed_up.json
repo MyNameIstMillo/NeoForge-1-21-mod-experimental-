@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_speed_up": {
+      "conditions": {
+        "items": [
+          {
+            "items": "experimentalmodid:speed_up"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "experimentalmodid:life_time_down_and_speed_up"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_speed_up"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "experimentalmodid:life_time_down_and_speed_up"
+    ]
+  }
+}

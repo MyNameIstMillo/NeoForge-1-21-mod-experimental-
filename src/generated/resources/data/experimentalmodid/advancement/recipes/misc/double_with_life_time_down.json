@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_double": {
+      "conditions": {
+        "items": [
+          {
+            "items": "experimentalmodid:double"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "experimentalmodid:double_with_life_time_down"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_double"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "experimentalmodid:double_with_life_time_down"
+    ]
+  }
+}

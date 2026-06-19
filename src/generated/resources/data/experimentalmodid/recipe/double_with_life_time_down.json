@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "experimentalmodid:double"
+    },
+    {
+      "item": "experimentalmodid:life_time_down"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:double_with_life_time_down"
+  }
+}

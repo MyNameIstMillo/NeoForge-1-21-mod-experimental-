@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "experimentalmodid:life_time_down"
+    },
+    {
+      "item": "experimentalmodid:speed_up"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:life_time_down_and_speed_up"
+  }
+}

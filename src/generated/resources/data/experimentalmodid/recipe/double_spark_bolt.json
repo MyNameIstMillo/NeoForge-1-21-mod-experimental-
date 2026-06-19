@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "experimentalmodid:spark_bolt"
+    },
+    {
+      "item": "experimentalmodid:spark_bolt"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:double_spark_bolt"
+  }
+}
