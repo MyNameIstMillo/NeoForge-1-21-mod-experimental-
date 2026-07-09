@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "item": "minecraft:clock"
+    },
+    {
+      "item": "minecraft:short_grass"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "experimentalmodid:wait_and_cast"
+  }
+}

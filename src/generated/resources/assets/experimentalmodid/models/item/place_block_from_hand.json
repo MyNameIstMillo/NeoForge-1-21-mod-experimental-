@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experimentalmodid:item/place_block_from_hand"
+  }
+}

@@ -45,6 +45,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.SLIME_BALL.get())
                 .add(ModItems.INFESTATION_SINGLE.get())
                 .add(ModItems.INFESTATION.get())
+                .add(ModItems.DESTROY_BLOCK.get())
+                .add(ModItems.PLACE_BLOCK_FROM_HAND.get())
+                .add(ModItems.WAIT_AND_CAST.get())
 
 
                 .add(ModItems.SPEED_UP.get())

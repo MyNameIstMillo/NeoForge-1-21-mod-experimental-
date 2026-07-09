@@ -109,6 +109,15 @@ public class ModItems {
     public static final DeferredItem<Item> INFESTATION_SINGLE = ITEMS.register("infestation_single",
             ()-> new infestationSingle(new Item.Properties()));
 
+    public static final DeferredItem<Item> DESTROY_BLOCK = ITEMS.register("destroy_block",
+            ()-> new destroyBlock(new Item.Properties()));
+
+    public static final DeferredItem<Item> PLACE_BLOCK_FROM_HAND = ITEMS.register("place_block_from_hand",
+            ()-> new placeBlockInHand(new Item.Properties()));
+
+    public static final DeferredItem<Item> WAIT_AND_CAST = ITEMS.register("wait_and_cast",
+            ()-> new waitAndCast(new Item.Properties()));
+
 
     // MODIFIER
 

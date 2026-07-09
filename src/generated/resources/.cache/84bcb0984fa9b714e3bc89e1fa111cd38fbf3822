@@ -1,4 +1,4 @@
-// 1.21	2026-05-09T16:09:59.7596777	Item Models: experimentalmodid
+// 1.21	2026-07-08T12:26:46.7388978	Item Models: experimentalmodid
 f864bf9a01c08ad1b5629135b53aa885a3606d0b assets/experimentalmodid/models/item/add_damage.json
 bb077f0fc2efe300facfa15d3474874ec81d23c6 assets/experimentalmodid/models/item/add_gravity.json
 5ee4275ee0d73a70e762b8f5c7c17b0855c0d4cb assets/experimentalmodid/models/item/big_distance_cast_fbn.json
@@ -10,6 +10,7 @@ e6b80be372e2708f80f7a7faf1605ce288cead0a assets/experimentalmodid/models/item/bi
 605e1f3f7dc56cccac1ef34fdc57a33cdf3fc847 assets/experimentalmodid/models/item/blood_lust.json
 0fab5a0744e50a57c64d7bb9f67ff0128d379a48 assets/experimentalmodid/models/item/bubble_spark.json
 1b063f1f9d039ab797485b1d303ce128d141db72 assets/experimentalmodid/models/item/cast_by_player.json
+02830b683e64e7be162579e1fd99ef71272841a3 assets/experimentalmodid/models/item/destroy_block.json
 888005a76c8bdff7a47e624cc7a126ee4626e5ca assets/experimentalmodid/models/item/double.json
 75912bb91f0d1d107a8b55c6040da5ae0353eead assets/experimentalmodid/models/item/double_spark_bolt.json
 865daf2d0a15c1451874f48dd7954aa054151f13 assets/experimentalmodid/models/item/double_with_life_time_down.json
@@ -35,6 +36,7 @@ de985c38dd6eeac0eb4d09df0a412761d46268f6 assets/experimentalmodid/models/item/no
 63f8164a7a1cd251922b2e0c3bb994939f28ead1 assets/experimentalmodid/models/item/pin_point.json
 d2d7409b9c6ed6f98892c041f5b5fcb1c501263f assets/experimentalmodid/models/item/pin_point_expire.json
 d46e1afa45d52699009d663be04b982ac0102078 assets/experimentalmodid/models/item/pin_point_trigger.json
+1d8e278342dc25891d199ae011d47d807e9af87d assets/experimentalmodid/models/item/place_block_from_hand.json
 8da5f9f5c037a255b721a7a1067a24b070014e52 assets/experimentalmodid/models/item/plane_reset.json
 4628db079218f0767818a46fa932b742110629fb assets/experimentalmodid/models/item/plane_xy.json
 757346c64f528eba84f9bfe3b60ee0ff31299e4b assets/experimentalmodid/models/item/plane_xz.json
@@ -59,4 +61,5 @@ e3683c8a9ac24b5be2f915b66b6e914e9792b08c assets/experimentalmodid/models/item/sp
 0b3952afe7692c666ab6cadcec6338d5ee3ad6eb assets/experimentalmodid/models/item/ten_bubble_spark.json
 fc8dc10d1a4fdee5b74dbc6107ae7fc32176966e assets/experimentalmodid/models/item/ten_cast.json
 b9656da449cf0a063ea6f2e63575baeb5e6ce8eb assets/experimentalmodid/models/item/triple.json
+ee997759b8b9b3854e9b467c1bd71e5c355c5f4c assets/experimentalmodid/models/item/wait_and_cast.json
 c8c66315be398f807ca40fc7f641552e111a3133 assets/experimentalmodid/models/item/wand.json
