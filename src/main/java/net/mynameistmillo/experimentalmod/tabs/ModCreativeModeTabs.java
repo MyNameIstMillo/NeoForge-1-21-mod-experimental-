@@ -50,6 +50,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.INFESTATION_SINGLE);
 
                         output.accept(ModItems.INFESTATION);
+                        output.accept(ModItems.DESTROY_BLOCK);
+                        output.accept(ModItems.PLACE_BLOCK_FROM_HAND);
+                        output.accept(ModItems.WAIT_AND_CAST);
 
                         output.accept(ModItems.SPEED_UP);
                         output.accept(ModItems.SPEED_DOWN);

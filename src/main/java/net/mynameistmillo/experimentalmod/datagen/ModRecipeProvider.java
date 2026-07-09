@@ -115,6 +115,33 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.SPIDER_EYE, 4)
                 .unlockedBy("has_infestation_single", has(ModItems.INFESTATION_SINGLE.get())).save(recipeOutput);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.DESTROY_BLOCK.get())
+                .requires(Items.LAPIS_LAZULI)
+                .requires(Items.LEATHER)
+                .requires(Items.IRON_BLOCK)
+                .requires(Items.IRON_BARS,3)
+                .unlockedBy("has_lapis", has(Items.LAPIS_LAZULI)).save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PLACE_BLOCK_FROM_HAND.get())
+                .requires(Items.LAPIS_LAZULI)
+                .requires(Items.LEATHER)
+                .requires(Items.ARMOR_STAND)
+                .requires(Items.YELLOW_DYE)
+                .requires(Items.BLACK_DYE)
+                .unlockedBy("has_lapis", has(Items.LAPIS_LAZULI)).save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.WAIT_AND_CAST.get())
+                .requires(Items.LAPIS_LAZULI)
+                .requires(Items.LEATHER)
+                .requires(Items.FEATHER)
+                .requires(Items.CLOCK)
+                .requires(Items.SHORT_GRASS)
+                .unlockedBy("has_lapis", has(Items.LAPIS_LAZULI)).save(recipeOutput);
+
+
+
+
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SLIME_BALL.get())
                 .requires(Items.LAPIS_LAZULI)
                 .requires(Items.LEATHER)

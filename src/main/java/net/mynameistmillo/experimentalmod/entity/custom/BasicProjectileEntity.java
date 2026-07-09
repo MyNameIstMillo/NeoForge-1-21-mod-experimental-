@@ -44,6 +44,7 @@ public class BasicProjectileEntity extends Projectile {
     private float initHeight = 0.25f;
 
     private Vec3 prevDelta = Vec3.ZERO;
+    private double initialSpeed = 0;
 
     private ItemStack projStack = ItemStack.EMPTY;
     private ItemStack wandStack = ItemStack.EMPTY;
@@ -51,6 +52,9 @@ public class BasicProjectileEntity extends Projectile {
 
     private static final double MAX_STEP = 0.75D;
     private static final int MAX_STEPS = 5;
+
+    private static final double STOP_RATIO = 0.05;
+    private static final double ABSOLUTE_FLOOR = 1.0E-6;
 
     public BasicProjectileEntity(EntityType<? extends  BasicProjectileEntity> entityType, Level level) {
         super(entityType, level);
@@ -122,11 +126,15 @@ public class BasicProjectileEntity extends Projectile {
         this.wandStack = stack == null ? ItemStack.EMPTY : stack.copy();
     }
 
+    public double getInitialSpeed() {return initialSpeed;}
+
+    public void setInitialSpeed(double initialSpeed) {this.initialSpeed = initialSpeed;}
+
     public void setCasterUUID(UUID id){
         this.casterUUID = id;
     }
-
     private String name = "";
+
 
     public void setProjName(String name){
         this.entityData.set(DATA_NAME, name == null? "" : name);
@@ -158,7 +166,6 @@ public class BasicProjectileEntity extends Projectile {
         nbt.putString("proj_name", getProjName());
 
     }
-
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
@@ -174,12 +181,12 @@ public class BasicProjectileEntity extends Projectile {
         }
         if (nbt.contains("proj_name")) setProjName(nbt.getString("proj_name"));
     }
-    private static final double MIN_SPEED = 0.006;
 
 
     @Override
     public void tick() {
         super.tick();
+        if(tickCount==1) setInitialSpeed(this.getDeltaMovement().lengthSqr());
         if(!this.level().isClientSide()){
             int lifeTime = getLifeTime();
             lifeTime--;
@@ -198,9 +205,10 @@ public class BasicProjectileEntity extends Projectile {
             vector = HelperPhysic.projectToPlane(vector, ResPlane.fromValue(getResPlane()), ProjectionMode.PROJECT);
         }
 
-
-
-        if (vector.lengthSqr()<MIN_SPEED){
+        double currentSqr = vector.lengthSqr();
+        double stop = Math.max(getInitialSpeed()*STOP_RATIO,ABSOLUTE_FLOOR);
+        //System.out.println("cur: "+currentSqr+" stop: "+stop+" initial: "+getInitialSpeed());
+        if (currentSqr < stop){
             Vec3 pos = this.position();
             Vec3 dir = this.getDeltaMovement().normalize().reverse();
             handleProjHit(null, pos, dir, TriggerType.BEFORE);

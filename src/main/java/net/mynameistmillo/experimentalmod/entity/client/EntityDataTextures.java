@@ -5,8 +5,11 @@ import net.mynameistmillo.experimentalmod.ExperimentalMod;
 
 public class EntityDataTextures {
 
-    // I assume that EVERY proj have OWN side png
-    // gets name of the projectile and return resource location
+
+    /**
+     * I assume that EVERY proj have OWN side png
+     * gets name of the projectile and return resource location
+     */
     public static ResourceLocation getTxtPathSide(String name){
         String res = "textures/entity/basic_projectile/"+name+"_side.png";
 
@@ -14,10 +17,11 @@ public class EntityDataTextures {
     }
 
 
-
-    // add only if proj have own FRONT png
-    // if not add then front == side
-    // gets name of the projectile and return resource location
+    /**
+     * add only if proj have own FRONT png
+     * if not add then front == side
+     * gets name of the projectile and return resource location
+     */
     public static ResourceLocation getTxtPathFront(String name){
         String ending;
 
@@ -25,6 +29,7 @@ public class EntityDataTextures {
             case "pin_point",
                  "slime_ball",
                  "spin_spark",
+                 "destroy_block",
                  "spark_bolt" -> ending = "_front";
 
             default -> ending = "_side";
@@ -35,9 +40,10 @@ public class EntityDataTextures {
         return ResourceLocation.fromNamespaceAndPath(ExperimentalMod.MOD_ID, res);
     }
 
-
-    // if proj needs front png to be shifted
-    // gets name of the projectile and return shift
+    /**
+     * if proj needs front png to be shifted
+     * gets name of the projectile and return shift
+     */
     public static Float getFrontAxisShift(String name){
         float shift;
 
@@ -46,6 +52,7 @@ public class EntityDataTextures {
                  "slime_ball" -> shift = 0.5f;
 
             case "pin_point" -> shift = 1.0f;
+            case "destroy_block" -> shift = -0.9f;
             default -> shift = 0f;
         }
         return shift;

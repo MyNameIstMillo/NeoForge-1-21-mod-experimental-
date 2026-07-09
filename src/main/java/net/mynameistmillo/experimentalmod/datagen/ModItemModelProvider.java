@@ -29,8 +29,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.SPIN_SPARK.get());
         basicItem(ModItems.SLIME_BALL.get());
         basicItem(ModItems.INFESTATION_SINGLE.get());
-
         basicItem(ModItems.INFESTATION.get());
+        basicItem(ModItems.DESTROY_BLOCK.get());
+        basicItem(ModItems.PLACE_BLOCK_FROM_HAND.get());
+        basicItem(ModItems.WAIT_AND_CAST.get());
 
 
         basicItem(ModItems.SPEED_UP.get());

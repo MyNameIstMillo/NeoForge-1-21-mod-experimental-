@@ -18,6 +18,9 @@
   "item.experimentalmodid.infestation_single": "One infestation",
 
   "item.experimentalmodid.infestation": "Infestation",
+  "item.experimentalmodid.destroy_block": "Destroy Block",
+  "item.experimentalmodid.place_block_from_hand": "Place block from hand",
+  "item.experimentalmodid.wait_and_cast": "Wait And Cast",
 
   "item.experimentalmodid.speed_up": "Speed up",
   "item.experimentalmodid.speed_down": "Speed down",
