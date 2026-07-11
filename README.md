@@ -1,3 +1,9 @@
+This was just a 'experimental' mod/project, now I will move one to next step.  
+I don't think I will ever again update this repository. 'sad' ? Do it yourself.  
+I will _maybe_ update README to redirect to my next project, but don't except too much.  
+Thanks for reading this!  
+**Now, bye! BYE!!**
+
 
 Installation information
 =======
